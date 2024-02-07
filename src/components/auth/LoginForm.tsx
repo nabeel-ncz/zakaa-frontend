@@ -56,7 +56,7 @@ export default function LoginForm() {
 
             <button
                 type="submit"
-                className="custom-form-button">
+                className="custom-form-button primary-bg">
                 <span className="ml-3">
                     Log In
                 </span>

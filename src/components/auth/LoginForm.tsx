@@ -46,7 +46,7 @@ export default function LoginForm() {
             />
             
             <p className="mt-2 text-sm text-gray-600 text-start">
-                <Link href={"/signup"}>
+                <Link href={"/forgot-password"}>
                     <span className="font-medium text-blue-500">
                         Forgot password ?
                     </span>

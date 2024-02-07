@@ -3,14 +3,34 @@
 @tailwind utilities;
 
 
-.custom-form-input{
+.custom-form-input {
     @apply w-full px-8 py-3 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white;
 }
 
-.custom-form-button{
+.custom-form-button {
     @apply mt-5 tracking-wide font-semibold bg-purple-700 text-gray-100 w-full py-3 rounded-lg hover:bg-purple-800 transition-all duration-300 ease-in-out flex items-center justify-center;
 }
 
-.custom-form-error{
+.custom-form-error {
     @apply font-semibold text-red-700 text-xs;
+}
+
+.primary-text {
+    color: #8027C2;
+}
+
+.primary-bg {
+    background-color: #8027C2;
+}
+
+.secondary-text {
+    color: #F5E6FF;
+}
+
+.secondary-bg {
+    background-color: #F5E6FF;
+}
+
+.secondary-light-bg {
+    background-color: #FBFBFB;
 }

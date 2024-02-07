@@ -27,14 +27,15 @@ export default function Signup() {
                             <div className="mx-auto max-w-sm">
                                 <SignupForm />
                                 <p className="mt-6 text-xs text-gray-600 text-center">
-                                I agree to abide by templatana's
+                                By signing up, you agree to our Terms of Service and Privacy Policy. 
                                 <a href="#" className="border-b border-gray-500 border-dotted">
-                                    Terms of Service
+                                     Terms of Service
                                 </a>
-                                and its
+                                <span> and </span>
                                 <a href="#" className="border-b border-gray-500 border-dotted">
-                                    Privacy Policy
+                                    Privacy Policy 
                                 </a>
+                                Please review them before proceeding.
                             </p>
                             </div>
                         </div>

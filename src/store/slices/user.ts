@@ -4,19 +4,25 @@ import { signupAction } from "@/store/actions";
 const INITIAL_STATE = {
     loading: false,
     data: null,
+    temp: null,
     error: null
 }
 
 interface userState {
     loading: boolean;
-    data: any
-    error: any
+    data: any;
+    temp: any;
+    error: any;
 }
 
 const userSlice = createSlice({
     name: "user",
     initialState: INITIAL_STATE,
-    reducers: {},
+    reducers: {
+        tempSignupData: (state: userState, action) => {
+            state.temp = action.payload;
+        }
+    },
     extraReducers: (builder) => {
         builder
             //signup-user
@@ -36,4 +42,7 @@ const userSlice = createSlice({
     }
 })
 
+export const {
+    tempSignupData
+} = userSlice.actions;
 export const userReducer = userSlice.reducer;

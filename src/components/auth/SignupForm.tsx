@@ -5,14 +5,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { SignupSchema } from "@/lib/validation/schema";
 import FormField from "@/components/ui/FormField";
 import { TypeDispatch } from "@/store";
-import { signupAction } from "@/store/actions"
+import { tempSignupData } from "@/store/slices";
 import { useDispatch } from "react-redux";
 import { SignupFormData } from "@/types";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 export default function SignupForm() {
 
     const dispatch: TypeDispatch = useDispatch();
+    const router = useRouter();
 
     const {
         register,
@@ -23,7 +25,8 @@ export default function SignupForm() {
     });
 
     const onSubmit = (data: SignupFormData) => {
-        dispatch(signupAction(data));
+        dispatch(tempSignupData(data));
+        router.push('/set-username');
     }
 
     return (

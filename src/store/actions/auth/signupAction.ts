@@ -7,9 +7,11 @@ export const signupAction = createAsyncThunk(
     async (data: SignupFormData) => {
         try {
 
+            const { confirmPassword, ...requestData } = data;
+
             const response = await apiClient.post(
                 "/api/auth/signup",
-                data,
+                requestData,
                 {
                     headers: { "Content-Type": "application/json" },
                     withCredentials: true,

@@ -44,7 +44,7 @@ export default function LoginForm() {
                 register={register}
                 errors={errors}
             />
-            
+
             <p className="mt-2 text-sm text-gray-600 text-start">
                 <Link href={"/forgot-password"}>
                     <span className="font-medium text-blue-500">
@@ -52,7 +52,7 @@ export default function LoginForm() {
                     </span>
                 </Link>
             </p>
-            
+
 
             <button
                 type="submit"
@@ -63,7 +63,7 @@ export default function LoginForm() {
             </button>
 
             <p className="mt-6 text-sm text-gray-600 text-center">
-                Not a member,
+                Don't have an account,
                 <Link href={"/signup"}>
                     <span className="font-medium text-blue-500">
                         Signup now ?

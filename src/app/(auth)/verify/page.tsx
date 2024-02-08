@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Verify() {
     return (
         <>
@@ -11,6 +13,14 @@ export default function Verify() {
                                 <div className="flex flex-col items-center mt-6">
                                     <input placeholder={`Enter the otp`} className="custom-form-input" type={`text`} />
                                 </div>
+                                <p className="mt-6 text-sm text-gray-600 text-start">
+                                    Unable to receive OTP?, 
+                                    <Link href={"/login"}>
+                                        <span className="font-medium text-blue-500">
+                                            Resent OTP
+                                        </span>
+                                    </Link>
+                                </p>
                                 <button
                                     type="submit"
                                     className="custom-form-button primary-bg">

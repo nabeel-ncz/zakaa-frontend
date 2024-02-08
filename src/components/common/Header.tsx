@@ -12,7 +12,7 @@ export default function Header() {
                 <nav className="contents">
                     <ul className="flex items-center gap-2">
                         <li className="rounded secondary-bg py-3.5 px-4">
-                            <Link href={""}>
+                            <Link href={"/"}>
                                 <h2 className="primary-text font-bold text-sm">Home</h2>
                             </Link>
                         </li>
@@ -22,7 +22,7 @@ export default function Header() {
                             </Link>
                         </li>
                         <li className="rounded secondary-light-bg py-3.5 px-4">
-                            <Link href={""}>
+                            <Link href={"/teach"}>
                                 <h2 className="primary-text font-bold text-sm">Teach</h2>
                             </Link>
                         </li>
@@ -47,9 +47,9 @@ export default function Header() {
                 <nav className="contents">
                     <ul className="flex items-center gap-10">
                         {/* User Profile */}
-                        <li className="p-2 rounded">
+                        <li className="p-2 rounded cursor-pointer">
                             <div className="flex items-center justify-between gap-4">
-                                <Link href={""}>
+                                <Link href={"/signup"}>
                                     <img src="icons/profile-logo.png" className="w-12" />
                                 </Link>
                                 <div className="flex flex-col items-start h-full bg-white">

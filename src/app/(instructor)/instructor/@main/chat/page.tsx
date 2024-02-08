@@ -1,4 +1,4 @@
-export default function InstructorChat(){
+export default function Chat(){
     return (
         <div>
             Chat..

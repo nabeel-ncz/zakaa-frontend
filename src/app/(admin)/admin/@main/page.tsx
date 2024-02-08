@@ -1,4 +1,4 @@
-export default function InstructorDashboard() {
+export default function Dashboard() {
     return (
         <div>
             Dashboard

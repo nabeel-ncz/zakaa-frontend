@@ -1,4 +1,4 @@
-export default function InstructorAnalytics() {
+export default function Analytics() {
   return (
     <div>Analytics</div>
   )

@@ -1,4 +1,4 @@
-export default function Assessments(){
+export default function Asssessments(){
     return (
         <div>
             Asssessments

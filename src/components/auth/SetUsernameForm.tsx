@@ -31,7 +31,11 @@ export default function SetUsernameForm() {
 
             const result = await dispatch(findUsernameAction(username));
 
-            if (!result.payload.success) {
+            if(!result?.payload){
+                throw new Error("Username is not available!");
+            }
+
+            if (!result?.payload?.success) {
                 throw new Error("Username is not available!");
             }
 
@@ -63,11 +67,12 @@ export default function SetUsernameForm() {
                                 <div className="flex flex-col items-center mt-6">
                                     <input
                                         value={username}
+                                        onChange={(evt) => {setUsername(evt.target.value)}}
                                         placeholder={`username`}
                                         className={`custom-form-input ${error && "border-red-800 focus:border-red-800"}`}
                                         type={`text`}
                                     />
-                                    {error && <p className="custom-form-error">{error}</p>}
+                                    {error && <p className="text-start custom-form-error">{error}</p>}
                                 </div>
                                 <div className="py-4 flex flex-col items-start justify-center gap-2 text-blue-900">
                                     <h2 onClick={() => { copyToInput("user342") }} className="font-medium text-sm cursor-pointer hover:text-blue-950">- user342</h2>

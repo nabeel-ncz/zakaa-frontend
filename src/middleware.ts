@@ -1,32 +1,30 @@
-import { BASE_URL } from '@/utils/axios';
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+import {
+    studentMiddleware,
+    instructorMiddleware,
+    adminMiddleware
+} from '@/server';
 
 export async function middleware(req: NextRequest) {
 
-    const token = req.cookies.get('access_token');
+    const path = req.nextUrl.pathname;
+
+    if (path.startsWith('/student')) {
+        return studentMiddleware(req);
     
-    if (!token) {
-        return NextResponse.redirect(new URL("/login", req.url));
-    }
+    } else if (path.startsWith('/instructor')) {
+        return instructorMiddleware(req);
     
-    const response = await fetch(
-        BASE_URL
-    );
-
-    if(!response.ok){
-        return NextResponse.redirect(new URL("/login", req.url));
+    } else if (path.startsWith('/admin')) {
+        return adminMiddleware(req);
+    
+    } else {
+        return NextResponse.next();
     }
 
-    const json: any = response.json();
-
-    if(!json.success){
-        return NextResponse.redirect(new URL("/login", req.url));
-    }
-
-    return NextResponse.next();
 }
 
 export const config = {
-    matcher: ["/"],
+    matcher: ["/student/:path*", "/instructor/:path*", "/admin/:path*"],
 };

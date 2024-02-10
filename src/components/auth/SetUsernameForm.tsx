@@ -25,12 +25,10 @@ export default function SetUsernameForm() {
         setUsername(value)
     }
 
-    const onError = (message: string) => {
-        setError(message);
-    }
-
     const handleSubmition = () => {
-        return signupSubmitionService(username, onError);
+        return signupSubmitionService(username, (message: string) => {
+            setError(message);
+        });
     }
 
     return (

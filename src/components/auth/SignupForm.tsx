@@ -30,65 +30,79 @@ export default function SignupForm() {
     }
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} >
+        <div className="mx-auto max-w-sm">
+            <form onSubmit={handleSubmit(onSubmit)} >
 
-            <FormField
-                fieldName="firstName"
-                fieldType="text"
-                placeHolder="First Name"
-                register={register}
-                errors={errors}
-            />
+                <FormField
+                    fieldName="firstName"
+                    fieldType="text"
+                    placeHolder="First Name"
+                    register={register}
+                    errors={errors}
+                />
 
-            <FormField
-                fieldName="lastName"
-                fieldType="text"
-                placeHolder="Last Name"
-                register={register}
-                errors={errors}
-            />
+                <FormField
+                    fieldName="lastName"
+                    fieldType="text"
+                    placeHolder="Last Name"
+                    register={register}
+                    errors={errors}
+                />
 
-            <FormField
-                fieldName="email"
-                fieldType="email"
-                placeHolder="Email"
-                register={register}
-                errors={errors}
-            />
+                <FormField
+                    fieldName="email"
+                    fieldType="email"
+                    placeHolder="Email"
+                    register={register}
+                    errors={errors}
+                />
 
-            <FormField
-                fieldName="password"
-                fieldType="password"
-                placeHolder="password"
-                register={register}
-                errors={errors}
-            />
+                <FormField
+                    fieldName="password"
+                    fieldType="password"
+                    placeHolder="password"
+                    register={register}
+                    errors={errors}
+                />
 
-            <FormField
-                fieldName="confirmPassword"
-                fieldType="password"
-                placeHolder="Confirm Password"
-                register={register}
-                errors={errors}
-            />
+                <FormField
+                    fieldName="confirmPassword"
+                    fieldType="password"
+                    placeHolder="Confirm Password"
+                    register={register}
+                    errors={errors}
+                />
 
-            <button
-                type="submit"
-                className="custom-form-button primary-bg">
-                <span className="ml-3">
-                    Sign Up
-                </span>
-            </button>
-
-            <p className="mt-6 text-sm text-gray-600 text-center">
-                Already have an account,
-                <Link href={"/login"}>
-                    <span className="font-medium text-blue-500">
-                        Login now ?
+                <button
+                    type="submit"
+                    className="custom-form-button primary-bg">
+                    <span className="ml-3">
+                        Sign Up
                     </span>
-                </Link>
-            </p>
+                </button>
 
-        </form>
+                <p className="mt-6 text-sm text-gray-600 text-center">
+                    Already have an account,
+                    <Link href={"/login"}>
+                        <span className="font-medium text-blue-500">
+                            Login now ?
+                        </span>
+                    </Link>
+                </p>
+
+            </form>
+
+            <p className="mt-6 text-xs text-gray-600 text-center">
+                By signing up, you agree to our Terms of Service and Privacy Policy.
+                <a href="#" className="border-b border-gray-500 border-dotted">
+                    Terms of Service
+                </a>
+                <span> and </span>
+                <a href="#" className="border-b border-gray-500 border-dotted">
+                    Privacy Policy
+                </a>
+                Please review them before proceeding.
+            </p>
+        </div>
     )
 }

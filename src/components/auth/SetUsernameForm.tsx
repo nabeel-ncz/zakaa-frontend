@@ -1,15 +1,14 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { TypeDispatch, TypeState } from "@/store";
-import { findUsernameAction } from "@/store/actions/auth/findUsernameAction";
+import { useSelector } from "react-redux";
+import { TypeState } from "@/store";
 import { useRouter } from "next/navigation";
-import { signupAction } from "@/store/actions";
-import { SignupFormData } from "@/types";
+import { useAxiosGet } from "@/hooks";
+import { signupSubmitionService } from "@/services";
 
 export default function SetUsernameForm() {
 
-    const dispatch: TypeDispatch = useDispatch();
+    const { data }: any = useAxiosGet("/api/auth/available/username");
     const signupData = useSelector((state: TypeState) => state.user.temp);
     const router = useRouter();
 
@@ -26,33 +25,12 @@ export default function SetUsernameForm() {
         setUsername(value)
     }
 
-    const handleSubmition = async () => {
-        try {
+    const onError = (message: string) => {
+        setError(message);
+    }
 
-            const result = await dispatch(findUsernameAction(username));
-
-            if(!result?.payload){
-                throw new Error("Username is not available!");
-            }
-
-            if (!result?.payload?.success) {
-                throw new Error("Username is not available!");
-            }
-
-            setError("");
-
-            const data = signupData ? signupData : {};
-
-            await dispatch(signupAction({
-                ...data,
-                username
-            } as SignupFormData));
-
-            router.replace("/");
-
-        } catch (error: any) {
-            setError(error.message);
-        }
+    const handleSubmition = () => {
+        return signupSubmitionService(username, onError);
     }
 
     return (
@@ -67,7 +45,7 @@ export default function SetUsernameForm() {
                                 <div className="flex flex-col items-center mt-6">
                                     <input
                                         value={username}
-                                        onChange={(evt) => {setUsername(evt.target.value)}}
+                                        onChange={(evt) => { setUsername(evt.target.value) }}
                                         placeholder={`username`}
                                         className={`custom-form-input ${error && "border-red-800 focus:border-red-800"}`}
                                         type={`text`}
@@ -75,7 +53,9 @@ export default function SetUsernameForm() {
                                     {error && <p className="text-start custom-form-error">{error}</p>}
                                 </div>
                                 <div className="py-4 flex flex-col items-start justify-center gap-2 text-blue-900">
-                                    <h2 onClick={() => { copyToInput("user342") }} className="font-medium text-sm cursor-pointer hover:text-blue-950">- user342</h2>
+                                    {data?.success && data.data?.map((item: string) => (
+                                        <h2 onClick={() => { copyToInput(`${item}`) }} className="font-medium text-sm cursor-pointer hover:text-blue-950">- {item}</h2>
+                                    ))}
                                 </div>
                                 <button
                                     onClick={handleSubmition}

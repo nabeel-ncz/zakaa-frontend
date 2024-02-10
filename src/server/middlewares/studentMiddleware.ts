@@ -37,6 +37,10 @@ export async function studentMiddleware(req: NextRequest) {
             return NextResponse.redirect(new URL("/login", req.url));
         }
 
+        if(!response?.data?.isVerified){
+            return NextResponse.redirect(new URL("/verify", req.url));
+        }
+
         return NextResponse.next();
 
     } catch (error: any) {

@@ -1,4 +1,4 @@
-export default function Loading() {
+export default function Loading(){
     return (
         <div className="custom-loading-component min-h-screen w-full flex items-center justify-center">
             <div className="wrapper">

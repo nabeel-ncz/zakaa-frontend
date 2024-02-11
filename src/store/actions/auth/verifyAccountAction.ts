@@ -16,7 +16,7 @@ export const verifyAccountAction = createAsyncThunk(
             );
 
             if (response.data.success) {
-                return response.data.data;
+                return response.data;
             }
 
             throw new Error(response.data?.message);

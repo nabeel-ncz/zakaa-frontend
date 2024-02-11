@@ -1,14 +1,17 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { TypeState } from "@/store";
+import { useDispatch, useSelector } from "react-redux";
+import { TypeDispatch, TypeState } from "@/store";
 import { useRouter } from "next/navigation";
 import { useAxiosGet } from "@/hooks";
-import { signupSubmitionService } from "@/services";
+import { findUsernameAction, signupAction } from "@/store/actions";
+import { SignupFormData } from "@/types";
+
 
 export default function SetUsernameForm() {
 
     const { data }: any = useAxiosGet("/api/auth/available/username");
+    const dispatch : TypeDispatch = useDispatch();
     const signupData = useSelector((state: TypeState) => state.user.temp);
     const router = useRouter();
 
@@ -25,10 +28,34 @@ export default function SetUsernameForm() {
         setUsername(value)
     }
 
-    const handleSubmition = () => {
-        return signupSubmitionService(username, (message: string) => {
-            setError(message);
-        });
+    const handleSubmition = async () => {
+
+        try {
+
+            const result = await dispatch(findUsernameAction(username));
+
+            if (!result?.payload) {
+                throw new Error("Username is not available!");
+            }
+
+            if (!result?.payload?.success) {
+                throw new Error("Username is not available!");
+            }
+
+            setError('');
+
+            const data = signupData ? signupData : {};
+
+            await dispatch(signupAction({
+                ...data,
+                username
+            } as SignupFormData));
+
+            router.replace("/verify");
+
+        } catch (error: any) {
+            setError(error?.message);
+        }
     }
 
     return (

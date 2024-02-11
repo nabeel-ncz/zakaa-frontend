@@ -1,16 +1,41 @@
 "use client"
 import { useState } from "react";
-import { emailVerificationService } from "@/services";
+import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { TypeDispatch } from "@/store";
+import { verifyAccountAction } from "@/store/actions";
+import { toast } from "react-toastify";
 
 export default function EmailVerificationForm() {
+
+    const router = useRouter();
+    const dispatch: TypeDispatch = useDispatch();
 
     const [otp, setOtp] = useState("");
     const [error, setError] = useState("");
 
-    const handleSubmition = () => {
-        return emailVerificationService(otp, (message: string) => {
-            setError(message);
-        });
+    const handleSubmition = async () => {
+        try {
+
+            const result = await dispatch(verifyAccountAction({ otp }));
+    
+            if (!result?.payload) {
+                throw new Error("OTP is incorrect, Try again!");
+            }
+    
+            if (!result?.payload?.success) {
+                throw new Error("OTP is incorrect, Try again!");
+            }
+
+            setError("");
+            
+            toast.success("Your account is verified");
+    
+            router.replace("/");
+    
+        } catch (error: any) {
+            setError(error?.message);
+        }
     }
 
     return (

@@ -10,10 +10,13 @@ import { useDispatch } from "react-redux";
 import { SignupFormData } from "@/types";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useState } from "react";
+import { findEmailAction } from "@/store/actions/auth/findEmailAction";
 
 export default function SignupForm() {
 
     const dispatch: TypeDispatch = useDispatch();
+    const [emailError, setEmailError] = useState<any>(null);
     const router = useRouter();
 
     const {
@@ -24,9 +27,27 @@ export default function SignupForm() {
         resolver: zodResolver(SignupSchema),
     });
 
-    const onSubmit = (data: SignupFormData) => {
+    const onSubmit = async (data: SignupFormData) => {
         dispatch(tempSignupData(data));
-        router.push('/set-username');
+
+        try {
+
+            const result = await dispatch(findEmailAction(data.email));
+
+            if (!result.payload || !result.payload.success) {
+                throw new Error("Email is not available, Try again!");
+            }
+
+            setEmailError("");
+
+            router.push('/set-username');
+
+        } catch (error: any) {
+            setEmailError({
+                email: { message: `${error.message}` }
+            });
+        }
+
     }
 
     return (
@@ -54,7 +75,7 @@ export default function SignupForm() {
                     fieldType="email"
                     placeHolder="Email"
                     register={register}
-                    errors={errors}
+                    errors={errors || emailError}
                 />
 
                 <FormField

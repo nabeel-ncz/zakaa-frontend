@@ -3,3 +3,8 @@ export * from "./loginAction";
 export * from "./verifyAccountAction";
 export * from "./findUsernameAction";
 export * from "./fetchUserAction";
+export * from "./findEmailAction";
+export * from "./logoutAction";
+export * from "./sendForgotPasswordMailAction";
+export * from "./sendVerificationMail";
+export * from "./resetPasswordAction";

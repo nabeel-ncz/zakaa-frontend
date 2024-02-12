@@ -1,6 +1,10 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useDispatch, useSelector } from "react-redux";
+import { TypeDispatch, TypeState } from "@/store";
+import { fetchUserAction } from "@/store/actions";
+import Skeleton from "@/components/ui/Skeleton";
 
 export default function StudentLayout({
     children
@@ -8,7 +12,17 @@ export default function StudentLayout({
     children: React.ReactNode
 }) {
 
+    const [loading, setLoading] = useState(true);
     const [open, setOpen] = useState(true);
+    const dispatch: TypeDispatch = useDispatch();
+    const user: any = useSelector((state: TypeState) => state.user.data);
+
+    useEffect(() => {
+        dispatch(fetchUserAction())
+            .finally(() => {
+                setLoading(false);
+            })
+    }, []);
 
     return (
         <div className="flex h-screen bg-gray-100">
@@ -72,13 +86,24 @@ export default function StudentLayout({
                             <ul className="flex items-center gap-10">
                                 <li className="p-2 rounded cursor-pointer">
                                     <div className="flex items-center justify-between gap-4">
-                                        <Link href={"/signup"}>
-                                            <img src="/icons/profile-logo.png" className="w-12" />
-                                        </Link>
-                                        <div className="flex flex-col items-start h-full bg-white">
-                                            <h2 className="font-semibold text-sm">Behzadi Pashei</h2>
-                                            <h6 className="font-light text-xs">UI UX designer</h6>
-                                        </div>
+                                        {loading ? (
+                                            <>
+                                                <Skeleton width="44px" height="44px" />
+                                                <div className="flex flex-col gap-2">
+                                                    <Skeleton width="80px" height="18px" />
+                                                    <Skeleton width="40px" height="14px" />
+                                                </div>
+                                            </>
+
+                                        ) : (
+                                            <>
+                                                <img src="/icons/profile-logo.png" className="w-12" />
+                                                <div className="flex flex-col items-start h-full bg-white">
+                                                    <h2 className="font-semibold text-sm">{user.username}</h2>
+                                                    <h6 className="font-light text-xs">{user.role}</h6>
+                                                </div>
+                                            </>
+                                        )}
                                     </div>
                                 </li>
                                 <li className="">

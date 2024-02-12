@@ -2,8 +2,10 @@ import { createSlice } from "@reduxjs/toolkit";
 import {
     signupAction,
     loginAction,
-    verifyAccountAction
+    verifyAccountAction,
+    fetchUserAction
 } from "@/store/actions";
+import { logoutAction } from "../actions/auth/logoutAction";
 
 const INITIAL_STATE = {
     loading: false,
@@ -25,6 +27,9 @@ const userSlice = createSlice({
     reducers: {
         tempSignupData: (state: userState, action) => {
             state.temp = action.payload;
+        },
+        storeUserData: (state: userState, action) => {
+            state.data = action.payload;
         }
     },
     extraReducers: (builder) => {
@@ -71,10 +76,29 @@ const userSlice = createSlice({
                 state.error = action.error.message;
                 state.data = null;
             })
+            //fetch-user================================
+            .addCase(fetchUserAction.pending, (state: userState) => {
+                state.loading = true;
+            })
+            .addCase(fetchUserAction.fulfilled, (state: userState, action) => {
+                state.loading = false;
+                state.data = action.payload?.data;
+                state.error = null;
+            })
+            .addCase(fetchUserAction.rejected, (state: userState, action) => {
+                state.loading = false;
+                state.error = action.error.message;
+                state.data = null;
+            })
+            //logout=============================
+            .addCase(logoutAction.fulfilled, (state: userState, action) => {
+                state.data = null;
+            })
     }
 })
 
 export const {
-    tempSignupData
+    tempSignupData,
+    storeUserData
 } = userSlice.actions;
 export const userReducer = userSlice.reducer;

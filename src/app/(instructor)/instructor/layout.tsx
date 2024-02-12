@@ -1,4 +1,4 @@
-import InstructorLayout from '@/components/common/InstructorLayout';
+import InstructorLayout from '@/components/layout/InstructorLayout';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

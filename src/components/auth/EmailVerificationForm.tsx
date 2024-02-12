@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { TypeDispatch } from "@/store";
 import { verifyAccountAction } from "@/store/actions";
-import { toast } from "react-toastify";
 
 export default function EmailVerificationForm() {
 
@@ -29,7 +28,7 @@ export default function EmailVerificationForm() {
 
             setError("");
             
-            toast.success("Your account is verified");
+            // toast.success("Your account is verified");
     
             router.replace("/");
     

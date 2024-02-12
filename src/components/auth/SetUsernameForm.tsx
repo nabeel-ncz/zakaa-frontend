@@ -3,16 +3,16 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { TypeDispatch, TypeState } from "@/store";
 import { useRouter } from "next/navigation";
-import { useAxiosGet } from "@/hooks";
+import { useAxiosGetOnClick } from "@/hooks";
 import { findUsernameAction, signupAction } from "@/store/actions";
 import { SignupFormData } from "@/types";
 
 
 export default function SetUsernameForm() {
 
-    const { data }: any = useAxiosGet("/api/auth/available/username");
-    const dispatch : TypeDispatch = useDispatch();
-    const signupData = useSelector((state: TypeState) => state.user.temp);
+    const { fetchData, data }: any = useAxiosGetOnClick();
+    const dispatch: TypeDispatch = useDispatch();
+    const signupData: any = useSelector((state: TypeState) => state.user.temp);
     const router = useRouter();
 
     const [username, setUsername] = useState("");
@@ -21,6 +21,9 @@ export default function SetUsernameForm() {
     useEffect(() => {
         if (!signupData) {
             router.replace('/signup');
+        }
+        if (signupData) {
+            fetchData(`/api/auth/available/username?f=${signupData?.firstName}&l=${signupData.lastName}`);
         }
     }, [signupData]);
 

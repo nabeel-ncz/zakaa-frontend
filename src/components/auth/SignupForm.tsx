@@ -38,13 +38,18 @@ export default function SignupForm() {
                 throw new Error("Email is not available, Try again!");
             }
 
-            setEmailError("");
+            setEmailError(null);
 
             router.push('/set-username');
 
         } catch (error: any) {
+            console.log(error);
             setEmailError({
-                email: { message: `${error.message}` }
+                email: {
+                    message: `${error.message ||
+                        "Email is not available, Try again!"
+                        }`
+                }
             });
         }
 
@@ -75,7 +80,7 @@ export default function SignupForm() {
                     fieldType="email"
                     placeHolder="Email"
                     register={register}
-                    errors={errors || emailError}
+                    errors={emailError || errors}
                 />
 
                 <FormField

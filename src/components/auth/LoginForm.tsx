@@ -9,10 +9,14 @@ import { useDispatch } from "react-redux";
 import { LoginFormData } from "@/types";
 import FormField from "@/components/ui/FormField";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function LoginForm() {
 
+    const [error, setError] = useState(null);
     const dispatch: TypeDispatch = useDispatch();
+    const router = useRouter();
 
     const {
         register,
@@ -22,12 +26,36 @@ export default function LoginForm() {
         resolver: zodResolver(LoginSchema),
     });
 
-    const onSubmit = (data: LoginFormData) => {
-        dispatch(loginAction(data));
+    const onSubmit = async (data: LoginFormData) => {
+        try {
+
+            const result: any = await dispatch(loginAction(data))
+
+            if (result?.error && result?.error?.message) {
+                throw new Error(result?.error?.message);
+            }
+
+            if (!result?.payload) {
+                throw new Error("Login failed, Try again!");
+            }
+
+            if (!result?.payload?.success) {
+                throw new Error("Login failed, Try again!");
+            }
+
+            setError(null);
+
+            router.replace("/");
+
+        } catch (error: any) {
+            setError(error?.message || "Something wrong, Try again!");
+        }
     }
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
+
+            {error && <p className="text-start custom-form-error">{error}</p>}
 
             <FormField
                 fieldName="email"

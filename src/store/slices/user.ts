@@ -49,7 +49,7 @@ const userSlice = createSlice({
             })
             .addCase(loginAction.fulfilled, (state: userState, action) => {
                 state.loading = false;
-                state.data = action.payload;
+                state.data = action.payload?.data;
                 state.error = null;
             })
             .addCase(loginAction.rejected, (state: userState, action) => {
@@ -63,7 +63,7 @@ const userSlice = createSlice({
             })
             .addCase(verifyAccountAction.fulfilled, (state: userState, action) => {
                 state.loading = false;
-                state.data = action.payload;
+                state.data = action.payload?.data;
                 state.error = null;
             })
             .addCase(verifyAccountAction.rejected, (state: userState, action) => {

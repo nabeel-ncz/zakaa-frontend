@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { TypeDispatch } from "@/store";
 import { verifyAccountAction } from "@/store/actions";
+import { sendVerificationMailAction } from "@/store/actions/auth/sendVerificationMail";
+import toast from "react-hot-toast";
 
 export default function EmailVerificationForm() {
 
@@ -15,26 +17,25 @@ export default function EmailVerificationForm() {
 
     const handleSubmition = async () => {
         try {
-
             const result = await dispatch(verifyAccountAction({ otp }));
-    
             if (!result?.payload) {
                 throw new Error("OTP is incorrect, Try again!");
             }
-    
             if (!result?.payload?.success) {
                 throw new Error("OTP is incorrect, Try again!");
             }
-
             setError("");
-            
-            // toast.success("Your account is verified");
-    
+            toast.success("Your account is verified", { position: "bottom-right" });
             router.replace("/");
-    
         } catch (error: any) {
             setError(error?.message);
         }
+    }
+
+    const handleResentOTP = () => {
+        dispatch(sendVerificationMailAction()).then(() => {
+            toast.success("OTP sent to your email!", { position: "bottom-right" });
+        })
     }
 
     return (
@@ -46,11 +47,11 @@ export default function EmailVerificationForm() {
                     <input onChange={(evt) => {
                         setOtp(evt.target.value)
                     }} value={otp} placeholder={`Enter the otp`} className="custom-form-input" type={`text`} />
-                    {error && <p className="text-start custom-form-error">{error}</p>}
                 </div>
+                {error && <p className="text-start custom-form-error my-1">{error}</p>}
                 <p className="mt-6 text-sm text-gray-600 text-start">
                     Unable to receive OTP?,
-                    <span className="font-medium text-blue-500">
+                    <span onClick={handleResentOTP} className="cursor-pointer font-medium text-blue-500">
                         Resent OTP
                     </span>
                 </p>

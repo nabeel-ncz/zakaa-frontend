@@ -1,5 +1,6 @@
 import AuthLayout from '@/components/layout/AuthLayout';
 import type { Metadata } from 'next';
+import { Toaster } from 'react-hot-toast';
 
 export const metadata: Metadata = {
     title: 'Zakaa',
@@ -14,6 +15,7 @@ export default function RootLayout({
 
     return (
         <>
+            <Toaster />
             <AuthLayout children={main} />
         </>
     )

@@ -25,6 +25,8 @@ export async function authExistMiddleware(req: NextRequest) {
                 });
         });
 
+        console.log(response, "+===============");
+
         if (response?.success) {
             return NextResponse.redirect(new URL("/", req.url));
         }

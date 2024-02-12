@@ -10,7 +10,7 @@ export async function adminMiddleware(req: NextRequest) {
         const refresh_token = req.cookies.get("refresh_token")?.value;
 
         if (!access_token) {
-            return NextResponse.redirect(new URL("/login", req.url));
+            return NextResponse.redirect(new URL("/auth/login", req.url));
         }
 
         const response = await fetch(
@@ -30,17 +30,17 @@ export async function adminMiddleware(req: NextRequest) {
         });
 
         if (!response?.success) {
-            return NextResponse.redirect(new URL("/login", req.url));
+            return NextResponse.redirect(new URL("/auth/login", req.url));
         }
 
         if(response?.data?.role !== "admin"){
-            return NextResponse.redirect(new URL("/login", req.url));
+            return NextResponse.redirect(new URL("/auth/login", req.url));
         }
 
         return NextResponse.next();
 
     } catch (error: any) {
-        return NextResponse.redirect(new URL("/login", req.url));
+        return NextResponse.redirect(new URL("/auth/login", req.url));
     }
 
 }

@@ -1,5 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { apiClient } from "@/utils/axios";
+import { AxiosError } from "axios";
 
 export const findEmailAction = createAsyncThunk(
     "user/findEmail",
@@ -20,7 +21,8 @@ export const findEmailAction = createAsyncThunk(
             throw new Error(response.data?.message);
 
         } catch (error: any) {
-            throw new Error(error.message);
+            const e: any = error as AxiosError;
+            throw new Error(e.response?.data.error || e.response?.data.message || e.message);
         }
     }
 )

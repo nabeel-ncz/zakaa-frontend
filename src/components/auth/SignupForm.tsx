@@ -32,22 +32,26 @@ export default function SignupForm() {
 
         try {
 
-            const result = await dispatch(findEmailAction(data.email));
+            const result: any = await dispatch(findEmailAction(data.email));
+
+            if (result?.error && result?.error?.message) {
+                throw new Error(result?.error?.message);
+            }
 
             if (!result.payload || !result.payload.success) {
-                throw new Error("Email is not available, Try again!");
+                throw new Error("Something went wrong!");
             }
 
             setEmailError(null);
 
-            router.push('/set-username');
+            router.push('/auth/set-username');
 
         } catch (error: any) {
             console.log(error);
             setEmailError({
                 email: {
                     message: `${error.message ||
-                        "Email is not available, Try again!"
+                        "Something went wrong, Try again!"
                         }`
                 }
             });
@@ -109,7 +113,7 @@ export default function SignupForm() {
 
                 <p className="mt-6 text-sm text-gray-600 text-center">
                     Already have an account,
-                    <Link href={"/login"}>
+                    <Link href={"/auth/login"}>
                         <span className="font-medium text-blue-500">
                             Login now ?
                         </span>

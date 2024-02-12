@@ -54,7 +54,7 @@ export default function SetUsernameForm() {
                 username
             } as SignupFormData));
 
-            router.replace("/verify");
+            router.replace("/auth/verify");
 
         } catch (error: any) {
             setError(error?.message);

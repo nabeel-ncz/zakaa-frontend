@@ -55,7 +55,7 @@ export default function LoginForm() {
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
 
-            {error && <p className="text-start custom-form-error">{error}</p>}
+            {error && <p className="text-start custom-form-error mb-2">{error}</p>}
 
             <FormField
                 fieldName="email"
@@ -74,7 +74,7 @@ export default function LoginForm() {
             />
 
             <p className="mt-2 text-sm text-gray-600 text-start">
-                <Link href={"/forgot-password"}>
+                <Link href={"/auth/forgot-password"}>
                     <span className="font-medium text-blue-500">
                         Forgot password ?
                     </span>
@@ -92,7 +92,7 @@ export default function LoginForm() {
 
             <p className="mt-6 text-sm text-gray-600 text-center">
                 Don't have an account,
-                <Link href={"/signup"}>
+                <Link href={"/auth/signup"}>
                     <span className="font-medium text-blue-500">
                         Signup now ?
                     </span>

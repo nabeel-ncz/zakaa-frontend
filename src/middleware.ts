@@ -3,22 +3,26 @@ import type { NextRequest } from 'next/server';
 import {
     studentMiddleware,
     instructorMiddleware,
-    adminMiddleware
+    adminMiddleware,
+    authExistMiddleware
 } from '@/server';
 
 export async function middleware(req: NextRequest) {
 
     const path = req.nextUrl.pathname;
 
-    if (path.startsWith('/student')) {
+    if (path.startsWith('/auth')) {
+        return authExistMiddleware(req);
+
+    } else if (path.startsWith('/student')) {
         return studentMiddleware(req);
-    
+
     } else if (path.startsWith('/instructor')) {
         return instructorMiddleware(req);
-    
+
     } else if (path.startsWith('/admin')) {
         return adminMiddleware(req);
-    
+
     } else {
         return NextResponse.next();
     }
@@ -26,5 +30,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-    matcher: ["/student/:path*", "/instructor/:path*", "/admin/:path*"],
+    matcher: ["/auth/:path*", "/student/:path*", "/instructor/:path*", "/admin/:path*"],
 };

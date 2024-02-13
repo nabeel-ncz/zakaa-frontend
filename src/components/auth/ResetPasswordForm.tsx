@@ -15,26 +15,43 @@ export default function ResetPasswordForm() {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
 
-    const handleSubmition = () => {
+    const handleSubmition = async () => {
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-        if (!passwordRegex.test(newPassword)) {
-            return setError("Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.");
-        }
-        if (newPassword !== confirmPassword) {
-            return setError("Confirm password do not match!");
-        }
-        dispatch(resetPasswordAction({
-            currentPassword,
-            newPassword
-        })).then(() => {
+        try {
+            if (!currentPassword) {
+                throw new Error("Current password is required!");
+            }
+            
+            if (!passwordRegex.test(newPassword)) {
+                throw new Error("Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.");
+            }
+            
+            if (newPassword !== confirmPassword) {
+                throw new Error("Confirm password do not match!");
+            }
+
+            const response: any = await dispatch(resetPasswordAction({
+                currentPassword,
+                newPassword
+            }));
+
+            if (response?.error && response?.error?.message) {
+                throw new Error(response?.error?.message);
+            }
+
+            if(!response.payload || !response.payload.success){
+                throw new Error("There is something went wrong!");
+            }
+
             setError("");
-            toast.success("Password changed successfully!", {
+            toast.success("Password updated successfully!", {
                 position: "bottom-right"
             });
             router.push("/");
-        }).catch((error: any) => {
-            setError(error.message || "Something went wrong, Try again!");
-        })
+           
+        } catch (error: any) {
+            setError(error.message || "Something wrong, Try again!");
+        }
     }
 
     return (

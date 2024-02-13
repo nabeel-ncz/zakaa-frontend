@@ -31,6 +31,9 @@ export async function authExistMiddleware(req: NextRequest) {
             if (!response?.data?.isVerified && path.startsWith("/auth/verify")) {
                 return NextResponse.next();
             }
+            if(path.startsWith("/auth/reset-password")){
+                return NextResponse.next();
+            }
             return NextResponse.redirect(new URL("/", req.url));
         }
 

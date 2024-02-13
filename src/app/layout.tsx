@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import ReduxProvider from '@/store/provider';
+import { Toaster } from 'react-hot-toast';
 import './globals.css'
 
 const inter = Inter({
@@ -20,6 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+        <Toaster />
         <ReduxProvider>
           {children}
         </ReduxProvider>

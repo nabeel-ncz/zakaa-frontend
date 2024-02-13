@@ -15,7 +15,7 @@ export default function ChangePasswordForm() {
     const [cPassword, setCPassword] = useState("");
     const searchParams = useSearchParams();
 
-    const handleSubmition = () => {
+    const handleSubmition = async () => {
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
         if (!passwordRegex.test(nPassword)) {
             return setError("Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.");
@@ -23,18 +23,30 @@ export default function ChangePasswordForm() {
         if (nPassword !== cPassword) {
             return setError("Confirm password do not match!");
         }
-        dispatch(changePasswordAction({
-            token: searchParams.get("token") || "",
-            password: nPassword
-        })).then(() => {
+        try {
+
+            const response: any = await dispatch(changePasswordAction({
+                token: searchParams.get("token") || "",
+                password: nPassword
+            }));
+
+            if (response?.error && response?.error?.message) {
+                throw new Error(response?.error?.message);
+            }
+
+            if(!response.payload || !response.payload.success){
+                throw new Error("There is something went wrong!");
+            }
+
             setError("");
             toast.success("Password changed successfully, Please login!", {
                 position: "bottom-right"
             });
             router.replace("/auth/login");
-        }).catch((error: any) => {
+
+        } catch (error: any){
             setError(error.message || "Something went wrong!");
-        });
+        }
     }
 
     return (

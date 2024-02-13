@@ -35,7 +35,11 @@ export default function SetUsernameForm() {
 
         try {
 
-            const result = await dispatch(findUsernameAction(username));
+            const result: any = await dispatch(findUsernameAction(username));
+
+            if (result?.error && result?.error?.message) {
+                throw new Error(result?.error?.message);
+            }
 
             if (!result?.payload) {
                 throw new Error("Username is not available!");
@@ -45,14 +49,18 @@ export default function SetUsernameForm() {
                 throw new Error("Username is not available!");
             }
 
-            setError('');
-
             const data = signupData ? signupData : {};
 
-            await dispatch(signupAction({
+            const response: any = await dispatch(signupAction({
                 ...data,
                 username
             } as SignupFormData));
+
+            if (response?.error && response?.error?.message) {
+                throw new Error(response?.error?.message);
+            }
+
+            setError('');
 
             router.replace("/auth/verify");
 

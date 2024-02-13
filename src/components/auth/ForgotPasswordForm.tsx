@@ -13,17 +13,27 @@ export default function ForgotPasswordForm() {
     const [email, setEmail] = useState("");
     const [error, setError] = useState(null);
 
-    const handleForgotPasswordSubmition = () => {
-        dispatch(sendForgotPasswordMailAction({ email }))
-            .then(() => {
-                setError(null);
-                toast.success("Reset password mail sent successfully!", {
-                    position: "bottom-right"
-                });
-                router.push("/");
-            }).catch((error: any) => {
-                setError(error?.message || "Something went wrong, Try again!");
+    const handleForgotPasswordSubmition = async () => {
+        try {
+            const response: any = await dispatch(sendForgotPasswordMailAction({ email }));
+
+            if (response?.error && response?.error?.message) {
+                throw new Error(response?.error?.message);
+            }
+
+            if(!response.payload || !response.payload.success){
+                throw new Error("There is something went wrong!");
+            }
+
+            setError(null);
+            toast.success("Reset password mail sent successfully!", {
+                position: "bottom-right"
             });
+            router.push("/");
+
+        } catch (error: any) {
+            setError(error?.message || "Something went wrong, Try again!");
+        }
     }
 
     return (

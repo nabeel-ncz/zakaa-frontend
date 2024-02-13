@@ -17,13 +17,20 @@ export default function EmailVerificationForm() {
 
     const handleSubmition = async () => {
         try {
-            const result = await dispatch(verifyAccountAction({ otp }));
+            const result: any = await dispatch(verifyAccountAction({ otp }));
+
+            if (result?.error && result?.error?.message) {
+                throw new Error(result?.error?.message);
+            }
+            
             if (!result?.payload) {
                 throw new Error("OTP is incorrect, Try again!");
             }
+            
             if (!result?.payload?.success) {
                 throw new Error("OTP is incorrect, Try again!");
             }
+            
             setError("");
             toast.success("Your account is verified", { position: "bottom-right" });
             router.replace("/");

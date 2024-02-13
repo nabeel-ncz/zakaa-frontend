@@ -11,6 +11,7 @@ import FormField from "@/components/ui/FormField";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { signIn } from "next-auth/react";
 
 export default function LoginForm() {
 
@@ -52,52 +53,78 @@ export default function LoginForm() {
         }
     }
 
+    const handleGoogleSignIn = () => {
+        signIn('google', { callbackUrl: `${window.location.origin}/` });
+    }
+
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
-
-            {error && <p className="text-start custom-form-error mb-2">{error}</p>}
-
-            <FormField
-                fieldName="email"
-                fieldType="email"
-                placeHolder="Email"
-                register={register}
-                errors={errors}
-            />
-
-            <FormField
-                fieldName="password"
-                fieldType="password"
-                placeHolder="Password"
-                register={register}
-                errors={errors}
-            />
-
-            <p className="mt-2 text-sm text-gray-600 text-start">
-                <Link href={"/auth/forgot-password"}>
-                    <span className="font-medium text-blue-500">
-                        Forgot password ?
+        <>
+            <div className="flex flex-col items-center">
+                <button
+                    onClick={handleGoogleSignIn}
+                    className="w-full max-w-sm font-bold shadow-sm rounded-lg py-3 bg-purple-100 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline">
+                    <img src="../icons/google.png" alt="" />
+                    <span className="ml-4">
+                        Sign In with Google
                     </span>
-                </Link>
-            </p>
+                </button>
+            </div>
+
+            <div className="mt-2 mb-8 border-b text-center">
+                <div
+                    className="leading-none px-2 inline-block text-sm text-gray-600 tracking-wide font-medium transform translate-y-1/2">
+                    OR
+                </div>
+            </div>
+
+            <div className="mx-auto max-w-sm my-auto">
+                <form onSubmit={handleSubmit(onSubmit)}>
+
+                    {error && <p className="text-start custom-form-error mb-2">{error}</p>}
+
+                    <FormField
+                        fieldName="email"
+                        fieldType="email"
+                        placeHolder="Email"
+                        register={register}
+                        errors={errors}
+                    />
+
+                    <FormField
+                        fieldName="password"
+                        fieldType="password"
+                        placeHolder="Password"
+                        register={register}
+                        errors={errors}
+                    />
+
+                    <p className="mt-2 text-sm text-gray-600 text-start">
+                        <Link href={"/auth/forgot-password"}>
+                            <span className="font-medium text-blue-500">
+                                Forgot password ?
+                            </span>
+                        </Link>
+                    </p>
 
 
-            <button
-                type="submit"
-                className="custom-form-button primary-bg">
-                <span className="ml-3">
-                    Log In
-                </span>
-            </button>
+                    <button
+                        type="submit"
+                        className="custom-form-button primary-bg">
+                        <span className="ml-3">
+                            Log In
+                        </span>
+                    </button>
 
-            <p className="mt-6 text-sm text-gray-600 text-center">
-                Don't have an account,
-                <Link href={"/auth/signup"}>
-                    <span className="font-medium text-blue-500">
-                        Signup now ?
-                    </span>
-                </Link>
-            </p>
-        </form>
+                    <p className="mt-6 text-sm text-gray-600 text-center">
+                        Don't have an account,
+                        <Link href={"/auth/signup"}>
+                            <span className="font-medium text-blue-500">
+                                Signup now ?
+                            </span>
+                        </Link>
+                    </p>
+                </form>
+            </div>
+        </>
     )
 }

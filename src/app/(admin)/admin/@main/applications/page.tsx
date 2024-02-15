@@ -1,13 +1,15 @@
 "use client";
+import LoaderSm from "@/components/ui/LoaderSm";
 import Skeleton from "@/components/ui/Skeleton";
 import { TypeDispatch, TypeState } from "@/store";
-import { getAllApplicationsAction } from "@/store/actions/applications";
+import { acceptApplicationAction, getAllApplicationsAction } from "@/store/actions/applications";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function Applications() {
 
     const [loading, setLoading] = useState(true);
+    const [updating, setUpdating] = useState<any>(null);
     const dispatch: TypeDispatch = useDispatch();
     const data: any = useSelector((state: TypeState) => state.application.data);
 
@@ -17,12 +19,23 @@ export default function Applications() {
         });
     }, [dispatch]);
 
+    const handleApplicationAccept = (id: string, email: string) => {
+        setUpdating({
+            _id: id,
+        });
+        dispatch(acceptApplicationAction({
+            id,
+            email
+        })).then(() => dispatch(getAllApplicationsAction())).finally(() => {
+            setUpdating(null);
+        });
+    }
+
     return (
         <>
             {loading ? (
                 <>
                     <Skeleton width="100%" height="100px" />
-                    
                 </>
             ) : (
                 <>
@@ -39,6 +52,7 @@ export default function Applications() {
                             </thead >
                             <tbody>
                                 {data?.map((item: {
+                                    _id: string,
                                     email: string,
                                     phone: string,
                                     profession: string,
@@ -50,7 +64,26 @@ export default function Applications() {
                                         <td className="font-normal p-4 text-left border-r">{item.phone}</td>
                                         <td className="font-normal p-4 text-left border-r">{item?.profession}</td>
                                         <td className="font-normal p-4 text-left border-r">{item.profileDescription}</td>
-                                        <td className="font-normal p-4 text-left border-r">{item.accepted ? "Accepted!" : "Not Accepted!"}</td>
+                                        <td
+                                            className="font-normal p-4 text-left border-r"
+                                        >
+                                            {(updating && updating?._id === item._id) ? (
+                                                <>
+                                                    <button className="primary-bg h-8 w-24 flex items-center justify-center rounded text-white font-medium text-sm"><LoaderSm /></button>
+                                                </>
+                                            ) : (item.accepted ? (
+                                                <>
+                                                    <button className="primary-bg h-8 w-24 flex items-center justify-center rounded text-white font-medium text-sm">Accepted!</button>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <button
+                                                        onClick={() => { handleApplicationAccept(item._id, item.email) }}
+                                                        className="primary-bg h-8 w-24 flex items-center justify-center rounded text-white font-medium text-sm"
+                                                    >Accept</button>
+                                                </>
+                                            ))}
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>

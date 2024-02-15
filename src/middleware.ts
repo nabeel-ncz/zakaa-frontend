@@ -14,6 +14,9 @@ export async function middleware(req: NextRequest) {
     if (path.startsWith('/auth')) {
         return authExistMiddleware(req);
 
+    } else if (path.startsWith('/apply-to-teach')) {
+        return studentMiddleware(req);
+
     } else if (path.startsWith('/student')) {
         return studentMiddleware(req);
 
@@ -30,5 +33,11 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-    matcher: ["/auth/:path*", "/student/:path*", "/instructor/:path*", "/admin/:path*"],
+    matcher: [
+        "/auth/:path*", 
+        "/apply-to-teach/:path*", 
+        "/student/:path*", 
+        "/instructor/:path*", 
+        "/admin/:path*"
+    ],
 };

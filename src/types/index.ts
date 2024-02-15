@@ -11,3 +11,11 @@ export type LoginFormData = {
     email: string;
     password: string;
 }
+
+export type ApplyToTeachFormData = {
+    profession: string;
+    phone: string;
+    profileDescription: string;
+    linkedIn: string;
+    github: string;
+}

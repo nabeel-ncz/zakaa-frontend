@@ -80,7 +80,7 @@ export default function FileUpload(
                         onDragOver={handleDragOver}
                         onDragLeave={handleDragLeave}
                         onDrop={handleDrop}
-                        className={`${isDragging ? "secondary-bg" : "bg-white"} w-full h-56 flex flex-col gap-2 items-center justify-center border border-gray-400 border-dashed rounded-md`}>
+                        className={`${isDragging ? "secondary-bg" : "bg-white"} w-full h-40 flex flex-col gap-2 items-center justify-center border border-gray-400 border-dashed rounded-md`}>
                         <img src="/icons/upload-file.png" alt="" className="w-12 opacity-20" />
                         <h1 className="font-medium text-xs opacity-30">Drag and drop an pdf here, or click to upload</h1>
                         <button

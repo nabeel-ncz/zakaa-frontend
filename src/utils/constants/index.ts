@@ -1,0 +1,1 @@
+export const PUBLIC_RESOURCE_URL = 'http://localhost:5000';

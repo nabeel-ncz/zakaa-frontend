@@ -35,6 +35,11 @@ export default function CreateLesson({ params }: any) {
 
     useEffect(() => {
         const course = getObject("course");
+        if(!course){
+            toast.error("You are not allowed to access the page!", { position: 'top-right' });
+            router.back();
+            return;  
+        }
         if (course.lessons.length + 1 < lesson) {
             toast.error("You are not allowed to access the page!", { position: 'top-right' });
             router.back();
@@ -49,6 +54,11 @@ export default function CreateLesson({ params }: any) {
 
     useEffect(() => {
         const course = getObject("course");
+        if(!course){
+            toast.error("You are not allowed to access the page!", { position: 'top-right' });
+            router.back();
+            return;
+        }
         if(lesson > Number(course.numberOfLessons) ){
             toast.error("You are not allowed to access the page!", { position: 'top-right' });
             router.back();
@@ -99,16 +109,18 @@ export default function CreateLesson({ params }: any) {
 
             const course = getObject("course");
             const lessons = course.lessons;
-            const data = {
+            const courseData = {
                 ...course,
                 lessons: [...lessons, {
                     thumbnail: result.payload.data?.thumbnail,
                     video: result.payload.data?.lessonVideo,
-                    attachment: result.payload.data?.attachment
+                    attachment: result.payload.data?.attachment,
+                    title: data.lessonTitle,
+                    description: data.lessonDescription
                 }]
             };
 
-            storeObject("course", data);
+            storeObject("course", courseData);
 
             setLoading(false);
 

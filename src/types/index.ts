@@ -19,3 +19,16 @@ export type ApplyToTeachFormData = {
     linkedIn: string;
     github: string;
 }
+
+export type CreateCourseFormData = {
+    courseTitle: string;
+    courseCategory: string;
+    courseDescription: string;
+    numberOfLessons: string;
+}
+
+export type CreateLessonFormData = {
+    lessonTitle: string;
+    lessonDescription: string;
+}
+

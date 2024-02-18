@@ -8,7 +8,8 @@ export default function CourseFormField({
     fieldType,
     placeHolder,
     register,
-    errors
+    errors,
+    isNotZod
 }: {
     style?: string[],
     title: string,
@@ -18,27 +19,58 @@ export default function CourseFormField({
     placeHolder?: string,
     register?: any,
     errors?: any
+    isNotZod?: boolean
 }) {
     return (
         <div className={style?.join(' ')}>
-            <h2 className="font-medium text-xs mb-1 primary-text">{title} {required && <span className="text-red-700">*</span>}</h2>
+            <h2 className="font-medium text-xs mb-1">{title} {required && <span className="text-red-700">*</span>}</h2>
             {fieldType === "textarea" ? (
-                <textarea
-                    name={fieldName}
-                    placeholder={placeHolder ? placeHolder : ""}
-                    className="w-full h-28 px-8 py-3 rounded-lg font-medium border placeholder-gray-500 text-xs focus:outline-none border-gray-400 bg-white"
-                >
-                </textarea>
+                <>
+                    {isNotZod ? (
+                        <>
+                            <textarea
+                                name={fieldName}
+                                placeholder={placeHolder ? placeHolder : ""}
+                                className="w-full h-28 px-8 py-3 rounded-lg font-medium border placeholder-gray-500 text-xs focus:outline-none border-gray-400 bg-white"
+                            >
+                            </textarea>
+                        </>
+                    ) : (
+                        <>
+                            <textarea
+                                name={fieldName}
+                                placeholder={placeHolder ? placeHolder : ""}
+                                className="w-full h-28 px-8 py-3 rounded-lg font-medium border placeholder-gray-500 text-xs focus:outline-none border-gray-400 bg-white"
+                                {...register && register(fieldName)}
+                            >
+                            </textarea>
+                            {errors && errors[`${fieldName}`] && <span className="custom-form-error"> {errors[`${fieldName}`]?.message}</span>}
+                        </>
+                    )}
+                </>
             ) : (
-                <input
-                    name={fieldName}
-                    type={fieldType}
-                    placeholder={placeHolder ? placeHolder : ""}
-                    className="w-full px-8 py-3 rounded-lg font-medium border placeholder-gray-500 text-xs focus:outline-none border-gray-400 bg-white"
-                // {...register(`${fieldName}`)}
-                />
+                <>
+                    {isNotZod ? (
+                        <input
+                            name={fieldName}
+                            type={fieldType}
+                            placeholder={placeHolder ? placeHolder : ""}
+                            className="w-full px-8 py-3 rounded-lg font-medium border placeholder-gray-500 text-xs focus:outline-none border-gray-400 bg-white"
+                        />
+                    ) : (
+                        <>
+                            <input
+                                name={fieldName}
+                                type={fieldType}
+                                placeholder={placeHolder ? placeHolder : ""}
+                                className="w-full px-8 py-3 rounded-lg font-medium border placeholder-gray-500 text-xs focus:outline-none border-gray-400 bg-white"
+                                {...register && register(fieldName)}
+                            />
+                            {errors && errors[`${fieldName}`] && <span className="custom-form-error"> {errors[`${fieldName}`]?.message}</span>}
+                        </>
+                    )}
+                </>
             )}
-            {/* {errors[`${fieldName}`] && <span className="custom-form-error"> {errors[`${fieldName}`]?.message}</span>} */}
         </div>
     )
 }

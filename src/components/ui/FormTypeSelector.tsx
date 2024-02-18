@@ -22,7 +22,7 @@ export default function FormTypeSelector({
 
     return (
         <>
-            <h2 className="mt-4 font-medium text-xs mb-1 primary-text">{title}{required && <span className="text-red-700">*</span>}</h2>
+            <h2 className="mt-4 font-medium text-xs mb-1">{title}{required && <span className="text-red-700">*</span>}</h2>
             <div className="flex gap-2">
                 {types?.map((item: string) => (
                     <div

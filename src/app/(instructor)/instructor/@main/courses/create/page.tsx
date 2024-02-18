@@ -1,4 +1,5 @@
 "use client"
+import BanterLoader from "@/components/ui/BanterLoader";
 import CourseFormField from "@/components/ui/CourseFormField";
 import FormTypeSelector from "@/components/ui/FormTypeSelector";
 import ImageUpload from "@/components/ui/ImageUpload";
@@ -7,11 +8,12 @@ import { CreateCourseSchema } from "@/lib/validation/schema/createCourse";
 import { TypeDispatch } from "@/store";
 import { uploadCourseContent } from "@/store/actions/course";
 import { CreateCourseFormData } from "@/types";
-import { storeObject } from "@/utils/localStorage";
+import { getObject, storeObject } from "@/utils/localStorage";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { z } from "zod";
 
@@ -26,6 +28,15 @@ export default function CreateCourse() {
     const [trialDescription, setTrialDescription] = useState("");
     const [pricingType, setPricingType] = useState("free");
     const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
+
+
+    useEffect(() => {
+        if(getObject("course")){
+            router.replace("/instructor/courses");
+            toast.error("Complete you pending course!", { position: 'top-right' });
+        }
+    }, []);
 
     const {
         register,
@@ -41,6 +52,8 @@ export default function CreateCourse() {
             if (!courseThumbnail || !pricingType || (pricingType === "paid" && !trialVideo) || (trialVideo && (!trialTitle || !trialDescription))) {
                 return;
             }
+
+            setLoading(true);
 
             const result: any = await dispatch(uploadCourseContent({
                 courseThumbnail,
@@ -74,9 +87,12 @@ export default function CreateCourse() {
 
             storeObject("course", courseData);
 
+            setLoading(false);
+
             router.push("create/1");
 
         } catch (error: any) {
+            setLoading(false);
             setError(error.message || "Something went wrong, Try again!");
         }
     }
@@ -84,9 +100,16 @@ export default function CreateCourse() {
     return (
         <>
             {error && (
-                <div className="fixed top-0 left-0 flex items-center justify-center w-full min-h-screen bg-black opacity-15">
-                    <h2 className="font-medium text-red-900 text-lg">{error}</h2>
-                    <button onClick={() => { setError(null) }} >Try again!</button>
+                <div className="fixed z-50 top-0 left-0 flex items-center justify-center w-full min-h-screen bg-[#00000050]">
+                    <div className="px-12 py-12 bg-white flex flex-col items-center justify-center rounded-md gap-2">
+                        <h2 className="font-medium text-red-900 text-lg">{error}</h2>
+                        <button className="px-6 py-2 rounded font-medium text-white bg-black" onClick={() => { setError(null) }} >Try again!</button>
+                    </div>
+                </div>
+            )}
+            {loading && (
+                <div className="fixed z-50 top-0 left-0 flex items-center justify-center w-full min-h-screen bg-[#00000050]">
+                    <BanterLoader />
                 </div>
             )}
             <div className="w-full px-10 flex items-end justify-end">

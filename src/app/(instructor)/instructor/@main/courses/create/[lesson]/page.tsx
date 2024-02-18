@@ -1,31 +1,67 @@
 "use client";
+import BanterLoader from "@/components/ui/BanterLoader";
 import CourseFormField from "@/components/ui/CourseFormField";
 import FileUpload from "@/components/ui/FileUpload";
 import ImageUpload from "@/components/ui/ImageUpload";
 import VideoUpload from "@/components/ui/VideoUpload";
 import { CreateLessonSchema } from "@/lib/validation/schema/createLesson";
+import { TypeDispatch } from "@/store";
+import { uploadLessonContent } from "@/store/actions/course/uploadLessonContent";
 import { CreateLessonFormData } from "@/types";
+import { getObject, storeObject } from "@/utils/localStorage";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
 import { z } from "zod";
 
 
 export default function CreateLesson({ params }: any) {
-    
+
     const { lesson } = params;
     const router = useRouter();
+    const dispatch: TypeDispatch = useDispatch();
 
     const [submitted, setSubmitted] = useState(false);
-    const [lessonVideo,setLessonVideo] = useState(null);
+    const [lessonVideo, setLessonVideo] = useState(null);
     const [lessonThumbnail, setLessonThumbnail] = useState(null);
     const [lessonAttachment, setLessonAttachment] = useState(null);
     const [attachmentTitle, setAttachmentTitle] = useState("");
+    const [actionText, setActionText] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
 
-    // useEffect(() => {
-    //     router.replace("create");
-    // }, []);
+    useEffect(() => {
+        const course = getObject("course");
+        if (course.lessons.length + 1 < lesson) {
+            toast.error("You are not allowed to access the page!", { position: 'top-right' });
+            router.back();
+            return;
+        }
+        if (lesson <= course.lessons.length) {
+            toast.error("You are already completed this, go to next!", { position: 'top-right' });
+            router.back();
+            return;
+        }
+    }, []);
+
+    useEffect(() => {
+        const course = getObject("course");
+        if(lesson > Number(course.numberOfLessons) ){
+            toast.error("You are not allowed to access the page!", { position: 'top-right' });
+            router.back();
+            return;
+        }
+
+        if (course.numberOfLessons === lesson) {
+            setActionText("Complete");
+        } else {
+            setActionText("Next");
+        }
+
+    }, []);
 
     const {
         register,
@@ -35,26 +71,82 @@ export default function CreateLesson({ params }: any) {
         resolver: zodResolver(CreateLessonSchema),
     });
 
-    const onSubmit = (data: CreateLessonFormData) => {
-        setSubmitted(true);
-        if(!lessonVideo || !lessonThumbnail){
-            return;
+    const onSubmit = async (data: CreateLessonFormData) => {
+        try {
+            setSubmitted(true);
+            if (!lessonVideo || !lessonThumbnail) {
+                return;
+            }
+            if (lessonAttachment && !attachmentTitle) {
+                return;
+            }
+
+            setLoading(true);
+
+            const result: any = await dispatch(uploadLessonContent({
+                lessonThumbnail,
+                lessonVideo,
+                lessonAttachment
+            }));
+
+            if (result?.error && result?.error?.message) {
+                throw new Error(result?.error?.message);
+            }
+
+            if (!result.payload || !result.payload.success) {
+                throw new Error("Something went wrong!");
+            }
+
+            const course = getObject("course");
+            const lessons = course.lessons;
+            const data = {
+                ...course,
+                lessons: [...lessons, {
+                    thumbnail: result.payload.data?.thumbnail,
+                    video: result.payload.data?.lessonVideo,
+                    attachment: result.payload.data?.attachment
+                }]
+            };
+
+            storeObject("course", data);
+
+            setLoading(false);
+
+            if(actionText==="Complete"){
+                router.push("finish");
+                return;
+            }
+
+            router.push(`${Number(lesson) + 1}`);
+
+        } catch (error: any) {
+            setLoading(false);
+            setError(error?.message || "Something went wrong, try again!");
         }
-        if(lessonAttachment && !attachmentTitle){
-            return;
-        }
-        console.log(data)
     }
 
     return (
         <>
+            {error && (
+                <div className="fixed z-50 top-0 left-0 flex items-center justify-center w-full min-h-screen bg-[#00000050]">
+                    <div className="px-12 py-12 bg-white flex flex-col items-center justify-center rounded-md gap-2">
+                        <h2 className="font-medium text-red-900 text-lg">{error}</h2>
+                        <button className="px-6 py-2 rounded font-medium text-white bg-black" onClick={() => { setError(null) }} >Try again!</button>
+                    </div>
+                </div>
+            )}
+            {loading && (
+                <div className="fixed z-50 top-0 left-0 flex items-center justify-center w-full min-h-screen bg-[#00000050]">
+                    <BanterLoader />
+                </div>
+            )}
             <div className="w-full px-10 flex items-end justify-between">
                 <div>
                     <h2 className="font-bold">Lesson {lesson}</h2>
                 </div>
                 <div>
                     <button className="bg-white px-6 py-2 rounded opacity-60 me-4">Prev</button>
-                    <button onClick={handleSubmit(onSubmit)} className="secondary-bg px-6 py-2 rounded border border-[#8027C2] me-4">Next</button>
+                    <button onClick={handleSubmit(onSubmit)} className="secondary-bg px-6 py-2 rounded border border-[#8027C2] me-4">{actionText || "Next"}</button>
                 </div>
             </div>
             <div className="w-full px-10 py-4 flex gap-12">
@@ -93,7 +185,7 @@ export default function CreateLesson({ params }: any) {
 
                     <h2 className="mt-4 font-medium text-xs mb-1 ">Lesson Attachments</h2>
                     <FileUpload onChange={(file: any) => { setLessonAttachment(file) }} />
-                    
+
 
                     <h2 className="mt-4 font-medium text-xs mb-1 ">Attachment title</h2>
                     <input

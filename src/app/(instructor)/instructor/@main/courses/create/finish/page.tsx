@@ -3,6 +3,7 @@ import BanterLoader from "@/components/ui/BanterLoader";
 import LessonCard from "@/components/user/LessonCard";
 import { TypeDispatch, TypeState } from "@/store";
 import { createCourseAction } from "@/store/actions/course";
+import { getInstructorCoursesAction } from "@/store/actions/course/getInstructorCoursesAction";
 import { PUBLIC_RESOURCE_URL } from "@/utils/constants";
 import { deleteObject, getObject } from "@/utils/localStorage";
 import { useRouter } from "next/navigation";
@@ -19,7 +20,7 @@ export default function CourseCreationFinish() {
     const user: any = useSelector((state: TypeState) => state.user.data);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-
+    
     useEffect(() => {
         const course = getObject("course");
         if (!course) {
@@ -34,6 +35,7 @@ export default function CourseCreationFinish() {
         }
         setPendingCourse(course);
     }, []);
+
 
     const handleSubmition = async () => {
         const { numberOfLessons, pricing, ...data } = pendingCourse;
@@ -66,6 +68,8 @@ export default function CourseCreationFinish() {
             setError(null);
             setLoading(false);
 
+            deleteObject("course");
+
             router.replace("/instructor/courses");
 
         } catch (error: any) {
@@ -92,19 +96,21 @@ export default function CourseCreationFinish() {
             )}
             {pendingCourse ? (
                 <>
-                    <div className="w-full flex items-center justify-between px-10 py-4 gap-4">
-                        <img crossOrigin="anonymous" src={`${PUBLIC_RESOURCE_URL}/api/course/images/${pendingCourse.thumbnail}`} alt="" className="w-1/2 h-48" />
-                        <div className="flex flex-col items-start justify-center gap-1">
-                            <h2 className="font-bold text-3xl">
-                                {pendingCourse.title.split(" ").map((word: string, index: number, array: string[]) => (
-                                    <span key={index} className={index === array.length - 1 ? "text-purple-800" : ""}>
-                                        {word + " "}
-                                    </span>
-                                ))}
-                            </h2>
-                            <p className="font-medium text-sm line-clamp-3 w-11/12">{pendingCourse.description}</p>
-                            <p className="font-medium text-sm">Category : {pendingCourse?.categor || "Software development"}</p>
-                            <p className="font-medium text-sm">Number of lessons : {pendingCourse.numberOfLessons}</p>
+                    <div className="px-10">
+                        <div className="w-full flex items-center justify-between px-4 py-4 gap-8 bg-white rounded shadow-md">
+                            <img crossOrigin="anonymous" src={`${PUBLIC_RESOURCE_URL}/api/course/images/${pendingCourse.thumbnail}`} alt="" className="w-1/2 h-48" />
+                            <div className="flex flex-col items-start justify-center gap-1">
+                                <h2 className="font-bold text-3xl">
+                                    {pendingCourse.title.split(" ").map((word: string, index: number, array: string[]) => (
+                                        <span key={index} className={index === array.length - 1 ? "text-purple-800" : ""}>
+                                            {word + " "}
+                                        </span>
+                                    ))}
+                                </h2>
+                                <p className="text-gray-500 font-medium text-sm line-clamp-3 w-11/12">{pendingCourse.description}</p>
+                                <p className="text-gray-500 font-medium text-sm">Category : {pendingCourse?.category || "Software development"}</p>
+                                <p className="text-gray-500 font-medium text-sm">Number of lessons : {pendingCourse.numberOfLessons}</p>
+                            </div>
                         </div>
                     </div>
                     <div className="w-full px-10 py-4 flex flex-wrap gap-5">

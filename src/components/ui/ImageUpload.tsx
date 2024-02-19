@@ -33,7 +33,9 @@ export default function ImageUpload(
 
         const file = e.dataTransfer.files[0];
         setSelectedFile(file);
-        onChange(file)
+        if(file.type.startsWith("image/")){
+            onChange(file);
+        }
     };
 
     const handleButtonClick = () => {
@@ -43,7 +45,9 @@ export default function ImageUpload(
     const handleFileChange = (e: any) => {
         const file = e.target.files[0];
         setSelectedFile(file);
-        onChange(file);
+        if(file.type.startsWith("image/")){
+            onChange(file);
+        }
     };
 
     const handleClearFile = () => {

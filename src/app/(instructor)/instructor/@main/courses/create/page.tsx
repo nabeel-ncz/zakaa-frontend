@@ -115,7 +115,7 @@ export default function CreateCourse() {
             )}
             <div className="w-full px-10 flex items-end justify-end">
                 <div>
-                    <button className="bg-white px-6 py-2 rounded opacity-60 me-4">Prev</button>
+                    {/* <button className="bg-white px-6 py-2 rounded opacity-60 me-4">Prev</button> */}
                     <button onClick={handleSubmit(onSubmit)} className="secondary-bg px-6 py-2 rounded border border-[#8027C2] me-4">Next</button>
                 </div>
             </div>

@@ -15,7 +15,7 @@ export default function LessonCard({
         <div className="w-[17rem] relative bg-white h-64 shadow-md rounded-md overflow-hidden flex flex-col items-center justify-center">
             <img crossOrigin="anonymous" src={image} alt="" className="w-11/12 h-36" />
             <div className="flex flex-col items-start justify-start w-11/12">
-                <h2 className="mt-2 font-medium text-md text-wrap">{title}</h2>
+                <h2 className="mt-2 font-medium text-md text-wrap line-clamp-1">{title}</h2>
                 <p className="text-xs font-light line-clamp-2">{description}</p>
             </div>
             {loading && (

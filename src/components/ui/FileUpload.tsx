@@ -33,7 +33,9 @@ export default function FileUpload(
 
         const file = e.dataTransfer.files[0];
         setSelectedFile(file);
-        onChange(file)
+        if (file.type?.startsWith("application/pdf")) {
+            onChange(file);
+        }
     };
 
     const handleButtonClick = () => {
@@ -43,7 +45,9 @@ export default function FileUpload(
     const handleFileChange = (e: any) => {
         const file = e.target.files[0];
         setSelectedFile(file);
-        onChange(file);
+        if (file.type?.startsWith("application/pdf")) {
+            onChange(file);
+        }
     };
 
     const handleClearFile = () => {
@@ -61,8 +65,12 @@ export default function FileUpload(
                         onMouseLeave={() => setShowClearButton(false)}
                     >
 
-                        <iframe src={URL.createObjectURL(selectedFile)} title="PDF Viewer" style={{ width: '100%', height: '100%', border: 'none' }}></iframe>
-
+                        {selectedFile.type.startsWith("application/pdf") ? (
+                             <iframe src={URL.createObjectURL(selectedFile)} title="PDF Viewer" style={{ width: '100%', height: '100%', border: 'none' }}></iframe>
+                        ) : (
+                            <h2>Unsuppoarted file format!</h2>
+                        )}
+                       
                         {showClearButton && (
                             <button
                                 className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white text-gray-700 px-4 py-2 border border-gray-300 rounded"

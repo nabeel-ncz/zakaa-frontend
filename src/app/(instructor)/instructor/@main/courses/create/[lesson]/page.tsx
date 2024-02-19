@@ -158,7 +158,7 @@ export default function CreateLesson({ params }: any) {
                     <h2 className="font-bold">Lesson {lesson}</h2>
                 </div>
                 <div>
-                    <button className="bg-white px-6 py-2 rounded opacity-60 me-4">Prev</button>
+                    {/* <button className="bg-white px-6 py-2 rounded opacity-60 me-4">Prev</button> */}
                     <button onClick={handleSubmit(onSubmit)} className="secondary-bg px-6 py-2 rounded border border-[#8027C2] me-4">{actionText || "Next"}</button>
                 </div>
             </div>

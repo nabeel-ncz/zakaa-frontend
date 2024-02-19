@@ -5,6 +5,7 @@ import { fetchUserAction } from "@/store/actions";
 import { useDispatch, useSelector } from "react-redux";
 import { TypeDispatch, TypeState } from "@/store";
 import Skeleton from "@/components/ui/Skeleton";
+import NavLink from "@/components/common/NavLink";
 
 export default function InstructorLayout({
     children
@@ -32,42 +33,42 @@ export default function InstructorLayout({
                 </div>
                 <div className="flex-1 overflow-y-auto border-r secondary-bg">
                     <nav className="flex flex-col gap-4 flex-1 px-4 py-4">
-                        <Link href="/instructor">
-                            <div className="pl-6 py-4 flex items-center justify-start gap-4 bg-white rounded-lg shadow">
+                        <NavLink href="/instructor">
+                            <div className="pl-6 py-4 flex items-center justify-start gap-4 bg-white rounded-lg">
                                 <img src="/svgs/home.svg" alt="" className="w-5 opacity-80" />
                                 <span className="mt-1 font-medium text-sm">Dashboard</span>
                             </div>
-                        </Link>
-                        <Link href="/instructor/courses">
+                        </NavLink>
+                        <NavLink href="/instructor/courses">
                             <div className="pl-6 py-4 flex items-center justify-start gap-4 bg-white rounded-lg">
-                                <img src="/svgs/book-open.svg" alt="" className="w-5 opacity-50" />
-                                <span className="mt-1 font-medium text-sm opacity-50">My Courses</span>
+                                <img src="/svgs/book-open.svg" alt="" className="w-5 opacity-80" />
+                                <span className="mt-1 font-medium text-sm">My Courses</span>
                             </div>
-                        </Link>
-                        <Link href="/instructor/analytics">
+                        </NavLink>
+                        <NavLink href="/instructor/analytics">
                             <div className="pl-6 py-4 flex items-center justify-start gap-4 bg-white rounded-lg">
-                                <img src="/svgs/pie-chart.svg" alt="" className="w-5 opacity-50" />
-                                <span className="mt-1 font-medium text-sm opacity-50">Analytics</span>
+                                <img src="/svgs/pie-chart.svg" alt="" className="w-5 opacity-80" />
+                                <span className="mt-1 font-medium text-sm">Analytics</span>
                             </div>
-                        </Link>
-                        <Link href="/instructor/assessments">
+                        </NavLink>
+                        <NavLink href="/instructor/assessments">
                             <div className="pl-6 py-4 flex items-center justify-start gap-4 bg-white rounded-lg">
-                                <img src="/svgs/bar-chart-2.svg" alt="" className="w-5 opacity-50" />
-                                <span className="mt-1 font-medium text-sm opacity-50">Assessments</span>
+                                <img src="/svgs/bar-chart-2.svg" alt="" className="w-5 opacity-80" />
+                                <span className="mt-1 font-medium text-sm">Assessments</span>
                             </div>
-                        </Link>
-                        <Link href="/instructor/chat">
+                        </NavLink>
+                        <NavLink href="/instructor/chat">
                             <div className="pl-6 py-4 flex items-center justify-start gap-4 bg-white rounded-lg">
-                                <img src="/svgs/message-circle.svg" alt="" className="w-5 opacity-50" />
-                                <span className="mt-1 font-medium text-sm opacity-50">Messages</span>
+                                <img src="/svgs/message-circle.svg" alt="" className="w-5 opacity-80" />
+                                <span className="mt-1 font-medium text-sm">Messages</span>
                             </div>
-                        </Link>
-                        <Link href="/instructor/settings">
+                        </NavLink>
+                        <NavLink href="/instructor/settings">
                             <div className="pl-6 py-4 flex items-center justify-start gap-4 bg-white rounded-lg">
-                                <img src="/svgs/settings.svg" alt="" className="w-5 opacity-50" />
-                                <span className="mt-1 font-medium text-sm opacity-50">Settings</span>
+                                <img src="/svgs/settings.svg" alt="" className="w-5 opacity-80" />
+                                <span className="mt-1 font-medium text-sm">Settings</span>
                             </div>
-                        </Link>
+                        </NavLink>
                     </nav>
                 </div>
             </div>

@@ -60,9 +60,13 @@ export default function AssessmentQuestion({ params }: any) {
                         <h2 className="mt-4 font-medium text-xs mb-1 ">Answer <span className="text-red-700">*</span></h2>
                         <select
                             name={"name"}
-                            className="w-full h-12 rounded-lg font-medium border px-4 text-gray-400 text-xs focus:outline-none border-gray-400 bg-white"
+                            className="w-full h-12 rounded-lg font-medium border px-4 text-xs focus:outline-none border-gray-400 bg-white"
                         >
                             <option>Select the correct answer</option>
+                            <option value={"option_1"}>Option 1</option>
+                            <option value={"option_2"}>Option 2</option>
+                            <option value={"option_3"}>Option 3</option>
+                            <option value={"option_4"}>Option 4</option>
                         </select>
                     </div>
                 </div>

@@ -100,7 +100,7 @@ export default function CreateCourse() {
     return (
         <>
             {error && (
-                <div className="fixed z-50 top-0 left-0 flex items-center justify-center w-full min-h-screen bg-[#00000050]">
+                <div className="fixed z-50 top-0 left-0 flex items-center justify-center w-full min-h-screen bg-[#00000050] backdrop-blur-md">
                     <div className="px-12 py-12 bg-white flex flex-col items-center justify-center rounded-md gap-2">
                         <h2 className="font-medium text-red-900 text-lg">{error}</h2>
                         <button className="px-6 py-2 rounded font-medium text-white bg-black" onClick={() => { setError(null) }} >Try again!</button>
@@ -108,8 +108,9 @@ export default function CreateCourse() {
                 </div>
             )}
             {loading && (
-                <div className="fixed z-50 top-0 left-0 flex items-center justify-center w-full min-h-screen bg-[#00000050]">
+                <div className="fixed z-50 top-0 left-0 flex flex-col items-center justify-center w-full min-h-screen bg-[#00000050] backdrop-blur-md">
                     <BanterLoader />
+                    <h2 className="absolute top-[60%] font-medium">Resources are processing, Please wait!</h2>
                 </div>
             )}
             <div className="w-full px-10 flex items-end justify-end">

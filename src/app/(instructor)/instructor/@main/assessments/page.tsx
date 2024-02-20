@@ -1,19 +1,39 @@
 "use client";
+import { TypeDispatch } from "@/store";
+import { fetchUserAction } from "@/store/actions";
+import { getAssessmentsByInstructorIdAction } from "@/store/actions/course/getAssessmentsByInstructorIdAction";
 import { deleteObject, getObject } from "@/utils/localStorage";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
 
 export default function Assessments() {
 
     const router = useRouter();
+    const dispatch: TypeDispatch = useDispatch();
     const [pendingExam, setPendingExam] = useState<any>(null);
+    const [createdExams, setCreatedExams] = useState<any>(null);
 
     useEffect(() => {
         const exam = getObject("exam")
         if (exam) {
             setPendingExam(exam);
         }
+    }, []);
+
+    useEffect(() => {
+        dispatch(fetchUserAction()).then((res1) => {
+            if (res1.payload.success) {
+                dispatch(getAssessmentsByInstructorIdAction({
+                    instructorId: res1.payload.data._id
+                })).then((res2) => {
+                    if(res2.payload.success){
+                        setCreatedExams(res2.payload.data);
+                    }
+                })
+            }
+        })
     }, []);
 
     const handleDelete = () => {
@@ -47,8 +67,8 @@ export default function Assessments() {
             </div>
             <div className="w-full px-10 py-4 flex flex-wrap gap-5">
                 {pendingExam && (
-                    <div className="w-[17rem] relative bg-white h-[12rem] shadow-md rounded-md overflow-hidden flex flex-col items-center justify-center">
-                        <div className="absolute flex items-center justify-center w-11/12 h-32 bg-[rgba(255,255,255,0.5)] top-3 backdrop-blur-sm">
+                    <div className="w-[17rem] relative bg-white h-[10rem] shadow-md rounded-md overflow-hidden flex flex-col items-center justify-center">
+                        <div className="absolute flex items-center justify-center w-11/12 h-24 bg-[rgba(255,255,255,0.5)] top-3 backdrop-blur-sm">
                             <h1 className="font-medium text-black">Pending Assessment</h1>
                         </div>
                         <div className="flex flex-col items-start justify-start w-11/12">
@@ -56,8 +76,6 @@ export default function Assessments() {
                             <p className="text-xs font-light">Total questions : 10</p>
                             <p className="text-xs font-light">Total mark : 10</p>
                             <p className="text-xs font-light">Pass mark : 10</p>
-                            <p className="text-xs font-light line-clamp-1">Course : Web development course</p>
-                            <p className="text-xs font-light line-clamp-1">Lesson (2) : Fundamentals of html & css</p>
                             <div className="flex w-full items-center justify-end mt-4 gap-2">
                                 <button onClick={handleDelete} className="px-4 py-1 rounded border border-black font-medium text-black text-xs">Delete</button>
                                 <button onClick={handlePendingConinuation} className="px-4 py-1 rounded bg-black font-medium text-white text-xs" >Continue</button>
@@ -65,6 +83,21 @@ export default function Assessments() {
                         </div>
                     </div>
                 )}
+
+                {createdExams?.map((item: any) => (
+                    <div className="w-[17rem] relative bg-white h-[10rem] shadow-md rounded-md overflow-hidden flex flex-col items-center justify-center">
+                        <div className="flex flex-col items-start justify-start w-11/12">
+                            <h2 className="mt-2 font-medium text-md text-wrap line-clamp-1">{item.title}</h2>
+                            <p className="text-xs font-light">Total questions : {item.questions.length}</p>
+                            <p className="text-xs font-light">Total mark : {item.totalScore}</p>
+                            <p className="text-xs font-light">Pass mark : {item.passingScore}</p>
+                            <div className="flex w-full items-center justify-end mt-4 gap-2">
+                                <button className="px-4 py-1 rounded border border-black font-medium text-black text-xs">Delete</button>
+                                <button className="px-4 py-1 rounded bg-black font-medium text-white text-xs" >View</button>
+                            </div>
+                        </div>
+                    </div>
+                ))}
 
             </div>
         </div>

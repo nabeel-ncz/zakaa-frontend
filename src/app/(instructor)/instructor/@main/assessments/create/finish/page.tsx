@@ -3,8 +3,9 @@ import BanterLoader from "@/components/ui/BanterLoader";
 import { TypeDispatch } from "@/store";
 import { fetchUserAction } from "@/store/actions";
 import { getCourseAction } from "@/store/actions/course";
+import { createExamAction } from "@/store/actions/course/createExamAction";
 import { PUBLIC_RESOURCE_URL } from "@/utils/constants";
-import { getObject } from "@/utils/localStorage";
+import { deleteObject, getObject } from "@/utils/localStorage";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -51,8 +52,38 @@ export default function AssessmentFinish() {
 
     }, []);
 
-    const handleSubmition = () => {
-        
+    const handleSubmition = async () => {
+        const { totalNoOfQuestions, ...data } = exam;
+        const examData = {
+            ...data,
+            passingScore: Number(data.passingScore),
+            questionScore: Number(data.questionScore)
+        };
+
+        try {
+            setLoading(true);
+            
+            const result: any = await dispatch(createExamAction(examData));
+            
+            if (result?.error && result?.error?.message) {
+                throw new Error(result?.error?.message);
+            }
+
+            if (!result.payload || !result.payload.success) {
+                throw new Error("Something went wrong!");
+            }
+
+            setError(null);
+            setLoading(false);
+
+            deleteObject("exam");
+            
+            router.replace("/instructor/assessments");
+
+        } catch (error: any){
+            setError(error?.message || "Something went wrong, try again!");;
+            setLoading(false);
+        }
     };
 
     return (

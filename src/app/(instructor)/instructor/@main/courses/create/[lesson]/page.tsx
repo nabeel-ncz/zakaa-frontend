@@ -37,17 +37,17 @@ export default function CreateLesson({ params }: any) {
         const course = getObject("course");
         if (!course) {
             toast.error("You are not allowed to access the page!", { position: 'top-right' });
-            router.back();
+            router.replace("/instructor/courses");
             return;
         }
         if (course.lessons.length + 1 < lesson) {
             toast.error("You are not allowed to access the page!", { position: 'top-right' });
-            router.back();
+            router.replace("/instructor/courses");
             return;
         }
         if (lesson <= course.lessons.length) {
             toast.error("You are already completed this, go to next!", { position: 'top-right' });
-            router.back();
+            router.replace("/instructor/courses");
             return;
         }
     }, []);
@@ -56,12 +56,12 @@ export default function CreateLesson({ params }: any) {
         const course = getObject("course");
         if (!course) {
             toast.error("You are not allowed to access the page!", { position: 'top-right' });
-            router.back();
+            router.replace("/instructor/courses");
             return;
         }
         if (lesson > Number(course.numberOfLessons)) {
             toast.error("You are not allowed to access the page!", { position: 'top-right' });
-            router.back();
+            router.replace("/instructor/courses");
             return;
         }
 

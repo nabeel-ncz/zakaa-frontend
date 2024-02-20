@@ -56,9 +56,11 @@ export default function Courses() {
         const course = getObject("course");
         if (Number(course.numberOfLessons) === course.lessons.length) {
             router.push(`courses/create/finish`);
+            return;
         }
         if (Number(course.numberOfLessons) > course.lessons.length) {
             router.push(`courses/create/${course.lessons.length + 1}`);
+            return;
         }
     }
 

@@ -24,12 +24,12 @@ export default function CourseCreationFinish() {
     useEffect(() => {
         const course = getObject("course");
         if (!course) {
-            router.back();
+            router.replace("/instructor/courses");
             toast.error("Please finish your pending course");
             return;
         }
         if (course?.lessons?.length < course.numberOfLessons) {
-            router.back();
+            router.replace("/instructor/courses");
             toast.error("Please finish your pending course");
             return;
         }

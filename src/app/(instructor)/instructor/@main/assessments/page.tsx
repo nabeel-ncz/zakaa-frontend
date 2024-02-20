@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 export default function Assessments() {
 
     const router = useRouter();
-    const [pendingExam, setPendingExam] = useState(null);
+    const [pendingExam, setPendingExam] = useState<any>(null);
 
     useEffect(() => {
         const exam = getObject("exam")
@@ -18,6 +18,7 @@ export default function Assessments() {
 
     const handleDelete = () => {
         deleteObject("exam");
+        setPendingExam(null);
     }
 
     const navigateToCreate = () => {
@@ -26,6 +27,17 @@ export default function Assessments() {
             return;
         }
         router.push("assessments/create");
+    }
+
+    const handlePendingConinuation = () => {
+        if (pendingExam.totalNoOfQuestions === pendingExam.questions.length) {
+            router.push(`assessments/create/finish`);
+            return;
+        }
+        if (pendingExam.totalNoOfQuestions > pendingExam.questions.length) {
+            router.push(`assessments/create/${pendingExam.questions.length + 1}`)
+            return;
+        }
     }
 
     return (
@@ -47,8 +59,8 @@ export default function Assessments() {
                             <p className="text-xs font-light line-clamp-1">Course : Web development course</p>
                             <p className="text-xs font-light line-clamp-1">Lesson (2) : Fundamentals of html & css</p>
                             <div className="flex w-full items-center justify-end mt-4 gap-2">
-                                <button className="px-4 py-1 rounded border border-black font-medium text-black text-xs">Delete</button>
-                                <button className="px-4 py-1 rounded bg-black font-medium text-white text-xs" >Continue</button>
+                                <button onClick={handleDelete} className="px-4 py-1 rounded border border-black font-medium text-black text-xs">Delete</button>
+                                <button onClick={handlePendingConinuation} className="px-4 py-1 rounded bg-black font-medium text-white text-xs" >Continue</button>
                             </div>
                         </div>
                     </div>

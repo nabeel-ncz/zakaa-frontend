@@ -32,3 +32,20 @@ export type CreateLessonFormData = {
     lessonDescription: string;
 }
 
+export type CreateExamFormData = {
+    title: string;
+    lessonId: string;
+    totalNoOfQuestions: string;
+    scoreForEachQuestion: string;
+    passMark: string;
+}
+
+export type CreateQuestionFormData = {
+    question: string;
+    option_1: string;
+    option_2: string;
+    option_3: string;
+    option_4: string;
+    answer: string;
+}
+

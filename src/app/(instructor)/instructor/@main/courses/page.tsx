@@ -120,7 +120,9 @@ export default function Courses() {
                                             item.isPublished ? "UnPublish" : "Publish"
                                         )}
                                     </button>
-                                    <button className="px-4 py-1 rounded bg-black font-medium text-white text-xs" onClick={navigateToLesson}>View</button>
+                                    <button className="px-4 py-1 rounded bg-black font-medium text-white text-xs" onClick={() => {
+                                        router.push(`courses/${item._id}`);
+                                    }}>View</button>
                                 </div>
                             </div>
                         </div>

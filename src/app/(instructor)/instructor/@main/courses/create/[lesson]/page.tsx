@@ -164,8 +164,6 @@ export default function CreateLesson({ params }: any) {
             </div>
             <div className="w-full px-10 py-4 flex gap-12">
                 <div className="w-6/12">
-
-
                     <h2 className="font-medium text-xs mb-1 ">Lesson Resource <span className="text-red-700">*</span></h2>
                     <VideoUpload onChange={(file: any) => { setLessonVideo(file) }} />
                     {(submitted && !lessonVideo) && <span className="custom-form-error">Video is required!</span>}

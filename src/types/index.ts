@@ -26,6 +26,11 @@ export type CreateCourseFormData = {
     numberOfLessons: string;
 }
 
+export type UpdateCourseFormData = {
+    courseTitle: string;
+    courseDescription: string;
+}
+
 export type CreateLessonFormData = {
     lessonTitle: string;
     lessonDescription: string;

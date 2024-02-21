@@ -54,7 +54,7 @@ export default function page({ params }: any) {
       courseId: course?._id,
       lessonId: lesson?._id,
       title: lessonTitle,
-      description: lessonThumbnail,
+      description: lessonDescription,
     }
     if (isThumbnailChanged) {
       changes['thumbnail'] = lessonThumbnail;

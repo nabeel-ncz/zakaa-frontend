@@ -74,7 +74,7 @@ export default function Header() {
                                                     <Skeleton width="40px" height="14px" />
                                                 </div>
                                             ) : (
-                                                <div className="rounded secondary-bg py-3.5 px-4">
+                                                <div className="rounded secondary-bg py-3.5 px-[34px]">
                                                     <Link href={"/auth/login"}>
                                                         <h2 className="primary-text font-bold text-sm">Login</h2>
                                                     </Link>

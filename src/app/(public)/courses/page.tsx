@@ -1,10 +1,25 @@
 "use client";
 import Header from "@/components/common/Header";
+import { TypeDispatch } from "@/store";
+import { getPublicCoursesAction } from "@/store/actions/course";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 
 export default function Courses() {
 
+    const dispatch: TypeDispatch = useDispatch();
+    const [courses, setCourses] = useState(null);
     const router = useRouter();
+
+    useEffect(() => {
+        dispatch(getPublicCoursesAction())
+            .then((res) => {
+                if (res.payload.success) {
+                    setCourses(res.payload.data);
+                }
+            });
+    }, []);
 
     return (
         <>

@@ -1,6 +1,8 @@
 "use client";
+import LoaderSm from "@/components/ui/LoaderSm";
 import { TypeDispatch, TypeState } from "@/store";
 import { fetchUserAction } from "@/store/actions";
+import { updateCourseAction } from "@/store/actions/course";
 import { getInstructorCoursesAction } from "@/store/actions/course/getInstructorCoursesAction";
 import { PUBLIC_RESOURCE_URL } from "@/utils/constants";
 import { deleteObject, getObject } from "@/utils/localStorage";
@@ -16,6 +18,7 @@ export default function Courses() {
     const user: any = useSelector((state: TypeState) => state.user.data);
     const [pendingCourse, setPendingCourse] = useState<any>(null);
     const [createdCourses, setCreatedCourses] = useState<any>(null);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const course = getObject("course")
@@ -25,6 +28,10 @@ export default function Courses() {
     }, []);
 
     useEffect(() => {
+        handleGetCourses();
+    }, []);
+
+    const handleGetCourses = () => {
         dispatch(fetchUserAction()).then((res1) => {
             if (res1.payload.success) {
                 dispatch(getInstructorCoursesAction({
@@ -36,7 +43,7 @@ export default function Courses() {
                 })
             }
         });
-    }, []);
+    }
 
 
     const handleDelete = () => {
@@ -54,15 +61,26 @@ export default function Courses() {
 
     const navigateToLesson = () => {
         const course = getObject("course");
-        if (Number(course.numberOfLessons) === course.lessons.length) {
+        if (Number(course?.numberOfLessons) === course?.lessons.length) {
             router.push(`courses/create/finish`);
             return;
         }
-        if (Number(course.numberOfLessons) > course.lessons.length) {
-            router.push(`courses/create/${course.lessons.length + 1}`);
+        if (Number(course?.numberOfLessons) > course?.lessons.length) {
+            router.push(`courses/create/${course?.lessons.length + 1}`);
             return;
         }
     }
+
+    const handlePublishing = (data: any) => {
+        setLoading(true);
+        dispatch(updateCourseAction({
+            ...data,
+            isPublished: !data.isPublished
+        })).finally(() => {
+            handleGetCourses();
+            setLoading(false);
+        });
+    };
 
     return (
         <div className="w-full min-h-screen">
@@ -95,7 +113,13 @@ export default function Courses() {
                                 <h2 className="mt-2 font-medium text-md text-wrap line-clamp-1">{item?.title}</h2>
                                 <p className="text-xs font-light line-clamp-2">{item.description}</p>
                                 <div className="flex w-full items-center justify-end mt-4 gap-2">
-                                    <button className="px-4 py-1 rounded border border-black font-medium text-black text-xs" onClick={handleDelete}>Block</button>
+                                    <button className="px-4 py-1 rounded border border-black font-medium text-black text-xs" onClick={() => {
+                                        handlePublishing(item);
+                                    }}>
+                                        {loading ? <LoaderSm /> : (
+                                            item.isPublished ? "UnPublish" : "Publish"
+                                        )}
+                                    </button>
                                     <button className="px-4 py-1 rounded bg-black font-medium text-white text-xs" onClick={navigateToLesson}>View</button>
                                 </div>
                             </div>

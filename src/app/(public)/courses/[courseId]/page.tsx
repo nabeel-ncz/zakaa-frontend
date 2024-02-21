@@ -1,6 +1,27 @@
+"use client";
 import Header from "@/components/common/Header";
+import { TypeDispatch } from "@/store";
+import { getCourseAction } from "@/store/actions/course";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 
-export default function CourseDetailed() {
+export default function CourseDetailed({ params }: any) {
+
+    const { courseId } = params;
+
+    const dispatch: TypeDispatch = useDispatch();
+    const [course, setCourse] = useState(null);
+
+    useEffect(() => {
+        dispatch(getCourseAction({
+            courseId
+        })).then((res) => {
+            if(res.payload?.success){
+                setCourse(res.payload?.data);
+            }
+        });
+    }, []);
+
     return (
         <>
             <Header />

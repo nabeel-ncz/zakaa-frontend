@@ -24,7 +24,7 @@ export default function Header() {
         <header className="bg-white border-b">
             <div className="container mx-auto px-24 pt-6 pb-4 flex items-center justify-center">
                 <div className="mr-auto flex-shrink-0">
-                    <img className="h-6 mb-1" src="icons/zakaa-logo.png" alt="" />
+                    <img className="h-6 mb-1" src="/icons/zakaa-logo.png" alt="" />
                 </div>
                 <nav className="contents">
                     <ul className="flex items-center gap-2">
@@ -48,7 +48,7 @@ export default function Header() {
                 {/* Menu for Large Screens */}
                 <div className="ml-8 secondary-light-bg flex items-center justify-center gap-12 px-4 rounded">
                     <input className="bg-transparent outline-none py-3.5 px-8 text-sm" type="text" placeholder="Search Anything..." />
-                    <img src="icons/search-icon.png" alt="" className="w-6" />
+                    <img src="/icons/search-icon.png" alt="" className="w-6" />
                 </div>
                 {/* User Navigation */}
                 <nav className="contents">
@@ -89,7 +89,7 @@ export default function Header() {
                         {/* Notification */}
                         <li className="">
                             <Link href={""}>
-                                <img src="icons/notification.png" className="w-12" />
+                                <img src="/icons/notification.png" className="w-12" />
                             </Link>
                         </li>
                     </ul>

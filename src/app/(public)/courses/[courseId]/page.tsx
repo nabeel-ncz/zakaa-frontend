@@ -104,6 +104,11 @@ export default function CourseDetailed({ params }: any) {
                         <p className="font-light text-sm mt-2">
                             {course?.description}
                         </p>
+                        <h2 className="font-medium text-sm mt-2">Category : <span className="font-light">{course?.categoryRef.title}</span></h2>
+                        <h2 className="font-medium text-sm mt-1">Instructor : <span className="font-light">{course?.instructorRef.username} ({course?.instructorRef.email})</span></h2>
+                        <h2 className="font-medium text-sm mt-1">No of lessons : <span className="font-light">{course?.lessons?.length}</span></h2>
+                        <h2 className="font-medium text-sm mt-1">Language : <span className="font-light">{course?.language}</span></h2>
+                        <h2 className="font-medium text-sm mt-1">Pricing : <span className="font-light">{course?.prcing?.type}<span className="text-green-800">(₹.{course?.pricing?.amount})</span></span></h2>
                     </div>
                 </div>
             )}

@@ -5,6 +5,7 @@ import { TypeDispatch, TypeState } from "@/store"
 import { fetchUserAction } from "@/store/actions";
 import { useEffect, useState } from "react";
 import Skeleton from "@/components/ui/Skeleton";
+import HeaderLink from "./HeaderLink";
 
 export default function Header() {
 
@@ -27,31 +28,21 @@ export default function Header() {
                 </div>
                 <nav className="contents">
                     <ul className="flex items-center gap-2">
-                        <li className="rounded secondary-bg py-3.5 px-4">
-                            <Link href={"/"}>
-                                <h2 className="primary-text font-bold text-sm">Home</h2>
-                            </Link>
-                        </li>
-                        <li className="rounded secondary-light-bg py-3.5 px-4">
-                            <Link href={""}>
-                                <h2 className="primary-text font-bold text-sm">Courses</h2>
-                            </Link>
-                        </li>
-                        <li className="rounded secondary-light-bg py-3.5 px-4">
-                            <Link href={"/teach"}>
-                                <h2 className="primary-text font-bold text-sm">Teach</h2>
-                            </Link>
-                        </li>
-                        <li className="rounded secondary-light-bg py-3.5 px-4">
-                            <Link href={""}>
-                                <h2 className="primary-text font-bold text-sm">Contact us</h2>
-                            </Link>
-                        </li>
-                        <li className="rounded secondary-light-bg py-3.5 px-4">
-                            <Link href={""}>
-                                <h2 className="primary-text font-bold text-sm">About us</h2>
-                            </Link>
-                        </li>
+                        <HeaderLink href={"/"}>
+                            <h2 className="primary-text font-bold text-sm">Home</h2>
+                        </HeaderLink>
+                        <HeaderLink href={"/courses"}>
+                            <h2 className="primary-text font-bold text-sm">Courses</h2>
+                        </HeaderLink>
+                        <HeaderLink href={"/teach"}>
+                            <h2 className="primary-text font-bold text-sm">Teach</h2>
+                        </HeaderLink>
+                        <HeaderLink href={"/contact"}>
+                            <h2 className="primary-text font-bold text-sm">Contact</h2>
+                        </HeaderLink>
+                        <HeaderLink href={"/about"}>
+                            <h2 className="primary-text font-bold text-sm">About</h2>
+                        </HeaderLink>
                     </ul>
                 </nav>
                 {/* Menu for Large Screens */}
@@ -65,7 +56,7 @@ export default function Header() {
                         {/* User Profile */}
                         <li className="p-2 rounded cursor-pointer">
                             <div className="flex items-center justify-between gap-4">
-                                <Link href={`${user ? "/"+user.role+"/" : "/auth/login"}`}>
+                                <Link href={`${user ? "/" + user.role + "/" : "/auth/login"}`}>
                                     {loading && <Skeleton width="44px" height="44px" />}
                                     {user && <img src="icons/profile-logo.png" className="w-12" />}
                                 </Link>

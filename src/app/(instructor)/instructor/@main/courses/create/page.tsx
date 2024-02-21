@@ -27,12 +27,13 @@ export default function CreateCourse() {
     const [trialTitle, setTrialTitle] = useState("");
     const [trialDescription, setTrialDescription] = useState("");
     const [pricingType, setPricingType] = useState("free");
+    const [pricingAmount, setPricingAmount] = useState("0");
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
 
 
     useEffect(() => {
-        if(getObject("course")){
+        if (getObject("course")) {
             router.replace("/instructor/courses");
             toast.error("Complete you pending course!", { position: 'top-right' });
         }
@@ -50,6 +51,10 @@ export default function CreateCourse() {
         try {
             setSubmitted(true);
             if (!courseThumbnail || !pricingType || (pricingType === "paid" && !trialVideo) || (trialVideo && (!trialTitle || !trialDescription))) {
+                return;
+            }
+
+            if (pricingType === "paid" && Number(pricingAmount) <= 0) {
                 return;
             }
 
@@ -76,7 +81,10 @@ export default function CreateCourse() {
                 categoryRef: data.courseCategory,
                 thumbnail: result.payload.data?.thumbnail,
                 numberOfLessons: data.numberOfLessons,
-                pricing: pricingType,
+                pricing: {
+                    type: pricingType,
+                    amount: pricingAmount
+                },
                 trial: {
                     video: result.payload.data?.trialVideo,
                     title: trialTitle,
@@ -175,6 +183,19 @@ export default function CreateCourse() {
                         required
                     />
                     {(submitted && !pricingType) && <span className="custom-form-error">Pricing is required!</span>}
+
+                    {pricingType === "paid" && (
+                        <>
+                            <h2 className="mt-4 font-medium text-xs mb-1 ">Amount <span className="text-red-700"></span></h2>
+                            <input
+                                value={pricingAmount}
+                                onChange={(e) => { setPricingAmount(e.target.value) }}
+                                type="number"
+                                className="w-full px-8 py-3 rounded-lg font-medium border placeholder-gray-500 text-xs focus:outline-none border-gray-400 bg-white"
+                            />
+                            {(Number(pricingAmount) <= 0) && <span className="custom-form-error">Amount should be valid!</span>}
+                        </>
+                    )}
 
                     <h2 className="mt-4 font-medium text-xs mb-1 ">Trial video <span className="text-red-700"></span></h2>
                     <VideoUpload onChange={(file: any) => { setTrialVideo(file) }} />

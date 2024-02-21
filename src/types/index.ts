@@ -22,7 +22,6 @@ export type ApplyToTeachFormData = {
 
 export type CreateCourseFormData = {
     courseTitle: string;
-    courseCategory: string;
     courseDescription: string;
     numberOfLessons: string;
 }

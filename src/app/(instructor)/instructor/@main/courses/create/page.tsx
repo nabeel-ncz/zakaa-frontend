@@ -6,6 +6,7 @@ import ImageUpload from "@/components/ui/ImageUpload";
 import VideoUpload from "@/components/ui/VideoUpload";
 import { CreateCourseSchema } from "@/lib/validation/schema/createCourse";
 import { TypeDispatch } from "@/store";
+import { getAvailableCategoriesAction } from "@/store/actions/category";
 import { uploadCourseContent } from "@/store/actions/course";
 import { CreateCourseFormData } from "@/types";
 import { getObject, storeObject } from "@/utils/localStorage";
@@ -30,6 +31,8 @@ export default function CreateCourse() {
     const [pricingAmount, setPricingAmount] = useState("0");
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [categories, setCategories] = useState<any>(null);
+    const [courseCategory, setCourseCategory] = useState("");
 
 
     useEffect(() => {
@@ -37,6 +40,15 @@ export default function CreateCourse() {
             router.replace("/instructor/courses");
             toast.error("Complete you pending course!", { position: 'top-right' });
         }
+    }, []);
+
+    useEffect(() => {
+        dispatch(getAvailableCategoriesAction())
+            .then((res) => {
+                if (res.payload?.success) {
+                    setCategories(res.payload?.data);
+                }
+            });
     }, []);
 
     const {
@@ -78,7 +90,7 @@ export default function CreateCourse() {
             const courseData = {
                 title: data.courseTitle,
                 description: data.courseDescription,
-                categoryRef: data.courseCategory,
+                categoryRef: courseCategory,
                 thumbnail: result.payload.data?.thumbnail,
                 numberOfLessons: data.numberOfLessons,
                 pricing: {
@@ -144,15 +156,20 @@ export default function CreateCourse() {
                         register={register}
                         errors={errors}
                     />
-                    <CourseFormField
-                        style={['mt-4']}
-                        title="Course category"
-                        fieldName="courseCategory"
-                        fieldType="text"
-                        required
-                        register={register}
-                        errors={errors}
-                    />
+
+                    <h2 className="mt-4 font-medium text-xs mb-1 ">Course category <span className="text-red-700">*</span></h2>
+                    <select
+                        value={courseCategory}
+                        onChange={(evt) => { setCourseCategory(evt.target.value) }}
+                        className="w-full h-12 rounded-lg font-medium border px-4 text-gray-800 text-sm focus:outline-none border-gray-400 bg-white"
+                    >
+                        <option value={""}>Choose category</option>
+                        {categories?.map((item: any) => (
+                            <option value={item._id} >{item.title}</option>
+                        ))}
+                    </select>
+                    {(submitted && !courseCategory) && <span className="custom-form-error">Course category is required!</span>}
+
                     <CourseFormField
                         style={['mt-4']}
                         title="Course description"

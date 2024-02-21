@@ -51,7 +51,6 @@ export default function CourseCreationFinish() {
 
             let result: any = await dispatch(createCourseAction({
                 ...data,
-                categoryRef: "65d2d2c99c991a593b8d800c",
                 instructorRef: user?._id,
                 pricing,
                 trial

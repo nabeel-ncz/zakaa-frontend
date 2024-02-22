@@ -39,6 +39,10 @@ export default function UpdateCourse({ params }: any) {
         setCourseCategory(res.payload?.data?.categoryRef?._id)
         setCourseTitle(res.payload?.data?.title);
         setCourseDescription(res.payload?.data?.description);
+        if(res.payload?.data?.trial?.video){
+          setTrialTitle(res.payload?.data?.trial?.title);
+          setTrialDescription(res.payload?.data?.trial?.description);
+        }
       }
     }).finally(() => {
       setLoading(false);
@@ -99,7 +103,10 @@ export default function UpdateCourse({ params }: any) {
         categoryRef: courseCategory,
         trial: {
           title: trialTitle,
-          description: trialDescription
+          description: trialDescription,
+          thumbnail: course?.trial?.thumbnail,
+          video: course?.trial?.video,
+          _id: course?.trial?._id
         }
       }
       if (isImageChanged) {

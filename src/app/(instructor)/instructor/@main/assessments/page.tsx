@@ -65,6 +65,14 @@ export default function Assessments() {
             <div className="px-4 flex items-end justify-end w-full">
                 <button onClick={navigateToCreate} className="px-4 py-2 rounded border-[rgba(127,39,194,0.5)] border-2 bg-white font-medium">Create</button>
             </div>
+
+            {!pendingExam && (!createdExams || createdExams.length === 0) && (
+                <div className="w-full pe-6 pt-12 flex flex-col gap-2 items-center justify-center">
+                    <img src="/icons/not-found.png" alt="" className="h-80" />
+                    <h2 className="font-bold text-xl">No assessments found!</h2>
+                </div>
+            )}
+
             <div className="w-full px-10 py-4 flex flex-wrap gap-5">
                 {pendingExam && (
                     <div className="w-[17rem] relative bg-white h-[10rem] shadow-md rounded-md overflow-hidden flex flex-col items-center justify-center">
@@ -92,7 +100,7 @@ export default function Assessments() {
                             <p className="text-xs font-light">Total mark : {item.totalScore}</p>
                             <p className="text-xs font-light">Pass mark : {item.passingScore}</p>
                             <div className="flex w-full items-center justify-end mt-4 gap-2">
-                                <button className="px-4 py-1 rounded border border-black font-medium text-black text-xs">Delete</button>
+                                {/* <button className="px-4 py-1 rounded border border-black font-medium text-black text-xs">Delete</button> */}
                                 <button onClick={() => {
                                     router.push(`assessments/${item._id}`);
                                 }} className="px-4 py-1 rounded bg-black font-medium text-white text-xs" >View</button>

@@ -88,6 +88,14 @@ export default function Courses() {
                 <button className="px-4 py-2 rounded border-[rgba(127,39,194,0.5)] border-2 bg-white font-medium" onClick={navigateToCreate}>Create</button>
             </div>
 
+            {!pendingCourse && (!createdCourses || createdCourses.length === 0) && (
+                <div className="w-full pe-6 pt-12 flex flex-col gap-2 items-center justify-center">
+                    <img src="/icons/not-found.png" alt="" className="h-80" />
+                    <h2 className="font-bold text-xl">No courses found!</h2>
+                </div>
+            )}
+
+
             <div className="w-full px-10 py-4 flex flex-wrap gap-5">
                 {pendingCourse && (<>
                     <div className="w-[17rem] relative bg-white h-[17rem] shadow-md rounded-md overflow-hidden flex flex-col items-center justify-center">

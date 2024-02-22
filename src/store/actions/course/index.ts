@@ -5,3 +5,6 @@ export * from "./getCourseAction";
 export * from "./getPublicCoursesAction";
 export * from "./updateCourseAction";
 export * from "./updateCourseAction";
+export * from "./getAssessmentByIdAction";
+export * from "./updateExamAction";
+export * from "./updateAssessmentQuestionAction";

@@ -93,7 +93,9 @@ export default function Assessments() {
                             <p className="text-xs font-light">Pass mark : {item.passingScore}</p>
                             <div className="flex w-full items-center justify-end mt-4 gap-2">
                                 <button className="px-4 py-1 rounded border border-black font-medium text-black text-xs">Delete</button>
-                                <button className="px-4 py-1 rounded bg-black font-medium text-white text-xs" >View</button>
+                                <button onClick={() => {
+                                    router.push(`assessments/${item._id}`);
+                                }} className="px-4 py-1 rounded bg-black font-medium text-white text-xs" >View</button>
                             </div>
                         </div>
                     </div>

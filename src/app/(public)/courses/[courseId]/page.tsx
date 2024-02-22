@@ -85,6 +85,19 @@ export default function CourseDetailed({ params }: any) {
                             )}
                         </div>
                         <div className="w-4/12 flex flex-col gap-2">
+
+                            {course?.trial?.video && (
+                                <div
+                                    onClick={() => { setSelectedLesson(course?.trial) }}
+                                    className="cursor-pointer flex items-center justify-center gap-2 bg-white shadow p-2 rounded">
+                                    <img crossOrigin="anonymous" src={`${PUBLIC_RESOURCE_URL}/api/course/images/${course?.trial?.thumbnail}`} alt="" className="w-1/3" />
+                                    <div className="flex flex-col items-start w-2/3">
+                                        <h3 className="line-clamp-1 font-medium text-sm">{course?.trial?.title}</h3>
+                                        <p className="line-clamp-2 font-light text-xs">{course?.trial?.description}</p>
+                                    </div>
+                                </div>
+                            )}
+
                             {course?.lessons?.map((lesson: any) => (
                                 <div
                                     onClick={() => { setSelectedLesson(lesson) }}

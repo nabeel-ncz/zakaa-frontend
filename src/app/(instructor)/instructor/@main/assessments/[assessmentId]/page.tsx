@@ -87,6 +87,14 @@ export default function page({ params }: any) {
                 throw new Error("Something went wrong!");
             }
 
+            const result2 = await dispatch(getAssessmentByIdAction({
+                id: assessmentId
+            }));
+
+            if (result2?.payload?.success) {
+                setExam(result2?.payload?.data);
+            }
+
             setError(null);
             setLoading(false);
 

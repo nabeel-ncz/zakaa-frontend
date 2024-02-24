@@ -8,6 +8,7 @@ import { BASE_URL } from "@/utils/axios";
 import { PUBLIC_RESOURCE_URL } from "@/utils/constants";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react"
+import ReactPlayer from "react-player";
 import { useDispatch } from "react-redux";
 
 export default function page({ params }: any) {
@@ -117,9 +118,7 @@ export default function page({ params }: any) {
           <h2 className="font-medium text-xs mb-1 ">Lesson Resource <span className="text-red-700">*</span></h2>
           <div className="w-full relative h-56 flex items-center justify-center secondary-bg border border-gray-400 border-dashed rounded-md">
             {!loading && (
-              <video crossOrigin="anonymous" controls className="h-full">
-                <source src={`${BASE_URL}/api/course/video/${lesson?.video?.high}`} type="video/mp4" title="High Quality" />
-              </video>
+              <ReactPlayer url={`${BASE_URL}/api/course/video/${lesson?.video}`} controls height="100%" style={{ aspectRatio: '16:9' }} />
             )}
           </div>
 
@@ -140,7 +139,6 @@ export default function page({ params }: any) {
             className="w-full px-8 py-3 rounded-lg font-medium border placeholder-gray-500 text-xs focus:outline-none border-gray-400 bg-white"
           />
           {(!lessonDescription) && <span className="custom-form-error">Description is required!</span>}
-
 
         </div>
         <div className="w-6/12">

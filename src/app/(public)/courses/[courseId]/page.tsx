@@ -40,7 +40,9 @@ export default function CourseDetailed({ params }: any) {
                         <button className="absolute top-4 right-4" onClick={() => { setVideoOpen(false) }} >
                             <img src="/icons/close-icon.png" alt="" className="w-8" />
                         </button>
-                        <Player url={`${BASE_URL}/api/course/video/${selectedLesson?.video}`} controls width="840" height="460" />
+                        <div className="h-5/6">
+                            <Player url={`${BASE_URL}/api/course/video/${selectedLesson?.video}`} controls height="100%" style={{ aspectRatio: '16:9' }} />
+                        </div>
                     </div>
                 </div>
             )}

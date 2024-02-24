@@ -8,6 +8,7 @@ import { BASE_URL } from "@/utils/axios";
 import { PUBLIC_RESOURCE_URL } from "@/utils/constants";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react"
+import ReactPlayer from "react-player";
 import { useDispatch } from "react-redux";
 
 export default function UpdateCourse({ params }: any) {
@@ -39,7 +40,7 @@ export default function UpdateCourse({ params }: any) {
         setCourseCategory(res.payload?.data?.categoryRef?._id)
         setCourseTitle(res.payload?.data?.title);
         setCourseDescription(res.payload?.data?.description);
-        if(res.payload?.data?.trial?.video){
+        if (res.payload?.data?.trial?.video) {
           setTrialTitle(res.payload?.data?.trial?.title);
           setTrialDescription(res.payload?.data?.trial?.description);
         }
@@ -253,9 +254,7 @@ export default function UpdateCourse({ params }: any) {
 
             <h2 className="mt-4 font-medium text-xs mb-1 ">Trial video <span className="text-red-700"></span></h2>
             <div className="w-full relative h-56 flex items-center justify-center secondary-bg border border-gray-400 border-dashed rounded-md">
-              <video crossOrigin="anonymous" controls className="h-full">
-                <source src={`${BASE_URL}/api/course/video/${course?.trial?.video?.high}`} type="video/mp4" title="High Quality" />
-              </video>
+              <ReactPlayer url={`${BASE_URL}/api/course/video/${course?.trial?.video}`} controls height="100%" style={{ aspectRatio: '16:9' }} />
             </div>
 
             <>

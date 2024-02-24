@@ -1,13 +1,13 @@
 "use client";
 import Header from "@/components/common/Header";
-import BanterLoader from "@/components/ui/BanterLoader";
 import Loading from "@/components/ui/Loading";
 import { TypeDispatch } from "@/store";
 import { getCourseAction } from "@/store/actions/course";
 import { BASE_URL } from "@/utils/axios";
 import { PUBLIC_RESOURCE_URL } from "@/utils/constants";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+import Player from 'react-player';
 
 export default function CourseDetailed({ params }: any) {
 
@@ -16,10 +16,8 @@ export default function CourseDetailed({ params }: any) {
     const dispatch: TypeDispatch = useDispatch();
     const [course, setCourse] = useState<any>(null);
     const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState(null);
     const [videoOpen, setVideoOpen] = useState<boolean>(false);
     const [selectedLesson, setSelectedLesson] = useState<any>(null);
-    const videoRef: any = useRef();
 
     useEffect(() => {
         dispatch(getCourseAction({
@@ -33,35 +31,16 @@ export default function CourseDetailed({ params }: any) {
         });
     }, []);
 
-    const changeVideoQuality = (evt: any) => {
-        var selectedQuality = evt.target.value;
-
-        videoRef.current.src = `${BASE_URL}/api/course/video/${selectedQuality}`;
-        videoRef.current.load();
-        videoRef.current.play();
-    }
-
     return (
         <>
             <Header />
             {videoOpen && (
                 <div className="fixed z-50 top-0 left-0 flex items-center justify-center w-full min-h-screen bg-[#00000050] backdrop-blur-md">
                     <div className="relative bg-white flex flex-col items-center justify-center h-5/6 w-10/12 p-8">
-                        <div className="w-full flex items-center justify-end pe-32 py-4">
-                            <select onChange={changeVideoQuality}>
-                                <option value={selectedLesson?.video?.high}>High Quality</option>
-                                <option value={selectedLesson?.video?.medium}>Medium Quality</option>
-                                <option value={selectedLesson?.video?.low}>Low Quality</option>
-                            </select>
-                        </div>
                         <button className="absolute top-4 right-4" onClick={() => { setVideoOpen(false) }} >
                             <img src="/icons/close-icon.png" alt="" className="w-8" />
                         </button>
-                        <video ref={videoRef} crossOrigin="anonymous" width="70%" autoPlay controls muted={false}>
-                            <source src={`${BASE_URL}/api/course/video/${selectedLesson?.video?.high}`} type="video/mp4" title="High Quality" />
-                            <source src={`${BASE_URL}/api/course/video/${selectedLesson?.video?.medium}`} type="video/mp4" title="Medium Quality" />
-                            <source src={`${BASE_URL}/api/course/video/${selectedLesson?.video?.low}`} type="video/mp4" title="Low Quality" />
-                        </video>
+                        <Player url={`${BASE_URL}/api/course/video/${selectedLesson?.video}`} controls width="840" height="460" />
                     </div>
                 </div>
             )}

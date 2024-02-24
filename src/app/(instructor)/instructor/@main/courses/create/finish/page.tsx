@@ -96,8 +96,8 @@ export default function CourseCreationFinish() {
             {pendingCourse ? (
                 <>
                     <div className="px-10">
-                        <div className="w-full flex items-center justify-between px-4 py-4 gap-8 bg-white rounded shadow-md">
-                            <img crossOrigin="anonymous" src={`${PUBLIC_RESOURCE_URL}/api/course/images/${pendingCourse.thumbnail}`} alt="" className="w-1/2 h-48" />
+                        <div className="w-full flex items-center justify-start px-4 py-4 gap-8 bg-white rounded shadow-md">
+                            <img crossOrigin="anonymous" src={`${PUBLIC_RESOURCE_URL}/api/course/images/${pendingCourse.thumbnail}`} alt="" className="w-4/12" />
                             <div className="flex flex-col items-start justify-center gap-1">
                                 <h2 className="font-bold text-3xl">
                                     {pendingCourse.title.split(" ").map((word: string, index: number, array: string[]) => (

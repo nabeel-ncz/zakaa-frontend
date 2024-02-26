@@ -4,12 +4,24 @@ import { AxiosError } from "axios";
 
 export const getPublicCoursesAction = createAsyncThunk(
     "course/getPublicCourses",
-    async () => {
-       
+    async (
+        data: {
+            search: string
+            page: number
+        }
+    ) => {
+
+        let query = '';
+        query += `?search=${data?.search || ""}`
+
+        if (data?.page) {
+            query += `&page=${data?.page || "1"}`
+        }
+
         try {
 
             const response = await apiClient.get(
-                `api/course/active`,
+                `api/course/active${query}`,
                 {
                     headers: { "Content-Type": "application/json" },
                     withCredentials: true,

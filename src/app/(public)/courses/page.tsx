@@ -1,26 +1,74 @@
 "use client";
 import Header from "@/components/common/Header";
-import { TypeDispatch } from "@/store";
 import { getPublicCoursesAction } from "@/store/actions/course";
 import { PUBLIC_RESOURCE_URL } from "@/utils/constants";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { makeArrayUniqueByKey } from "@/utils/helpers";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+import { TypeDispatch } from "@/store";
 
 export default function Courses() {
 
-    const dispatch: TypeDispatch = useDispatch();
-    const [courses, setCourses] = useState<any>(null);
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const dispatch: TypeDispatch = useDispatch();
+    const [courses, setCourses] = useState<any[] | null>(null);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [pageNo, setPageNo] = useState<number>(1);
+    const [hasMore, setHasMore] = useState(true);
+    
+    useEffect(() => {
+        loadCourses(1);
+    }, []);
+
+    const handleScroll = (event: any) => {
+        event.preventDefault();
+        if (
+            window.innerHeight + document.documentElement.scrollTop >=
+            document.documentElement.offsetHeight - 50
+        ) {
+            loadCourses(pageNo+1);
+            setPageNo(prev => prev + 1);
+        }
+    };
 
     useEffect(() => {
-        dispatch(getPublicCoursesAction())
-            .then((res) => {
-                if (res.payload.success) {
-                    setCourses(res.payload.data);
-                }
-            });
-    }, []);
+        window.addEventListener('scroll', handleScroll);
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, [handleScroll]);
+
+    const loadCourses = async (page: number) => {
+        if(!hasMore) return;
+        setLoading(true);
+        
+        try {
+
+            const query: any = { search: searchParams.get('search'), page: page };
+            const res = await dispatch(getPublicCoursesAction(query));
+            
+            if (res.payload?.success && res.payload?.data) {
+                setCourses((prev) => {
+                    if (prev) {
+                        let arr = makeArrayUniqueByKey([...prev, ...res.payload?.data], "_id");
+                        return arr;
+                    }
+                    return [...res.payload?.data];
+                });
+            }
+
+            if(res.payload?.data?.length === 0){
+                setHasMore(false);
+            }
+
+        } catch (error) {
+            console.error("Error fetching courses:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <>
@@ -53,8 +101,10 @@ export default function Courses() {
                 </div>
                 <div className="w-3/12 secondary-bg h-80 rounded-md">
                     <h2>Filter</h2>
+                    {/* ... filter section remains the same ... */}
                 </div>
             </div>
+            {loading && <div>Loading courses...</div>}
         </>
-    )
+    );
 }

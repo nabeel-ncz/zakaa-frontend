@@ -8,6 +8,11 @@ import { PUBLIC_RESOURCE_URL } from "@/utils/constants";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import Player from 'react-player';
+import { loadStripe } from "@stripe/stripe-js";
+import { createPaymentSessionAction } from "@/store/actions/payment";
+import { fetchUserAction } from "@/store/actions";
+import toast from "react-hot-toast";
+import { storeObject } from "@/utils/localStorage";
 
 export default function CourseDetailed({ params }: any) {
 
@@ -30,6 +35,47 @@ export default function CourseDetailed({ params }: any) {
             setLoading(false);
         });
     }, []);
+
+    const handlePayment = async () => {
+        try {
+
+            const user = await dispatch(fetchUserAction());
+
+            if (!user.payload || !user.payload?.success) {
+                toast.error("Please create an account", { position: "top-right" });
+                return;
+            }
+
+            const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_KEY as unknown as string);
+
+            const response = await dispatch(createPaymentSessionAction({
+                courseName: course?.title,
+                courseThumbnail: course?.thumbnail,
+                courseId: course?._id,
+                amount: course?.pricing?.amount,
+                userId: user?.payload?.data?._id
+            }));
+
+            if (!response?.payload || !response?.payload?.success) {
+                throw new Error("Something went wrong, Try again!");
+            }
+
+            storeObject("payment_session", response);
+
+            const sessionId = response?.payload?.data?.sessionId;
+
+            const result = await stripe?.redirectToCheckout({
+                sessionId: sessionId
+            })
+
+            if (result?.error) {
+                throw new Error(result?.error?.message);
+            }
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     return (
         <>
@@ -104,6 +150,7 @@ export default function CourseDetailed({ params }: any) {
                         <h2 className="font-medium text-sm mt-1">Language : <span className="font-light">{course?.language}</span></h2>
                         <h2 className="font-medium text-sm mt-1">Pricing : <span className="font-light">{course?.prcing?.type}<span className="text-green-800">(₹.{course?.pricing?.amount})</span></span></h2>
                     </div>
+                    <button onClick={handlePayment}>pay</button>
                 </div>
             )}
         </>

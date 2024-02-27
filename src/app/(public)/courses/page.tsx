@@ -100,8 +100,13 @@ export default function Courses() {
                     ))}
                 </div>
                 <div className="w-3/12 secondary-bg h-80 rounded-md">
-                    <h2>Filter</h2>
-                    {/* ... filter section remains the same ... */}
+                    <h2 className="font-medium mt-2 ms-2">Filter</h2>
+                    <select name="category" id="">
+                        <option value="">category_id</option>
+                        <option value="">category_id</option>
+                        <option value="">category_id</option>
+                        <option value="">category_id</option>
+                    </select>
                 </div>
             </div>
             {loading && <div>Loading courses...</div>}

@@ -254,7 +254,7 @@ export default function UpdateCourse({ params }: any) {
 
             <h2 className="mt-4 font-medium text-xs mb-1 ">Trial video <span className="text-red-700"></span></h2>
             <div className="w-full relative h-56 flex items-center justify-center secondary-bg border border-gray-400 border-dashed rounded-md">
-              <ReactPlayer url={`${BASE_URL}/api/course/video/${course?.trial?.video}`} controls height="100%" style={{ aspectRatio: '16:9' }} />
+              <ReactPlayer url={`${BASE_URL}/api/course/video/${course?._id}/${course?.trial?.video}`} controls height="100%" style={{ aspectRatio: '16:9' }} />
             </div>
 
             <>

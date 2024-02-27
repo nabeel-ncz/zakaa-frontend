@@ -13,6 +13,7 @@ import { createPaymentSessionAction } from "@/store/actions/payment";
 import { fetchUserAction } from "@/store/actions";
 import toast from "react-hot-toast";
 import { storeObject } from "@/utils/localStorage";
+import { createEnrollmentAction } from "@/store/actions/enrollment";
 
 export default function CourseDetailed({ params }: any) {
 
@@ -35,6 +36,31 @@ export default function CourseDetailed({ params }: any) {
             setLoading(false);
         });
     }, []);
+
+    const handleEnrollment = async () => {
+        if (course?.pricing?.type === "paid") {
+            handlePayment();
+            return;
+        }
+        try {
+            const user = await dispatch(fetchUserAction());
+            if (!user.payload || !user.payload?.success) {
+                throw new Error("Authentication required");
+            }
+            const result = await dispatch(createEnrollmentAction({
+                userId: user.payload?.data?._id,
+                courseId: course?._id,
+                enrolledAt: Date.now()
+            }));
+
+            if(!result.payload?.success){
+                throw new Error("Enrollment failed, try again!");
+            };
+
+        } catch (error: any) {
+            toast.error(error?.message, { position: "top-right" });
+        }
+    }
 
     const handlePayment = async () => {
         try {
@@ -60,7 +86,10 @@ export default function CourseDetailed({ params }: any) {
                 throw new Error("Something went wrong, Try again!");
             }
 
-            storeObject("payment_session", response);
+            storeObject("payment_session", {
+                ...response.payload?.data,
+                amount: course?.pricing?.amount
+            });
 
             const sessionId = response?.payload?.data?.sessionId;
 
@@ -72,8 +101,8 @@ export default function CourseDetailed({ params }: any) {
                 throw new Error(result?.error?.message);
             }
 
-        } catch (error) {
-            console.log(error);
+        } catch (error: any) {
+            toast.error(error?.message, { position: "bottom-right" });
         }
     }
 
@@ -87,7 +116,7 @@ export default function CourseDetailed({ params }: any) {
                             <img src="/icons/close-icon.png" alt="" className="w-8" />
                         </button>
                         <div className="h-5/6">
-                            <Player url={`${BASE_URL}/api/course/video/${selectedLesson?.video}`} controls height="100%" style={{ aspectRatio: '16:9' }} />
+                            <Player url={`${BASE_URL}/api/course/video/${course?._id}/${selectedLesson?.video}`} controls height="100%" style={{ aspectRatio: '16:9' }} />
                         </div>
                     </div>
                 </div>
@@ -139,18 +168,23 @@ export default function CourseDetailed({ params }: any) {
 
                         </div>
                     </div>
-                    <div className="w-full mt-8 px-8">
-                        <h2 className="font-medium text-2xl">{course?.title}</h2>
-                        <p className="font-light text-sm mt-2">
-                            {course?.description}
-                        </p>
-                        <h2 className="font-medium text-sm mt-2">Category : <span className="font-light">{course?.categoryRef.title}</span></h2>
-                        <h2 className="font-medium text-sm mt-1">Instructor : <span className="font-light">{course?.instructorRef.username} ({course?.instructorRef.email})</span></h2>
-                        <h2 className="font-medium text-sm mt-1">No of lessons : <span className="font-light">{course?.lessons?.length}</span></h2>
-                        <h2 className="font-medium text-sm mt-1">Language : <span className="font-light">{course?.language}</span></h2>
-                        <h2 className="font-medium text-sm mt-1">Pricing : <span className="font-light">{course?.prcing?.type}<span className="text-green-800">(₹.{course?.pricing?.amount})</span></span></h2>
+                    <div className="w-full mt-8 px-8 flex">
+                        <div className="w-2/3 flex flex-col items-start">
+                            <h2 className="font-semibold text-2xl">{course?.title}</h2>
+                            <p className="font-normal text-sm mt-2">
+                                {course?.description}
+                            </p>
+                            <h2 className="font-semibold text-sm mt-2">Category : <span className="font-normal">{course?.categoryRef.title}</span></h2>
+                            <h2 className="font-semibold text-sm mt-1">Instructor : <span className="font-normal">{course?.instructorRef.username} ({course?.instructorRef.email})</span></h2>
+                            <h2 className="font-semibold text-sm mt-1">No of lessons : <span className="font-normal">{course?.lessons?.length}</span></h2>
+                            <h2 className="font-semibold text-sm mt-1">Language : <span className="font-normal">{course?.language}</span></h2>
+                        </div>
+                        <div className="w-1/3 flex flex-col items-start justify-end">
+                            <h2 className="font-semibold text-sm mt-2">Pricing : <span className="font-normal">{course?.pricing?.type}</span></h2>
+                            <h2 className="font-semibold text-sm mt-2">Amount : <span className={`font-normal ${course?.pricing?.type === "paid" && "line-through"}`}>{course?.pricing?.type === "paid" ? course?.pricing?.amount : "0"}</span></h2>
+                            <button className="h-10 custom-form-button bg-purple-800" onClick={handleEnrollment}>Enroll</button>
+                        </div>
                     </div>
-                    <button onClick={handlePayment}>pay</button>
                 </div>
             )}
         </>

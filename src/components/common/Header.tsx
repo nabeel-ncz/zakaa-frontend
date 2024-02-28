@@ -6,13 +6,15 @@ import { fetchUserAction } from "@/store/actions";
 import { useEffect, useState } from "react";
 import Skeleton from "@/components/ui/Skeleton";
 import HeaderLink from "./HeaderLink";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export default function Header() {
 
     const router = useRouter();
-    const [loading, setLoading] = useState(true);
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
     const user: any = useSelector((state: TypeState) => state.user.data);
+    const [loading, setLoading] = useState(true);
     const dispatch: TypeDispatch = useDispatch();
 
     useEffect(() => {
@@ -24,6 +26,11 @@ export default function Header() {
 
     const handleSearch = (evt: any) => {
         evt.preventDefault();
+        if(pathname === "/courses"){
+            const { name, value } = evt.target;
+            router.push(`/courses?${name}=${value}`);
+            return;
+        }
         const { name, value } = evt.target.search;
         router.push(`/courses?${name}=${value}`);
     };
@@ -55,9 +62,13 @@ export default function Header() {
                 </nav>
                 {/* Menu for Large Screens */}
                 <div className="ml-8 secondary-light-bg flex items-center justify-center gap-12 px-4 rounded">
-                    <form action="" onSubmit={handleSearch}>
-                        <input name="search" className="bg-transparent outline-none py-3.5 px-8 text-sm" type="text" placeholder="Search Anything..." />
-                    </form>
+                    {pathname === "/courses" ? (
+                        <input defaultValue={searchParams.get('search') || ""} onChange={handleSearch} name="search" className="bg-transparent outline-none py-3.5 px-8 text-sm" type="text" placeholder="Search Anything..." />
+                    ) : (
+                        <form action="" onSubmit={handleSearch}>
+                            <input name="search" className="bg-transparent outline-none py-3.5 px-8 text-sm" type="text" placeholder="Search Anything..." />
+                        </form>
+                    )}
                     <img src="/icons/search-icon.png" alt="" className="w-6" />
                 </div>
                 {/* User Navigation */}

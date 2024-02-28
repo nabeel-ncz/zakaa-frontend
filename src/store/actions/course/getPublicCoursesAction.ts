@@ -6,18 +6,13 @@ export const getPublicCoursesAction = createAsyncThunk(
     "course/getPublicCourses",
     async (
         data: {
-            search: string
-            page: number
+            page: number,
         }
     ) => {
 
         let query = '';
-        query += `?search=${data?.search || ""}`
-
-        if (data?.page) {
-            query += `&page=${data?.page || "1"}`
-        }
-
+        query += `?page=${data?.page || "1"}`
+        
         try {
 
             const response = await apiClient.get(

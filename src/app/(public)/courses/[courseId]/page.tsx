@@ -43,7 +43,7 @@ export default function CourseDetailed({ params }: any) {
             }));
 
             enrollments.payload?.data?.forEach((item: any) => {
-                if (item.courseId === course.payload?.data?._id) {
+                if (item.courseId?._id === course.payload?.data?._id) {
                     setIsEnrolled(true);
                 }
             })

@@ -116,7 +116,7 @@ export default function StudentLayout({
                     </div>
 
                 </div>
-                <div className="p-4 secondary-light-bg h-full">
+                <div className="p-4 secondary-light-bg h-full overflow-y-auto">
                     {children}
                 </div>
             </div>

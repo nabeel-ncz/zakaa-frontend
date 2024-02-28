@@ -51,22 +51,24 @@ export default function Enrollments() {
                         </div>
                     ) : (
                         <div className="w-full min-h-screen">
-                            {enrollments?.map((item: any) => (
-                                <>
-                                    <div className="w-[17rem] relative bg-white h-[17rem] shadow-md rounded-md overflow-hidden flex flex-col items-center justify-center">
-                                        <img crossOrigin="anonymous" src={`${PUBLIC_RESOURCE_URL}/api/course/images/${item.thumbnail}`} alt="" className="w-11/12 h-36" />
-                                        <div className="flex flex-col items-start justify-start w-11/12">
-                                            <h2 className="mt-2 font-medium text-md text-wrap line-clamp-1">{item?.title}</h2>
-                                            <p className="text-xs font-light line-clamp-2">{item.description}</p>
-                                            <div className="flex w-full items-center justify-end mt-4 gap-2">
-                                                <button className="px-4 py-1 rounded bg-black font-medium text-white text-xs" onClick={() => {
-                                                    router.push(`courses/${item._id}`);
-                                                }}>View</button>
+                            <div className="w-full px-10 py-4 flex flex-wrap gap-5">
+                                {enrollments?.map((item: any) => (
+                                    <>
+                                        <div className="w-[17rem] relative bg-white h-[17rem] shadow-md rounded-md overflow-hidden flex flex-col items-center justify-center">
+                                            <img crossOrigin="anonymous" src={`${PUBLIC_RESOURCE_URL}/api/course/images/${item.courseId?.thumbnail}`} alt="" className="w-11/12 h-36" />
+                                            <div className="flex flex-col items-start justify-start w-11/12">
+                                                <h2 className="mt-2 font-medium text-md text-wrap line-clamp-1">{item.courseId?.title}</h2>
+                                                <p className="text-xs font-light line-clamp-2">{item.courseId?.description}</p>
+                                                <div className="flex w-full items-center justify-end mt-4 gap-2">
+                                                    <button className="px-4 py-1 rounded bg-black font-medium text-white text-xs" onClick={() => {
+                                                        router.push(`enrollments/${item._id}`);
+                                                    }}>View</button>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </>
-                            ))}
+                                    </>
+                                ))}
+                            </div>
                         </div>
                     )}
                 </>

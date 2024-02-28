@@ -1,6 +1,7 @@
 'use client';
 import Loading from "@/components/ui/Loading";
 import { TypeDispatch } from "@/store";
+import { getAssessmentsByCourseIdAction } from "@/store/actions/course";
 import { getEnrollmentsByIdAction } from "@/store/actions/enrollment";
 import { BASE_URL } from "@/utils/axios";
 import { PUBLIC_RESOURCE_URL } from "@/utils/constants";
@@ -18,6 +19,7 @@ export default function page({ params }: any) {
     const [videoOpen, setVideoOpen] = useState(false);
     const [course, setCourse] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+    const [assessments, setAssessments] = useState<any[] | null>(null)
 
     useEffect(() => {
         handleFetch();
@@ -29,8 +31,14 @@ export default function page({ params }: any) {
                 id: enrollmentId
             }));
 
+            const assessments = await dispatch(getAssessmentsByCourseIdAction({
+                courseId: result.payload?.data?.courseId?._id
+            }));
+
             setEnrollment(result.payload?.data);
             setCourse(result.payload?.data?.courseId);
+            setAssessments(assessments.payload?.data);
+        
         } catch (error) {
             console.log(error);
         } finally {

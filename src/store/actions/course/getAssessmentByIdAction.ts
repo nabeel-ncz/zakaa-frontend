@@ -11,7 +11,7 @@ export const getAssessmentByIdAction = createAsyncThunk(
         try {
 
             const response = await apiClient.get(
-                `/api/course/assessment/by/${data.id}`,
+                `/api/course/assessment/${data.id}`,
                 {
                     headers: { "Content-Type": "application/json" },
                     withCredentials: true,

@@ -2,16 +2,16 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { apiClient } from "@/utils/axios";
 import { AxiosError } from "axios";
 
-export const getExamResultsByUserIdAction = createAsyncThunk(
-    "course/getExamResultsByUserId",
+export const getExamResultsByIdAction = createAsyncThunk(
+    "course/getExamResultsById",
     async (data: {
-        userId: string;
+        id: string;
     }) => {
 
         try {
 
             const response = await apiClient.get(
-                `/api/course/exam/result/user/${data.userId}`,
+                `/api/course/exam/result/${data.id}`,
                 {
                     headers: { "Content-Type": "application/json" },
                     withCredentials: true,

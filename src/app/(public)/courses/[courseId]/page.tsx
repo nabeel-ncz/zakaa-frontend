@@ -22,6 +22,7 @@ export default function CourseDetailed({ params }: any) {
 
     const dispatch: TypeDispatch = useDispatch();
     const [course, setCourse] = useState<any>(null);
+    const [user, setUser] = useState<any>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [videoOpen, setVideoOpen] = useState<boolean>(false);
     const [selectedLesson, setSelectedLesson] = useState<any>(null);
@@ -37,11 +38,13 @@ export default function CourseDetailed({ params }: any) {
                 courseId
             }));
             setCourse(course.payload?.data);
+
             const user = await dispatch(fetchUserAction());
             const enrollments = await dispatch(getEnrollmentsByUserIdAction({
                 userId: user.payload?.data?._id
             }));
-
+            
+            setUser(user.payload?.data);
             enrollments.payload?.data?.forEach((item: any) => {
                 if (item.courseId?._id === course.payload?.data?._id) {
                     setIsEnrolled(true);
@@ -136,7 +139,7 @@ export default function CourseDetailed({ params }: any) {
                             <img src="/icons/close-icon.png" alt="" className="w-8" />
                         </button>
                         <div className="h-5/6">
-                            <Player url={`${BASE_URL}/api/course/video/${course?._id}/${selectedLesson?.video}`} controls height="100%" style={{ aspectRatio: '16:9' }} />
+                            <Player url={`${BASE_URL}/api/course/video/${course?._id}/${selectedLesson?.video}?userId=${user?._id}`} controls height="100%" style={{ aspectRatio: '16:9' }} />
                         </div>
                     </div>
                 </div>

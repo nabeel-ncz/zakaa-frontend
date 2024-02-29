@@ -1,7 +1,7 @@
 'use client';
 import Loading from "@/components/ui/Loading";
 import { TypeDispatch } from "@/store";
-import { fetchUserAction } from "@/store/actions";
+import { createExamResultAction, fetchUserAction } from "@/store/actions";
 import { getAssessmentsByCourseIdAction } from "@/store/actions/course";
 import { getEnrollmentsByIdAction } from "@/store/actions/enrollment";
 import { BASE_URL } from "@/utils/axios";
@@ -72,7 +72,36 @@ export default function page({ params }: any) {
             toast.error("Please complete the exam before submitting it", { position: "top-right" });
             return;
         };
+        try {
+            let score = 0;
+            const response = Object.entries(answers).map(([key, value]: any) => Number(value));
 
+            assessmentAvailable.questions?.forEach((item: any, index: number) => {
+                if(Number(item.answer) === response[index]){
+                    score += Number(assessmentAvailable.questionScore)
+                }
+            });
+
+            const result = await dispatch(createExamResultAction({
+                userRef: user?._id,
+                assessmentRef: assessmentAvailable?._id,
+                response: response,
+                score: score
+            }));
+
+            if(!result.payload?.success){
+                throw new Error("Storing exam result failed!");
+            }
+            
+            setAttendExam(false);
+            setLoading(true);
+            handleFetch();
+            
+            toast.success("Exam completed successfully!", {position: "top-right"});
+
+        } catch (error: any) {
+            toast.error(error?.message || "Something went wrong!");
+        }
     }
 
     const handleNextQuestion = () => {

@@ -45,12 +45,6 @@ export default function InstructorLayout({
                                 <span className="mt-1 font-medium text-sm">My Courses</span>
                             </div>
                         </NavLink>
-                        <NavLink href="/instructor/analytics">
-                            <div className="pl-6 py-4 flex items-center justify-start gap-4 bg-white rounded-lg">
-                                <img src="/svgs/pie-chart.svg" alt="" className="w-5 opacity-80" />
-                                <span className="mt-1 font-medium text-sm">Analytics</span>
-                            </div>
-                        </NavLink>
                         <NavLink href="/instructor/assessments">
                             <div className="pl-6 py-4 flex items-center justify-start gap-4 bg-white rounded-lg">
                                 <img src="/svgs/bar-chart-2.svg" alt="" className="w-5 opacity-80" />

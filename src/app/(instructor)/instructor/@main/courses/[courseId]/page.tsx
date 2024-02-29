@@ -40,8 +40,8 @@ export default function CourseDetailed({ params }: any) {
                             <div className="px-10">
                                 <div className="relative w-full flex items-center justify-between px-4 py-4 gap-8 bg-white rounded shadow-md">
                                     <button onClick={() => { router.push(`${courseId}/update`) }} className="absolute px-2 py-1 rounded bg-black top-2 right-2 text-xs text-white font-medium">update</button>
-                                    <img crossOrigin="anonymous" src={`${PUBLIC_RESOURCE_URL}/api/course/images/${course.thumbnail}`} alt="" className="w-1/2 h-48" />
-                                    <div className="flex flex-col items-start justify-center gap-1">
+                                    <img crossOrigin="anonymous" src={`${PUBLIC_RESOURCE_URL}/api/course/images/${course.thumbnail}`} alt="" className="h-48" />
+                                    <div className="flex flex-col items-start justify-start gap-1 w-full">
                                         <h2 className="font-bold text-3xl">
                                             {course.title.split(" ").map((word: string, index: number, array: string[]) => (
                                                 <span key={index} className={index === array.length - 1 ? "text-purple-800" : ""}>

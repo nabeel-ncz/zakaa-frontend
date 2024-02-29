@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { TypeDispatch, TypeState } from "@/store";
 import { fetchUserAction } from "@/store/actions";
 import Skeleton from "@/components/ui/Skeleton";
+import NavLink from "../common/NavLink";
 
 export default function StudentLayout({
     children
@@ -32,36 +33,36 @@ export default function StudentLayout({
                 </div>
                 <div className="flex-1 overflow-y-auto border-r secondary-bg">
                     <nav className="flex flex-col gap-4 flex-1 px-4 py-4">
-                        <Link href="/student">
-                            <div className="pl-6 py-4 flex items-center justify-start gap-4 bg-white rounded-lg shadow">
+                        <NavLink href="/student">
+                            <div className="pl-6 py-4 flex items-center justify-start gap-4 bg-white rounded-lg">
                                 <img src="/svgs/home.svg" alt="" className="w-5 opacity-80" />
                                 <span className="mt-1 font-medium text-sm">Overview</span>
                             </div>
-                        </Link>
-                        <Link href="/student/enrollments">
+                        </NavLink>
+                        <NavLink href="/student/enrollments">
                             <div className="pl-6 py-4 flex items-center justify-start gap-4 bg-white rounded-lg">
-                                <img src="/svgs/book-open.svg" alt="" className="w-5 opacity-50" />
-                                <span className="mt-1 font-medium text-sm opacity-50">Enrollments</span>
+                                <img src="/svgs/book-open.svg" alt="" className="w-5 opacity-80" />
+                                <span className="mt-1 font-medium text-sm">Enrollments</span>
                             </div>
-                        </Link>
-                        <Link href="/student/exams">
+                        </NavLink>
+                        <NavLink href="/student/exams">
                             <div className="pl-6 py-4 flex items-center justify-start gap-4 bg-white rounded-lg">
-                                <img src="/svgs/pie-chart.svg" alt="" className="w-5 opacity-50" />
-                                <span className="mt-1 font-medium text-sm opacity-50">Exams</span>
+                                <img src="/svgs/pie-chart.svg" alt="" className="w-5 opacity-80" />
+                                <span className="mt-1 font-medium text-sm">Exams</span>
                             </div>
-                        </Link>
-                        <Link href="/student/chat">
+                        </NavLink>
+                        <NavLink href="/student/chat">
                             <div className="pl-6 py-4 flex items-center justify-start gap-4 bg-white rounded-lg">
-                                <img src="/svgs/message-circle.svg" alt="" className="w-5 opacity-50" />
-                                <span className="mt-1 font-medium text-sm opacity-50">Messages</span>
+                                <img src="/svgs/message-circle.svg" alt="" className="w-5 opacity-80" />
+                                <span className="mt-1 font-medium text-sm">Messages</span>
                             </div>
-                        </Link>
-                        <Link href="/student/settings">
+                        </NavLink>
+                        <NavLink href="/student/settings">
                             <div className="pl-6 py-4 flex items-center justify-start gap-4 bg-white rounded-lg">
-                                <img src="/svgs/settings.svg" alt="" className="w-5 opacity-50" />
-                                <span className="mt-1 font-medium text-sm opacity-50">Settings</span>
+                                <img src="/svgs/settings.svg" alt="" className="w-5 opacity-80" />
+                                <span className="mt-1 font-medium text-sm">Settings</span>
                             </div>
-                        </Link>
+                        </NavLink>
                     </nav>
                 </div>
             </div>

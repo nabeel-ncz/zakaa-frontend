@@ -1,7 +1,7 @@
 'use client';
 import Loading from "@/components/ui/Loading";
 import { TypeDispatch } from "@/store";
-import { createExamResultAction, fetchUserAction } from "@/store/actions";
+import { createExamResultAction, fetchUserAction, getExamResultsByUserIdAction } from "@/store/actions";
 import { getAssessmentsByCourseIdAction } from "@/store/actions/course";
 import { getEnrollmentsByIdAction } from "@/store/actions/enrollment";
 import { BASE_URL } from "@/utils/axios";
@@ -23,10 +23,12 @@ export default function page({ params }: any) {
     const [loading, setLoading] = useState(true);
     const [assessments, setAssessments] = useState<any[] | null>(null);
     const [assessmentAvailable, setAssessmentAvailable] = useState<any>(null);
+    const [assessmentCompleted, setAssessmentCompleted] = useState<boolean>(false);
     const [user, setUser] = useState<any | null>(null);
     const [attendExam, setAttendExam] = useState<boolean>(false);
     const [currQuestion, setCurrQuestion] = useState<number>(0);
     const [answers, setAnswers] = useState<any>({});
+    const [examResults, setExamResults] = useState<any[] | null>(null);
 
     useEffect(() => {
         handleFetch();
@@ -37,9 +39,12 @@ export default function page({ params }: any) {
         setAssessmentAvailable(null);
         assessments?.forEach((item) => {
             if (item.lessonId?.toString() === lesson._id?.toString()) {
-                setAssessmentAvailable(item)
+                setAssessmentAvailable(item);
+                const attended = examResults?.find((exam) => exam.assessmentRef?._id?.toString() === item._id?.toString());
+                if (attended) setAssessmentCompleted(true);
             }
-        })
+        });
+
     };
 
     const handleFetch = async () => {
@@ -55,10 +60,15 @@ export default function page({ params }: any) {
                 courseId: result.payload?.data?.courseId?._id
             }));
 
+            const examResults = await dispatch(getExamResultsByUserIdAction({
+                userId: user.payload?.data?._id
+            }));
+
             setUser(user.payload?.data);
             setEnrollment(result.payload?.data);
             setCourse(result.payload?.data?.courseId);
             setAssessments(assessments.payload?.data);
+            setExamResults(examResults.payload?.data);
 
         } catch (error) {
             console.log(error);
@@ -77,7 +87,7 @@ export default function page({ params }: any) {
             const response = Object.entries(answers).map(([key, value]: any) => Number(value));
 
             assessmentAvailable.questions?.forEach((item: any, index: number) => {
-                if(Number(item.answer) === response[index]){
+                if (Number(item.answer) === response[index]) {
                     score += Number(assessmentAvailable.questionScore)
                 }
             });
@@ -89,15 +99,16 @@ export default function page({ params }: any) {
                 score: score
             }));
 
-            if(!result.payload?.success){
-                throw new Error("Storing exam result failed!");
+            if (!result.payload?.success) {
+                throw new Error("Exam completion failed!");
             }
-            
+
             setAttendExam(false);
             setLoading(true);
             handleFetch();
-            
-            toast.success("Exam completed successfully!", {position: "top-right"});
+            setAssessmentCompleted(true);
+
+            toast.success("Exam completed successfully!", { position: "top-right" });
 
         } catch (error: any) {
             toast.error(error?.message || "Something went wrong!");
@@ -242,11 +253,17 @@ export default function page({ params }: any) {
                                 <p className="font-semibold text-gray-600 text-sm">
                                     Last updated : {new Date(`${assessmentAvailable.updatedAt}`).toLocaleString()}
                                 </p>
-                                <button onClick={() => {
-                                    setAttendExam(true);
-                                }} className="font-semibold text-sm px-3 py-1 rounded bg-purple-800 text-white">
-                                    Attend Exam
-                                </button>
+                                {assessmentCompleted ? (
+                                    <button className="font-semibold text-sm px-3 py-1 rounded bg-purple-800 text-white">
+                                        Exam completed
+                                    </button>
+                                ) : (
+                                    <button onClick={() => {
+                                        setAttendExam(true);
+                                    }} className="font-semibold text-sm px-3 py-1 rounded bg-purple-800 text-white">
+                                        Attend Exam
+                                    </button>
+                                )}
                             </div>
                         </div>
                     )}

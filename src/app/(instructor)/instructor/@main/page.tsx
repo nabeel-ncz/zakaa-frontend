@@ -85,6 +85,7 @@ export default function Dashboard() {
                             <span className="absolute w-2 h-12 bg-purple-800 left-0 top-[25%] opacity-80"></span>
                         </div>
                     </div>
+                    <h2 className="font-bold text-lg mt-10 underline">Recent Enrollments</h2>
                     <div className="overflow-x-scroll lg:overflow-hidden bg-white rounded-lg mt-4">
                         <table className="w-full min-w-max table-auto">
                             <thead className="font-normal">

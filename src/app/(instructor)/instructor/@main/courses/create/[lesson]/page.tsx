@@ -194,7 +194,7 @@ export default function CreateLesson({ params }: any) {
                     <ImageUpload onChange={(file: any) => { setLessonThumbnail(file) }} />
                     {(submitted && !lessonThumbnail) && <span className="custom-form-error">Thumbnail is required!</span>}
 
-                    <h2 className="mt-4 font-medium text-xs mb-1 ">Lesson Attachments</h2>
+                    {/* <h2 className="mt-4 font-medium text-xs mb-1 ">Lesson Attachments</h2>
                     <FileUpload onChange={(file: any) => { setLessonAttachment(file) }} />
 
 
@@ -205,7 +205,7 @@ export default function CreateLesson({ params }: any) {
                         type="text"
                         className="w-full px-8 py-3 rounded-lg font-medium border placeholder-gray-500 text-xs focus:outline-none border-gray-400 bg-white"
                     />
-                    {(lessonAttachment && !attachmentTitle) && <span className="custom-form-error">Attachment title is required!</span>}
+                    {(lessonAttachment && !attachmentTitle) && <span className="custom-form-error">Attachment title is required!</span>} */}
                 </div>
             </div>
         </>

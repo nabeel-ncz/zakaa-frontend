@@ -203,7 +203,7 @@ export default function CreateCourse() {
 
                     {pricingType === "paid" && (
                         <>
-                            <h2 className="mt-4 font-medium text-xs mb-1 ">Amount <span className="text-red-700"></span></h2>
+                            <h2 className="mt-4 font-medium text-xs mb-1 ">Amount ($) <span className="text-red-700"></span></h2>
                             <input
                                 value={pricingAmount}
                                 onChange={(e) => { setPricingAmount(e.target.value) }}

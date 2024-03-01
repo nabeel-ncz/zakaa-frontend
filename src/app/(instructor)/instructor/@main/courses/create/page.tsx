@@ -214,12 +214,16 @@ export default function CreateCourse() {
                         </>
                     )}
 
-                    <h2 className="mt-4 font-medium text-xs mb-1 ">Trial video <span className="text-red-700"></span></h2>
+                    <h2 className="mt-4 font-medium text-xs mb-1 ">Trial video
+                        {pricingType === "paid" && (<span className="text-red-700">*</span>)}
+                    </h2>
                     <VideoUpload onChange={(file: any) => { setTrialVideo(file) }} />
                     {(submitted && pricingType === "paid" && !trialVideo) && <span className="custom-form-error">Trial video is required!</span>}
 
 
-                    <h2 className="mt-4 font-medium text-xs mb-1">Video title</h2>
+                    <h2 className="mt-4 font-medium text-xs mb-1">Video title
+                        {pricingType === "paid" && (<span className="text-red-700">*</span>)}
+                    </h2>
                     <input
                         value={trialTitle}
                         onChange={(e) => { setTrialTitle(e.target.value) }}
@@ -229,7 +233,9 @@ export default function CreateCourse() {
                     {(trialVideo && !trialTitle) && <span className="custom-form-error">Title is required!</span>}
 
 
-                    <h2 className="mt-4 font-medium text-xs mb-1">Video description</h2>
+                    <h2 className="mt-4 font-medium text-xs mb-1">Video description
+                        {pricingType === "paid" && (<span className="text-red-700">*</span>)}
+                    </h2>
                     <input
                         value={trialDescription}
                         onChange={(e) => { setTrialDescription(e.target.value) }}

@@ -58,7 +58,7 @@ export default function Dashboard() {
             {loading ? (
                 <Loading />
             ) : (
-                <div className="w-full px-12">
+                <div className="w-full px-12 pt-4">
                     <div className="flex items-center justify-between gap-12">
                         <div className="w-1/3 relative bg-white flex shadow rounded px-4 py-4 items-center justify-around">
                             <div className="flex flex-col font-bold text-lg">

@@ -83,7 +83,7 @@ export default function Courses() {
     };
 
     return (
-        <div className="w-full min-h-screen">
+        <div className="w-full min-h-screen pt-4">
             <div className="flex px-10 items-end justify-end w-full">
                 <button className="px-4 py-2 rounded border-[rgba(127,39,194,0.5)] border-2 bg-white font-medium" onClick={navigateToCreate}>Create</button>
             </div>

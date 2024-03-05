@@ -1,6 +1,57 @@
+"use client";
+import UserSearchInChat from "@/components/user/UserSearchInChat";
+import { TypeDispatch } from "@/store";
+import { fetchUserAction } from "@/store/actions";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { io } from "socket.io-client";
+
 export default function Chat() {
+
+    const socket = io("http://localhost:3007");
+    const dispatch: TypeDispatch = useDispatch();
+    const [user, setUser] = useState<any>(null);
+    const [messages, setMessages] = useState<any[] | null>(null);
+    const [openUserSearch, setOpenUserSearch] = useState<boolean>(false);
+
+    useEffect(() => {
+        handleJoinRoom();
+        handleRecieveMessages();
+    }, []);
+
+    const handleJoinRoom = () => {
+        dispatch(fetchUserAction()).then((res) => {
+            if (res.payload?.success) {
+                setUser(res.payload?.data);
+                socket.emit("join_room", {
+                    chatId: "1"
+                })
+            }
+        });
+    }
+
+    const handleRecieveMessages = () => {
+        socket.on("recieve_message", (payload: any) => {
+            console.log(payload, "---------------");
+        });
+    }
+
+    const handleSendMessages = () => {
+        socket.emit("send_message", {
+            message: "hello world",
+            chatId: "1"
+        });
+    }
+
+    const handleCloseSearch = () => {
+        setOpenUserSearch(false);
+    }
+
     return (
         <>
+            {openUserSearch && (
+                <UserSearchInChat closeSearch={handleCloseSearch} />
+            )}
             <div className="w-full max-h-screen flex">
                 <div className="w-3/12 h-full">
                     <div className="flex w-full items-center justify-between px-6 py-4 gap-4">
@@ -8,12 +59,15 @@ export default function Chat() {
                             <h2 className="font-bold text-lg">Messages</h2>
                             <img src="/icons/down-arrow.png" alt="" className="w-4" />
                         </div>
-                        <img src="/icons/plus-button.png" alt="" className="w-6 h-6 cursor-pointer" />
+                        <img onClick={() => {
+                            setOpenUserSearch(true)
+                        }} src="/icons/plus-button.png" alt="" className="w-6 h-6 cursor-pointer" />
                     </div>
                     <div className="flex w-full px-4">
                         <input placeholder="search message" type="text" className="text-sm font-light outline-none w-full px-4 py-2 rounded border border-gray-100" />
                     </div>
                     <div className="flex flex-col w-full items-start px-4 py-4 gap-4">
+
                         <div className="cursor-pointer w-full flex items-start gap-2 p-2 rounded">
                             <img src="/icons/profile-copy-2.png" alt="" className="w-10 h-10" />
                             <div className="flex flex-col items-start">
@@ -94,7 +148,9 @@ export default function Chat() {
                             <img src="/icons/attached.png" alt="" className="w-5" />
                         </button>
                         <input placeholder="Type a message..." type="text" className="text-sm text-light w-full px-4 py-2 outline-none border border-gray-300" />
-                        <button className="px-4 h-[2.35rem] primary-bg rounded-tr rounded-br text-white text-sm font-medium flex items-center justify-center">Send</button>
+                        <button
+                            onClick={handleSendMessages}
+                            className="px-4 h-[2.35rem] primary-bg rounded-tr rounded-br text-white text-sm font-medium flex items-center justify-center">Send</button>
                     </div>
                 </div>
             </div>

@@ -1,9 +1,12 @@
+import SocketProvider from "@/components/providers/SocketProvider";
 import ChatInterface from "@/components/user/ChatInterface";
 
 export default function page() {
     return (
         <>
-            <ChatInterface />
+            <SocketProvider>
+                <ChatInterface />
+            </SocketProvider>
         </>
     )
 }

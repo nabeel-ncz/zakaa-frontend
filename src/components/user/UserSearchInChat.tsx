@@ -40,10 +40,10 @@ export default function UserSearchInChat(
                         return item.type === "individual";
                     });
                     const alreadyCreateChatsAccepted = individualChats?.map((item: any) => {
-                        return item.participants[1]
+                        return item.participants[1]?._id
                     });
                     const alreadyCreatedChatsRequested = individualChats?.map((item: any) => {
-                        return item.participants[0]
+                        return item.participants[0]?._id
                     }).reduce((arr: string[], curr: string) => {
                         if (!arr.includes(curr)) {
                             arr.push(curr);
@@ -51,6 +51,7 @@ export default function UserSearchInChat(
                         }
                         return arr;
                     }, []);
+                    console.log([...alreadyCreateChatsAccepted, ...alreadyCreatedChatsRequested],"=======");
                     setCreatedChats([...alreadyCreateChatsAccepted, ...alreadyCreatedChatsRequested]);
                 });
             }

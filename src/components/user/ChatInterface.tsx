@@ -7,8 +7,8 @@ import { useDispatch } from "react-redux";
 import { SocketContext } from "../providers/SocketProvider";
 import LoaderSm from "../ui/LoaderSm";
 import Loading from "../ui/Loading";
-import WobbleLoader from "../ui/WobbleLoader";
-import BanterLoader from "../ui/BanterLoader";
+import ChatFileUpload from "./ChatFileUpload";
+import ChatRooms from "./ChatRooms";
 
 export default function ChatInterface() {
 
@@ -28,11 +28,7 @@ export default function ChatInterface() {
     const [openChatLoading, setOpenChatLoading] = useState<boolean>(false);
     const [fileUploadOpen, setFileUploadOpen] = useState<boolean>(false);
     const [fileUploadLoading, setFileUploadLoading] = useState<boolean>(false);
-
-    const audioInputRef: any = useRef();
-    const videoInputRef: any = useRef();
-    const imageInputRef: any = useRef();
-    const docsInputRef: any = useRef();
+    const [filteredChats, setFilteredChats] = useState<any[] | null>(null);
 
     useEffect(() => {
         handleLoadChats();
@@ -97,6 +93,7 @@ export default function ChatInterface() {
                 const reqChats = [...chats1, ...chats2].filter((item) => item.status === "requested").map((item) => item?.chatId);
                 setRequestedChats(reqChats);
                 setChats([...chats1, ...chats2]);
+                setFilteredChats([...chats1, ...chats2])
             }
         }).finally(() => {
             setLoading(false)
@@ -148,6 +145,7 @@ export default function ChatInterface() {
         }));
         setMessages((prev: any[]) => [...prev, payload]);
         setFormMessage("");
+        scrollToBottomOfTheMessageContainer();
     };
 
     const handleSendFileMessage = (chatId: string, senderId: string, url: string, contentType: string) => {
@@ -213,6 +211,16 @@ export default function ChatInterface() {
         }
     }
 
+    const hanldeChatsSearch = (evt: ChangeEvent<HTMLInputElement>) => {
+        const search = evt.target.value;
+        if (!search) {
+            setFilteredChats(chats);
+            return
+        }
+        const filtered = chats?.filter((item) => item.username.toLowerCase().includes(search.toLowerCase()));
+        setFilteredChats(filtered!);
+    }
+
     return (
         <>
             {openUserSearch && (
@@ -220,38 +228,14 @@ export default function ChatInterface() {
             )}
             <div className="w-full max-h-screen flex">
                 {/* chat rooms listing */}
-                <div className="w-3/12 h-full">
-                    <div className="flex w-full items-center justify-between px-6 py-4 gap-4">
-                        <div className="w-full flex items-center gap-2">
-                            <h2 className="font-bold text-lg">Messages</h2>
-                            <img src="/icons/down-arrow.png" alt="" className="w-4" />
-                        </div>
-                        <img onClick={() => {
-                            setOpenUserSearch(true)
-                        }} src="/icons/plus-button.png" alt="" className="w-6 h-6 cursor-pointer" />
-                    </div>
-                    <div className="flex w-full px-4">
-                        <input placeholder="search message" type="text" className="text-sm font-light outline-none w-full px-4 py-2 rounded border border-gray-100" />
-                    </div>
-                    <div className="flex flex-col w-full items-start px-4 py-4 gap-4">
-                        {loading && (
-                            <div className="w-full flex flex-col items-center justify-center">
-                                <img src="/ui/32.png" alt="" className="w-32" />
-                            </div>
-                        )}
-                        {chats?.map((item) => (
-                            <div key={item._id} onClick={() => {
-                                handleOpenChatRoom(item);
-                            }} className={`${currChat?._id === item._id ? "bg-[#e7c7fd]" : ""} cursor-pointer w-full flex items-start gap-2 p-2 rounded hover:bg-[#e7c7fd] transition-all delay-100`}>
-                                <img src="/icons/profile-copy-2.png" alt="" className="w-10 h-10" />
-                                <div className="flex flex-col items-start">
-                                    <h1 className="text-sm font-medium line-clamp-1">{item.username}</h1>
-                                    <h1 className="text-xs font-light line-clamp-1">{item.email}</h1>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
+                <ChatRooms
+                    setOpenUserSearch={setOpenUserSearch}
+                    handleOpenChatRoom={handleOpenChatRoom}
+                    currChat={currChat}
+                    filteredChats={filteredChats}
+                    hanldeChatsSearch={hanldeChatsSearch}
+                    loading={loading}
+                />
                 {/* chat-container */}
                 <div className="w-9/12 border-l border-gray-200 h-full bg-white flex flex-col items-start">
                     {currChat ? (
@@ -340,53 +324,19 @@ export default function ChatInterface() {
                                 <div className="h-16"></div>
                             </div>
                             <div className="relative w-full h-full py-4 px-8 flex">
-                                {fileUploadOpen && (
-                                    <div className="absolute w-80 h-[5.5rem] bg-white rounded-md shadow-xl top-[-5.5rem]">
-                                        <div className="w-full flex items-center justify-center gap-2">
-                                            <div onClick={() => {
-                                                audioInputRef.current.click();
-                                            }} className="p-4 flex flex-col items-center w-16 gap-2 cursor-pointer">
-                                                <img src="/icons/mic.png" alt="" className="object-fill" />
-                                                <h2 className="text-xs font-light">Audio</h2>
-                                                <input onChange={(evt) => {
-                                                    handleUploadMessage(evt, "audio")
-                                                }} type="file" accept="audio/*" ref={audioInputRef} hidden />
-                                            </div>
-                                            <div onClick={() => {
-                                                imageInputRef.current.click();
-                                            }} className="p-4 flex flex-col items-center w-16 gap-2 cursor-pointer">
-                                                <img src="/icons/image.png" alt="" className="object-fill" />
-                                                <h2 className="text-xs font-light">Image</h2>
-                                                <input onChange={(evt) => {
-                                                    handleUploadMessage(evt, "image")
-                                                }} type="file" accept="image/*" ref={imageInputRef} hidden />
-                                            </div>
-                                            <div onClick={() => {
-                                                videoInputRef.current.click();
-                                            }} className="p-4 flex flex-col items-center w-16 gap-2 cursor-pointer">
-                                                <img src="/icons/multimedia.png" alt="" className="object-fill" />
-                                                <h2 className="text-xs font-light">Video</h2>
-                                                <input onChange={(evt) => {
-                                                    handleUploadMessage(evt, "video")
-                                                }} type="file" accept="video/*" ref={videoInputRef} hidden />
-                                            </div>
-                                            <div onClick={() => {
-                                                docsInputRef.current.click();
-                                            }} className="p-4 flex flex-col items-center w-16 gap-2 cursor-pointer">
-                                                <img src="/icons/pdf-file-format.png" alt="" className="object-fill" />
-                                                <h2 className="text-xs font-light">Docs</h2>
-                                                <input onChange={(evt) => {
-                                                    handleUploadMessage(evt, "file")
-                                                }} type="file" accept=".pdf" ref={docsInputRef} hidden />
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
+                                {/* chat file upload option */}
+                                <ChatFileUpload
+                                    fileUploadOpen={fileUploadOpen}
+                                    handleUploadMessage={handleUploadMessage}
+                                />
+                                {/* -------------- */}
+
                                 <button onClick={() => {
                                     setFileUploadOpen(prev => !prev);
                                 }} className="px-4 h-[2.35rem] secondary-bg flex items-center justify-center rounded-tl rounded-bl">
                                     <img src="/icons/attached.png" alt="" className="w-5" />
                                 </button>
+                                
                                 <input
                                     onChange={(evt) => {
                                         setFormMessage(evt.target.value);
@@ -397,9 +347,11 @@ export default function ChatInterface() {
                                         }
                                     }}
                                     value={formMessage} placeholder="Type a message..." type="text" className="text-sm text-light w-full px-4 py-2 outline-none border border-gray-300" />
+                                
                                 <button
                                     onClick={() => { handleSendMessage(currChat?.chatId, user?._id) }}
                                     className="px-4 h-[2.35rem] primary-bg rounded-tr rounded-br text-white text-sm font-medium flex items-center justify-center">Send</button>
+                            
                             </div>
                         </>
                     ) : (

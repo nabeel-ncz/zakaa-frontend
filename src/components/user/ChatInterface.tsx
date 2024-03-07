@@ -1,10 +1,12 @@
 "use client";
 import UserSearchInChat from "@/components/user/UserSearchInChat";
 import { TypeDispatch } from "@/store";
-import { fetchUserAction, getChatsByUserIdAction } from "@/store/actions";
+import { createMessageAction, fetchUserAction, getChatsByUserIdAction, getMessagesByChatIdAction, updateChatAction } from "@/store/actions";
 import { useContext, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { SocketContext } from "../providers/SocketProvider";
+import LoaderSm from "../ui/LoaderSm";
+import Loading from "../ui/Loading";
 
 export default function ChatInterface() {
 
@@ -20,6 +22,8 @@ export default function ChatInterface() {
     const [accepters, setAccepters] = useState<any>(null);
     const [formMessage, setFormMessage] = useState<string>("");
     const chatContainerRef: any = useRef();
+    const [chatAcceptLoading, setChatAcceptLoading] = useState<boolean>(false);
+    const [openChatLoading, setOpenChatLoading] = useState<boolean>(false);
 
     useEffect(() => {
         handleLoadChats();
@@ -56,7 +60,9 @@ export default function ChatInterface() {
                         ...item.participants[0],
                         chatId: item._id,
                         type: item.type,
-                        status: item.status
+                        status: item.status,
+                        groupName: item.groupName,
+                        groupDescription: item.groupDescription
                     };
                 });
 
@@ -72,7 +78,9 @@ export default function ChatInterface() {
                         ...item.participants[1],
                         chatId: item._id,
                         type: item.type,
-                        status: item.status
+                        status: item.status,
+                        groupName: item.groupName,
+                        groupDescription: item.groupDescription
                     };
                 });
 
@@ -93,9 +101,17 @@ export default function ChatInterface() {
     }
 
     const handleOpenChatRoom = (chat: any) => {
+        setOpenChatLoading(true);
         setCurrChat(chat);
         handleJoinRoom(chat?.chatId);
-        scrollToBottomOfTheMessageContainer();
+        dispatch(getMessagesByChatIdAction({ chatId: chat?.chatId })).then((res) => {
+            if (res.payload?.success) {
+                setMessages(res.payload?.data);
+            }
+        }).finally(() => {
+            scrollToBottomOfTheMessageContainer();
+            setOpenChatLoading(false);
+        })
     }
 
     const handleCloseSearch = () => {
@@ -107,7 +123,7 @@ export default function ChatInterface() {
     }
 
     const handleSendMessage = (chatId: string, senderId: string) => {
-        if(!formMessage.trim()) return;
+        if (!formMessage.trim()) return;
         const payload = {
             content: formMessage,
             sender: senderId,
@@ -115,8 +131,48 @@ export default function ChatInterface() {
             createdAt: Date.now()
         };
         socket.emit("send_message", payload);
+        dispatch(createMessageAction({
+            ...payload,
+            contentType: 'text',
+            recieverSeen: false
+        }));
         setMessages((prev: any[]) => [...prev, payload]);
         setFormMessage("");
+    }
+
+    const handleAcceptMessage = () => {
+        setChatAcceptLoading(true);
+        dispatch(updateChatAction({
+            _id: currChat?.chatId,
+            status: "active",
+            type: currChat?.type,
+            groupName: currChat?.groupName,
+            groupDescription: currChat?.groupDescription
+        })).finally(() => {
+            handleLoadChats();
+            setChatAcceptLoading(false);
+        })
+    }
+
+    const handleUploadMessage = async () => {
+        try {
+            const formData = new FormData();
+            formData.append("file", "imageFile");
+            formData.append("upload_preset", "ml_default");
+
+            const response = await fetch(
+                `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_NAME}/image/upload`,
+                {
+                    method: "POST",
+                    body: formData,
+                }
+            );
+            const data = await response.json();
+            return data.secure_url;
+        } catch (error) {
+            console.log(error);
+            return "";
+        }
     }
 
     return (
@@ -125,6 +181,7 @@ export default function ChatInterface() {
                 <UserSearchInChat closeSearch={handleCloseSearch} />
             )}
             <div className="w-full max-h-screen flex">
+                {/* chat rooms listing */}
                 <div className="w-3/12 h-full">
                     <div className="flex w-full items-center justify-between px-6 py-4 gap-4">
                         <div className="w-full flex items-center gap-2">
@@ -147,7 +204,7 @@ export default function ChatInterface() {
                         {chats?.map((item) => (
                             <div key={item._id} onClick={() => {
                                 handleOpenChatRoom(item);
-                            }} className="cursor-pointer w-full flex items-start gap-2 p-2 rounded hover:bg-[#e7c7fd] transition-all delay-100">
+                            }} className={`${currChat?._id === item._id ? "bg-[#e7c7fd]" : ""} cursor-pointer w-full flex items-start gap-2 p-2 rounded hover:bg-[#e7c7fd] transition-all delay-100`}>
                                 <img src="/icons/profile-copy-2.png" alt="" className="w-10 h-10" />
                                 <div className="flex flex-col items-start">
                                     <h1 className="text-sm font-medium line-clamp-1">{item.username}</h1>
@@ -157,6 +214,7 @@ export default function ChatInterface() {
                         ))}
                     </div>
                 </div>
+                {/* chat-container */}
                 <div className="w-9/12 border-l border-gray-200 h-full bg-white flex flex-col items-start">
                     {currChat ? (
                         <>
@@ -172,27 +230,67 @@ export default function ChatInterface() {
                                     <button className="px-4 py-2 secondary-bg primary-text rounded font-medium text-sm">Call</button>
                                 </div>
                             </div>
+                            {/* messages container */}
                             <div ref={chatContainerRef} className="relative w-full h-[31rem] overflow-y-scroll p-4">
-                                {requestedChats?.includes(currChat?.chatId) && (
+                                {requestedChats?.includes(currChat?.chatId) ? (
                                     <>
                                         <img src="/ui/186.png" alt="" className="h-80 absolute left-64" />
                                         <h2 className="font-bold text-lg absolute bottom-32 left-[26rem]">Chat requested !</h2>
                                         {accepters?.includes(currChat?.chatId) && (
-                                            <button className="absolute bottom-20 left-[28rem] ext-sm font-medium text-white primary-bg rounded px-4 py-1">Accept</button>
+                                            <>
+                                                {chatAcceptLoading ? (
+                                                    <button
+                                                        className="absolute bottom-20 left-[28rem] ext-sm font-medium text-white primary-bg rounded px-4 py-1"
+                                                    >
+                                                        <LoaderSm />
+                                                    </button>
+                                                ) : (
+                                                    <button
+                                                        onClick={handleAcceptMessage}
+                                                        className="absolute bottom-20 left-[28rem] ext-sm font-medium text-white primary-bg rounded px-4 py-1"
+                                                    >Accept</button>
+                                                )}
+                                            </>
                                         )}
                                     </>
+                                ) : (
+                                    <>
+                                        {openChatLoading && (
+                                            <Loading />
+                                        )}
+                                        {messages?.map((item: any, index: number) => (
+                                            <div key={index} className={`flex ${item.sender === user?._id ? "justify-end" : "justify-start"}`}>
+                                                <div className={`${item.sender === user?._id ? "bg-[#e7c7fd]" : "secondary-bg"} rounded-xl w-fit max-w-96 px-6 py-2 mb-1`} style={{ wordWrap: "break-word" }}>
+                                                    <h2 className="font-medium text-sm">{item.content}</h2>
+                                                    <p className={`text-xs font-light ${item.sender === user?._id ? "text-end " : "text-start"}`}>{new Date(item.createdAt).toTimeString().split('GMT')[0]}</p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </>
                                 )}
-                                {messages?.map((item: any, index: number) => (
-                                    <div key={index} className={`flex ${item.sender === user?._id ? "justify-end" : "justify-start"}`}>
-                                        <div className={`${item.sender === user?._id ? "bg-[#e7c7fd]" : "secondary-bg"} rounded-xl w-fit max-w-96 px-6 py-2 mb-1`} style={{ wordWrap: "break-word" }}>
-                                            <h2 className="font-medium text-sm">{item.content}</h2>
-                                            <p className={`text-xs font-light ${item.sender === user?._id ? "text-end " : "text-start"}`}>{new Date(item.createdAt).toTimeString().split('GMT')[0]}</p>
-                                        </div>
-                                    </div>
-                                ))}
                                 <div className="h-16"></div>
                             </div>
-                            <div className="w-full h-full py-4 px-8 flex">
+                            <div className="relative w-full h-full py-4 px-8 flex">
+                                <div className="absolute w-80 h-[5.5rem] bg-white rounded-md shadow-xl top-[-5.5rem]">
+                                    <div className="w-full flex items-center justify-center gap-2">
+                                        <div className="p-4 flex flex-col items-center w-16 gap-2 cursor-pointer">
+                                            <img src="/icons/mic.png" alt="" className="object-fill" />
+                                            <h2 className="text-xs font-light">Audio</h2>
+                                        </div>
+                                        <div className="p-4 flex flex-col items-center w-16 gap-2 cursor-pointer">
+                                            <img src="/icons/image.png" alt="" className="object-fill" />
+                                            <h2 className="text-xs font-light">Image</h2>
+                                        </div>
+                                        <div className="p-4 flex flex-col items-center w-16 gap-2 cursor-pointer">
+                                            <img src="/icons/multimedia.png" alt="" className="object-fill" />
+                                            <h2 className="text-xs font-light">Video</h2>
+                                        </div>
+                                        <div className="p-4 flex flex-col items-center w-16 gap-2 cursor-pointer">
+                                            <img src="/icons/pdf-file-format.png" alt="" className="object-fill" />
+                                            <h2 className="text-xs font-light">Docs</h2>
+                                        </div>
+                                    </div>
+                                </div>
                                 <button className="px-4 h-[2.35rem] secondary-bg flex items-center justify-center rounded-tl rounded-bl">
                                     <img src="/icons/attached.png" alt="" className="w-5" />
                                 </button>

@@ -29,6 +29,7 @@ export default function ChatInterface() {
     const [fileUploadOpen, setFileUploadOpen] = useState<boolean>(false);
     const [fileUploadLoading, setFileUploadLoading] = useState<boolean>(false);
     const [filteredChats, setFilteredChats] = useState<any[] | null>(null);
+    const [currChatUserStatus, setCurrChatUserStatus] = useState<string>("offline");
 
     useEffect(() => {
         handleLoadChats();
@@ -38,9 +39,14 @@ export default function ChatInterface() {
         const handleMessage = (payload: any) => {
             setMessages((prev: any[]) => [...prev, payload]);
         };
+        const handleGetUserStatus = (payload: { status: string }) => {
+            setCurrChatUserStatus(payload?.status);
+        };
         socket.on("recieve_message", handleMessage);
+        socket.on("user_status", handleGetUserStatus);
         return () => {
             socket.off("recieve_message", handleMessage);
+            socket.off("user_status", handleGetUserStatus);
         };
     }, [socket])
 
@@ -109,7 +115,7 @@ export default function ChatInterface() {
     const handleOpenChatRoom = (chat: any) => {
         setOpenChatLoading(true);
         setCurrChat(chat);
-        handleJoinRoom(chat?.chatId);
+        handleJoinRoom(chat?.chatId, chat?._id);
         dispatch(getMessagesByChatIdAction({ chatId: chat?.chatId })).then((res) => {
             if (res.payload?.success) {
                 setMessages(res.payload?.data);
@@ -124,8 +130,8 @@ export default function ChatInterface() {
         setOpenUserSearch(false);
     }
 
-    const handleJoinRoom = (chatId: string) => {
-        socket.emit("join_room", { chatId });
+    const handleJoinRoom = (chatId: string, recieverId: string) => {
+        socket.emit("join_room", { chat: chatId, user: recieverId });
     }
 
     const handleSendMessage = (chatId: string, senderId: string) => {
@@ -245,7 +251,7 @@ export default function ChatInterface() {
                                     <img src="/icons/profile-copy-2.png" alt="" className="w-10 h-10" />
                                     <div className="flex flex-col items-start">
                                         <h2 className="text-sm font-medium">{currChat?.username}</h2>
-                                        <h2 className="text-xs font-light">Online...</h2>
+                                        <h2 className="text-xs font-light">{currChatUserStatus}...</h2>
                                     </div>
                                 </div>
                                 <div className="">
@@ -336,7 +342,7 @@ export default function ChatInterface() {
                                 }} className="px-4 h-[2.35rem] secondary-bg flex items-center justify-center rounded-tl rounded-bl">
                                     <img src="/icons/attached.png" alt="" className="w-5" />
                                 </button>
-                                
+
                                 <input
                                     onChange={(evt) => {
                                         setFormMessage(evt.target.value);
@@ -347,11 +353,11 @@ export default function ChatInterface() {
                                         }
                                     }}
                                     value={formMessage} placeholder="Type a message..." type="text" className="text-sm text-light w-full px-4 py-2 outline-none border border-gray-300" />
-                                
+
                                 <button
                                     onClick={() => { handleSendMessage(currChat?.chatId, user?._id) }}
                                     className="px-4 h-[2.35rem] primary-bg rounded-tr rounded-br text-white text-sm font-medium flex items-center justify-center">Send</button>
-                            
+
                             </div>
                         </>
                     ) : (

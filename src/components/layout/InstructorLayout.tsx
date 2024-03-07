@@ -1,28 +1,49 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import { fetchUserAction } from "@/store/actions";
 import { useDispatch, useSelector } from "react-redux";
 import { TypeDispatch, TypeState } from "@/store";
 import Skeleton from "@/components/ui/Skeleton";
 import NavLink from "@/components/common/NavLink";
+import { SocketContext } from "../providers/SocketProvider";
 
 export default function InstructorLayout({
     children
 }: {
     children: React.ReactNode
 }) {
-
+    const { socket } = useContext(SocketContext);
     const [loading, setLoading] = useState(true);
     const [open, setOpen] = useState(true);
     const dispatch: TypeDispatch = useDispatch();
     const user: any = useSelector((state: TypeState) => state.user.data);
 
     useEffect(() => {
-        dispatch(fetchUserAction())
-            .finally(() => {
-                setLoading(false);
-            })
+        dispatch(fetchUserAction()).then((res) => {
+            if (res.payload?.success) {
+                socket.emit("online", {
+                    user: res.payload?.data?._id
+                })
+            }
+        }).finally(() => {
+            setLoading(false);
+        });
+        return () => {
+            if (user) {
+                socket.emit("offline", {
+                    user: user?._id
+                });
+                return;
+            };
+            dispatch(fetchUserAction()).then((res) => {
+                if (res.payload?.success) {
+                    socket.emit("offline", {
+                        user: res.payload?.data?._id
+                    })
+                }
+            });
+        }
     }, []);
 
     return (

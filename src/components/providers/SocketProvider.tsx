@@ -6,12 +6,10 @@ import { SOCKET_SERVICE } from "@/utils/constants";
 interface InitialContextType {
     socket: Socket;
 }
-export const SocketContext = createContext<InitialContextType>({ socket: io(SOCKET_SERVICE) });
+const socket: Socket = io(SOCKET_SERVICE);
+export const SocketContext = createContext<InitialContextType>({ socket });
 
 export default function SocketProvider({ children }: { children: React.ReactNode }) {
-
-    const socket: Socket = io(SOCKET_SERVICE);
-
     return (
         <SocketContext.Provider value={{ socket }}>
             {children}

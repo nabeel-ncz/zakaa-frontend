@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import ReduxProvider from '@/store/provider';
 import { Toaster } from 'react-hot-toast';
 import './globals.css'
+import SocketProvider from '@/components/providers/SocketProvider';
 
 const inter = Inter({
   subsets: ['latin']
@@ -23,7 +24,9 @@ export default function RootLayout({
       <body className={inter.className}>
         <Toaster />
         <ReduxProvider>
-          {children}
+          <SocketProvider>
+            {children}
+          </SocketProvider>
         </ReduxProvider>
       </body>
     </html>

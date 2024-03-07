@@ -2,11 +2,13 @@
 import UserSearchInChat from "@/components/user/UserSearchInChat";
 import { TypeDispatch } from "@/store";
 import { createMessageAction, fetchUserAction, getChatsByUserIdAction, getMessagesByChatIdAction, updateChatAction } from "@/store/actions";
-import { useContext, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { SocketContext } from "../providers/SocketProvider";
 import LoaderSm from "../ui/LoaderSm";
 import Loading from "../ui/Loading";
+import WobbleLoader from "../ui/WobbleLoader";
+import BanterLoader from "../ui/BanterLoader";
 
 export default function ChatInterface() {
 
@@ -24,6 +26,13 @@ export default function ChatInterface() {
     const chatContainerRef: any = useRef();
     const [chatAcceptLoading, setChatAcceptLoading] = useState<boolean>(false);
     const [openChatLoading, setOpenChatLoading] = useState<boolean>(false);
+    const [fileUploadOpen, setFileUploadOpen] = useState<boolean>(false);
+    const [fileUploadLoading, setFileUploadLoading] = useState<boolean>(false);
+
+    const audioInputRef: any = useRef();
+    const videoInputRef: any = useRef();
+    const imageInputRef: any = useRef();
+    const docsInputRef: any = useRef();
 
     useEffect(() => {
         handleLoadChats();
@@ -128,12 +137,31 @@ export default function ChatInterface() {
             content: formMessage,
             sender: senderId,
             chat: chatId,
+            contentType: 'text',
             createdAt: Date.now()
         };
         socket.emit("send_message", payload);
         dispatch(createMessageAction({
             ...payload,
             contentType: 'text',
+            recieverSeen: false
+        }));
+        setMessages((prev: any[]) => [...prev, payload]);
+        setFormMessage("");
+    };
+
+    const handleSendFileMessage = (chatId: string, senderId: string, url: string, contentType: string) => {
+        const payload = {
+            content: url,
+            sender: senderId,
+            chat: chatId,
+            contentType: contentType,
+            createdAt: Date.now()
+        };
+        socket.emit("send_message", payload);
+        dispatch(createMessageAction({
+            ...payload,
+            contentType: contentType,
             recieverSeen: false
         }));
         setMessages((prev: any[]) => [...prev, payload]);
@@ -154,24 +182,34 @@ export default function ChatInterface() {
         })
     }
 
-    const handleUploadMessage = async () => {
+    const handleUploadMessage = async (evt: ChangeEvent<HTMLInputElement>, contentType: string) => {
         try {
+            setFileUploadLoading(true);
+            const file: File | null = evt.target.files![0];
             const formData = new FormData();
-            formData.append("file", "imageFile");
+            formData.append("file", file);
             formData.append("upload_preset", "ml_default");
 
+            const type = (contentType === "image" || contentType === "file") ? "image" : "video";
             const response = await fetch(
-                `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_NAME}/image/upload`,
+                `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_NAME}/${type}/upload`,
                 {
                     method: "POST",
                     body: formData,
                 }
             );
             const data = await response.json();
-            return data.secure_url;
+            handleSendFileMessage(
+                currChat?.chatId,
+                user?._id,
+                data?.secure_url,
+                contentType
+            );
         } catch (error) {
             console.log(error);
-            return "";
+        } finally {
+            setFileUploadLoading(false);
+            setFileUploadOpen(false);
         }
     }
 
@@ -261,37 +299,92 @@ export default function ChatInterface() {
                                         {messages?.map((item: any, index: number) => (
                                             <div key={index} className={`flex ${item.sender === user?._id ? "justify-end" : "justify-start"}`}>
                                                 <div className={`${item.sender === user?._id ? "bg-[#e7c7fd]" : "secondary-bg"} rounded-xl w-fit max-w-96 px-6 py-2 mb-1`} style={{ wordWrap: "break-word" }}>
-                                                    <h2 className="font-medium text-sm">{item.content}</h2>
-                                                    <p className={`text-xs font-light ${item.sender === user?._id ? "text-end " : "text-start"}`}>{new Date(item.createdAt).toTimeString().split('GMT')[0]}</p>
+                                                    {item.contentType === "text" && (
+                                                        <h2 className="font-medium text-sm">{item.content}</h2>
+                                                    )}
+                                                    {item.contentType === "image" && (
+                                                        <img src={`${item.content}`} alt="" className="w-64" />
+                                                    )}
+                                                    {item.contentType === "video" && (
+                                                        <video className="aspect-w-16 aspect-h-9" controls>
+                                                            <source src={`${item.content}`} />
+                                                        </video>
+                                                    )}
+                                                    {item.contentType === "audio" && (
+                                                        <div className="w-[18.5rem]">
+                                                            <audio controls>
+                                                                <source src={`${item.content}`} />
+                                                            </audio>
+                                                        </div>
+                                                    )}
+                                                    {item.contentType === "file" && (
+                                                        <div className="w-64">
+                                                            <embed src={`${item.content}`} type="application/pdf" width="100%" height="300px" />
+                                                        </div>
+                                                    )}
+                                                    <p className={`mt-2 text-xs font-light ${item.sender === user?._id ? "text-end " : "text-start"}`}>{new Date(item.createdAt).toTimeString().split('GMT')[0]}</p>
+
                                                 </div>
                                             </div>
                                         ))}
+                                        {fileUploadLoading && (
+                                            <div className="w-full flex items-center justify-end">
+                                                <div className="relative w-fit p-4 bg-[#e7c7fd] rounded-md overflow-hidden">
+                                                    <img src={`/ui/sample-thumb.png`} alt="" className="w-64 filter blur-sm" />
+                                                    <div className="absolute top-0 left-0 w-full h-full bg-[rgba(0,0,0,0.2)] backdrop-blur animate-pulse"></div>
+                                                </div>
+                                            </div>
+                                        )}
                                     </>
                                 )}
                                 <div className="h-16"></div>
                             </div>
                             <div className="relative w-full h-full py-4 px-8 flex">
-                                <div className="absolute w-80 h-[5.5rem] bg-white rounded-md shadow-xl top-[-5.5rem]">
-                                    <div className="w-full flex items-center justify-center gap-2">
-                                        <div className="p-4 flex flex-col items-center w-16 gap-2 cursor-pointer">
-                                            <img src="/icons/mic.png" alt="" className="object-fill" />
-                                            <h2 className="text-xs font-light">Audio</h2>
-                                        </div>
-                                        <div className="p-4 flex flex-col items-center w-16 gap-2 cursor-pointer">
-                                            <img src="/icons/image.png" alt="" className="object-fill" />
-                                            <h2 className="text-xs font-light">Image</h2>
-                                        </div>
-                                        <div className="p-4 flex flex-col items-center w-16 gap-2 cursor-pointer">
-                                            <img src="/icons/multimedia.png" alt="" className="object-fill" />
-                                            <h2 className="text-xs font-light">Video</h2>
-                                        </div>
-                                        <div className="p-4 flex flex-col items-center w-16 gap-2 cursor-pointer">
-                                            <img src="/icons/pdf-file-format.png" alt="" className="object-fill" />
-                                            <h2 className="text-xs font-light">Docs</h2>
+                                {fileUploadOpen && (
+                                    <div className="absolute w-80 h-[5.5rem] bg-white rounded-md shadow-xl top-[-5.5rem]">
+                                        <div className="w-full flex items-center justify-center gap-2">
+                                            <div onClick={() => {
+                                                audioInputRef.current.click();
+                                            }} className="p-4 flex flex-col items-center w-16 gap-2 cursor-pointer">
+                                                <img src="/icons/mic.png" alt="" className="object-fill" />
+                                                <h2 className="text-xs font-light">Audio</h2>
+                                                <input onChange={(evt) => {
+                                                    handleUploadMessage(evt, "audio")
+                                                }} type="file" accept="audio/*" ref={audioInputRef} hidden />
+                                            </div>
+                                            <div onClick={() => {
+                                                imageInputRef.current.click();
+                                            }} className="p-4 flex flex-col items-center w-16 gap-2 cursor-pointer">
+                                                <img src="/icons/image.png" alt="" className="object-fill" />
+                                                <h2 className="text-xs font-light">Image</h2>
+                                                <input onChange={(evt) => {
+                                                    handleUploadMessage(evt, "image")
+                                                }} type="file" accept="image/*" ref={imageInputRef} hidden />
+                                            </div>
+                                            <div onClick={() => {
+                                                videoInputRef.current.click();
+                                            }} className="p-4 flex flex-col items-center w-16 gap-2 cursor-pointer">
+                                                <img src="/icons/multimedia.png" alt="" className="object-fill" />
+                                                <h2 className="text-xs font-light">Video</h2>
+                                                <input onChange={(evt) => {
+                                                    handleUploadMessage(evt, "video")
+                                                }} type="file" accept="video/*" ref={videoInputRef} hidden />
+                                            </div>
+                                            <div onClick={() => {
+                                                docsInputRef.current.click();
+                                            }} className="p-4 flex flex-col items-center w-16 gap-2 cursor-pointer">
+                                                <img src="/icons/pdf-file-format.png" alt="" className="object-fill" />
+                                                <h2 className="text-xs font-light">Docs</h2>
+                                                <input onChange={(evt) => {
+                                                    handleUploadMessage(evt, "file")
+                                                }} type="file" accept=".pdf" ref={docsInputRef} hidden />
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <button className="px-4 h-[2.35rem] secondary-bg flex items-center justify-center rounded-tl rounded-bl">
+                                )}
+                                <button onClick={() => {
+                                    setFileUploadOpen(prev => !prev);
+                                }} className="px-4 h-[2.35rem] secondary-bg flex items-center justify-center rounded-tl rounded-bl">
                                     <img src="/icons/attached.png" alt="" className="w-5" />
                                 </button>
                                 <input

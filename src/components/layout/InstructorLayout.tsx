@@ -78,6 +78,12 @@ export default function InstructorLayout({
                                 <span className="mt-1 font-medium text-sm">Messages</span>
                             </div>
                         </NavLink>
+                        <NavLink href="/instructor/live">
+                            <div className="pl-6 py-4 flex items-center justify-start gap-4 bg-white rounded-lg">
+                                <img src="/svgs/message-circle.svg" alt="" className="w-5 opacity-80" />
+                                <span className="mt-1 font-medium text-sm">Live Stream</span>
+                            </div>
+                        </NavLink>
                         <NavLink href="/instructor/settings">
                             <div className="pl-6 py-4 flex items-center justify-start gap-4 bg-white rounded-lg">
                                 <img src="/svgs/settings.svg" alt="" className="w-5 opacity-80" />

@@ -4,6 +4,8 @@ import { MeetingConsumer, MeetingProvider } from "@videosdk.live/react-sdk";
 import WrapperBwStreamerAndViewer from "./WrapperBwStreamerAndViewer";
 import LiveStreamOpenScreen from "./LiveStreamOpenScreen";
 import LiveStreamJoinScreen from "./LiveStreamJoinScreen";
+import { useSelector } from "react-redux";
+import { TypeState } from "@/store";
 
 export default function LiveStreamContainer(
     {
@@ -12,6 +14,7 @@ export default function LiveStreamContainer(
         path: string
     }) {
 
+    const user: any = useSelector((state: TypeState) => state.user.data);
     const [meetingId, setMeetingId] = useState(null);
     const [mode, setMode] = useState<"CONFERENCE" | "VIEWER" | undefined>("CONFERENCE");
 
@@ -43,7 +46,7 @@ export default function LiveStreamContainer(
                 meetingId,
                 micEnabled: true,
                 webcamEnabled: true,
-                name: "C.V. Raman",
+                name: user?.username || "",
                 mode: mode
             }}
             token={String(process.env.NEXT_PUBLIC_VIDEO_SDK_LIVE)}

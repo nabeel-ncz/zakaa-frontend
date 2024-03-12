@@ -45,29 +45,49 @@ export default function LiveStreamJoinAsViewer() {
     }, [hlsUrls, hlsState, playerRef.current]);
 
     return (
-        <div>
-            {hlsState != "HLS_PLAYABLE" ? (
-                <div>
-                    <p>HLS has not started yet or is stopped</p>
-                </div>
-            ) : (
-                hlsState == "HLS_PLAYABLE" && (
-                    <div>
-                        <video
-                            ref={playerRef}
-                            id="hlsPlayer"
-                            autoPlay={true}
-                            controls
-                            style={{ width: "100%", height: "100%" }}
-                            playsInline
-                            muted={true}
-                            onError={(err) => {
-                                console.log(err, "hls video error");
-                            }}
-                        ></video>
+        <>
+            <>
+                <div className='w-full flex items-center justify-center gap-2 p-4'>
+                    <div className='h-[28rem] w-8/12 bg-white rounded px-2 py-4 shadow' style={{ aspectRatio: '16:9' }}>
+                        {hlsState == "HLS_PLAYABLE" ? (
+                            <video
+                                ref={playerRef}
+                                id="hlsPlayer"
+                                autoPlay={true}
+                                controls
+                                style={{ width: "100%", height: "100%" }}
+                                playsInline
+                                muted={true}
+                                onError={(err) => {
+                                    console.log(err, "hls video error");
+                                }}
+                            ></video>
+                        ) : (
+                            <div className='w-full h-full relative'>
+                                <div className="absolute left-[42%] top-[27%] w-32 h-32 rounded-full overflow-hidden flex items-center justify-center">
+                                    <div className="bg-purple-100 w-full h-full absolute top-0 left-0 z-0 animate-pulse"></div>
+                                    <img src="/icons/profile-copy-2.png" alt="" className="z-10 w-20 h-20 rounded-full" />
+                                </div>
+                                <div className='absolute w-full flex flex-col items-center justify-center top-[60%]'>
+                                    <h2 className="font-bold text-xl opacity-60">{"HLS has not started yet or is stopped!"}</h2>
+                                </div>
+                            </div>
+                        )}
                     </div>
-                )
-            )}
-        </div>
+                    <div className="w-4/12">
+                        <div className="w-full h-[28rem] bg-white shadow rounded-md p-4">
+                            <h2 className='font-bold text-sm mb-2'>Live chat</h2>
+                            <div className='w-full h-[20rem] rounded border'>
+
+                            </div>
+                            <div className='w-full flex items-center justify-center mt-4'>
+                                <input placeholder='Type here...' type="text" className='w-full px-4 py-3 rounded outline-none border text-sm' />
+                                <button className='h-11 px-2 text-sm font-medium flex items-center justify-center border secondary-bg'>send</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </>
+        </>
     );
 }

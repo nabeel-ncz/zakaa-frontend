@@ -3,8 +3,6 @@ import { TypeDispatch } from "@/store";
 import { logoutAction } from "@/store/actions/auth/logoutAction";
 import { useDispatch } from "react-redux"
 import { useRouter } from "next/navigation";
-import LiveViewInterface from "@/components/user/LiveViewInterface";
-import LiveStreamInterface from "@/components/user/LiveStreamInterface";
 
 export default function Settings() {
 
@@ -24,9 +22,7 @@ export default function Settings() {
                     router.push("/auth/reset-password");
                 }} className="mr-2 bg-white shadow cursor-pointer rounded px-6 py-2 font-medium primary-text">Reset Password</button>
                 <button onClick={handleLogout} className="bg-white shadow cursor-pointer rounded px-6 py-2 font-medium primary-text">Logout</button>
-
             </div>
-            <LiveStreamInterface />
         </>
     )
 }

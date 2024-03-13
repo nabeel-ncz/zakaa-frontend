@@ -53,10 +53,10 @@ export default function Header() {
                             <h2 className="primary-text font-bold text-sm">Teach</h2>
                         </HeaderLink>
                         <HeaderLink href={"/contact"}>
-                            <h2 className="primary-text font-bold text-sm">Contact</h2>
+                            <h2 className="primary-text font-bold text-sm">Announcments</h2>
                         </HeaderLink>
                         <HeaderLink href={"/about"}>
-                            <h2 className="primary-text font-bold text-sm">About</h2>
+                            <h2 className="primary-text font-bold text-sm">Instructors</h2>
                         </HeaderLink>
                     </ul>
                 </nav>
@@ -79,7 +79,7 @@ export default function Header() {
                             <div className="flex items-center justify-between gap-4">
                                 <Link href={`${user ? "/" + user.role + "/" : "/auth/login"}`}>
                                     {loading && <Skeleton width="44px" height="44px" />}
-                                    {user && <img src="/icons/profile-logo.png" className="w-12" />}
+                                    {user && <img src={`${user?.profile?.avatar ? user?.profile?.avatar : "/icons/profile-logo.png"}`} className="w-12 rounded-xl" />}
                                 </Link>
                                 <div className="flex flex-col items-start h-full bg-white">
                                     {user ? (

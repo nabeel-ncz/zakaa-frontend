@@ -125,7 +125,7 @@ export default function InstructorLayout({
 
                                         ) : (
                                             <>
-                                                <img src="/icons/profile-logo.png" className="w-12" />
+                                                <img src={`${user?.profile?.avatar ? user?.profile?.avatar : "/icons/profile-logo.png"}`} className="w-12 rounded-xl" />
                                                 <div className="flex flex-col items-start h-full bg-white">
                                                     <h2 className="font-semibold text-sm">{user.username}</h2>
                                                     <h6 className="font-light text-xs">{user.role}</h6>

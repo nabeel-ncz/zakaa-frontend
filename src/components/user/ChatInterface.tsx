@@ -251,7 +251,7 @@ export default function ChatInterface() {
                                     <img src="/icons/profile-copy-2.png" alt="" className="w-10 h-10" />
                                     <div className="flex flex-col items-start">
                                         <h2 className="text-sm font-medium">{currChat?.username}</h2>
-                                        <h2 className="text-xs font-light">{currChatUserStatus}...</h2>
+                                        <h2 className="text-xs font-light">{currChatUserStatus}{currChatUserStatus == "online" ? (<span className="inline-block w-2 h-2 bg-green-500 animate-pulse rounded-full ms-1"></span>) : (<span className="inline-block w-2 h-2 bg-red-500 animate-pulse rounded-full ms-1"></span>)}</h2>
                                     </div>
                                 </div>
                                 <div className="">

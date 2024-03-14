@@ -39,7 +39,7 @@ export default function ChatRooms({
                     <div key={item._id} onClick={() => {
                         handleOpenChatRoom(item);
                     }} className={`${currChat?._id === item._id ? "bg-[#e7c7fd]" : ""} cursor-pointer w-full flex items-start gap-2 p-2 rounded hover:bg-[#e7c7fd] transition-all delay-100`}>
-                        <img src="/icons/profile-copy-2.png" alt="" className="w-10 h-10" />
+                        <img src={`${item?.profile?.avatar ? item?.profile?.avatar : "/ui/empty-profile.webp"}`} alt="" className="w-10 h-10 rounded-xl" />
                         <div className="flex flex-col items-start">
                             <h1 className="text-sm font-medium line-clamp-1">{item.username}</h1>
                             <h1 className="text-xs font-light line-clamp-1">{item.email}</h1>

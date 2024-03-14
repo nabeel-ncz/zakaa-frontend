@@ -79,7 +79,7 @@ export default function Header() {
                             <div className="flex items-center justify-between gap-4">
                                 <Link href={`${user ? "/" + user.role + "/" : "/auth/login"}`}>
                                     {loading && <Skeleton width="44px" height="44px" />}
-                                    {user && <img src={`${user?.profile?.avatar ? user?.profile?.avatar : "/icons/profile-logo.png"}`} className="w-12 rounded-xl" />}
+                                    {user && <img src={`${user?.profile?.avatar ? user?.profile?.avatar : "/ui/empty-profile.webp"}`} className="w-12 rounded-xl" />}
                                 </Link>
                                 <div className="flex flex-col items-start h-full bg-white">
                                     {user ? (

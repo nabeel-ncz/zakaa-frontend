@@ -109,7 +109,7 @@ export default function AdminLayout({
 
                                         ) : (
                                             <>
-                                                <img src="/icons/profile-logo.png" className="w-12" />
+                                                <img src={`${user?.profile?.avatar ? user?.profile?.avatar : "/ui/empty-profile.webp"}`} className="w-12 rounded-xl" />
                                                 <div className="flex flex-col items-start h-full bg-white">
                                                     <h2 className="font-semibold text-sm">{user.username}</h2>
                                                     <h6 className="font-light text-xs">{user.role}</h6>
@@ -128,7 +128,7 @@ export default function AdminLayout({
                     </div>
 
                 </div>
-                <div className="p-4 secondary-light-bg h-full">
+                <div className="secondary-light-bg h-full overflow-y-auto">
                     {children}
                 </div>
             </div>

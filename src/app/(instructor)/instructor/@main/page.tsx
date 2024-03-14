@@ -104,12 +104,12 @@ export default function Dashboard() {
                                     profit: number
                                 }) => (
                                     <tr key={item._id} className="border-b border-gray-200">
-                                        <td className="font-medium text-xs p-4 text-left border-r">
+                                        <td className="font-medium text-xs p-4 text-left border-r max-w-96">
                                             <div className="flex items-center gap-2">
                                                 <img crossOrigin="anonymous" src={`${PUBLIC_RESOURCE_URL}/api/course/images/${item.course?.thumbnail}`} alt="" className="h-8" />
                                                 <div className="flex flex-col">
-                                                    <h2>{item.course.title}</h2>
-                                                    <h2>{item.course?.description}</h2>
+                                                    <h2 className="font-bold text-base mb-1 line-clamp-1">{item.course?.title}</h2>
+                                                    <h2 className="line-clamp-3">{item.course?.description}</h2>
                                                 </div>
                                             </div>
                                         </td>

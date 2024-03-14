@@ -35,6 +35,7 @@ export default function page() {
 
       const res2 = await dispatch(createPaymentAction({
         userId: paymentSession?.userId,
+        instructorId: paymentSession?.instructorId,
         courseId: paymentSession?.courseId,
         method: "card",
         status: "completed",

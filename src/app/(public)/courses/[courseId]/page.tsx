@@ -111,7 +111,8 @@ export default function CourseDetailed({ params }: any) {
 
             storeObject("payment_session", {
                 ...response.payload?.data,
-                amount: course?.pricing?.amount
+                amount: course?.pricing?.amount,
+                instructorId: course?.instructorRef?._id
             });
 
             const sessionId = response?.payload?.data?.sessionId;

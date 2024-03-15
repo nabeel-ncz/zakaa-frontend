@@ -1,0 +1,160 @@
+"use client";
+import BanterLoader from "@/components/ui/BanterLoader";
+import CourseFormField from "@/components/ui/CourseFormField";
+import ImageUpload from "@/components/ui/ImageUpload";
+import VideoUpload from "@/components/ui/VideoUpload";
+import { CreateLessonSchema } from "@/lib/validation/schema/createLesson";
+import { TypeDispatch } from "@/store";
+import { addLessonAction } from "@/store/actions/course/addLessonAction";
+import { uploadLessonContent } from "@/store/actions/course/uploadLessonContent";
+import { CreateLessonFormData } from "@/types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
+import { z } from "zod";
+
+
+export default function CreateLesson({ params: { courseId } }: { params: { courseId: string } }) {
+
+    const router = useRouter();
+    const dispatch: TypeDispatch = useDispatch();
+
+    const [submitted, setSubmitted] = useState(false);
+    const [lessonVideo, setLessonVideo] = useState(null);
+    const [lessonThumbnail, setLessonThumbnail] = useState(null);
+    const [lessonAttachment, setLessonAttachment] = useState(null);
+    const [attachmentTitle, setAttachmentTitle] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<z.infer<typeof CreateLessonSchema>>({
+        resolver: zodResolver(CreateLessonSchema),
+    });
+
+    const onSubmit = async (data: CreateLessonFormData) => {
+        try {
+            setSubmitted(true);
+            if (!lessonVideo || !lessonThumbnail) {
+                return;
+            }
+            if (lessonAttachment && !attachmentTitle) {
+                return;
+            }
+
+            setLoading(true);
+
+            const result: any = await dispatch(uploadLessonContent({
+                lessonThumbnail,
+                lessonVideo,
+                lessonAttachment
+            }));
+
+            if (result?.error && result?.error?.message) {
+                throw new Error(result?.error?.message);
+            }
+
+            const lesson = {
+                courseId,
+                thumbnail: result.payload.data?.thumbnail,
+                video: result.payload.data?.lessonVideo,
+                attachment: result.payload.data?.attachment,
+                title: data.lessonTitle,
+                description: data.lessonDescription
+            };
+
+            const res = await dispatch(addLessonAction(lesson));
+
+            if (!res.payload?.success) {
+                throw new Error(res.payload?.data?.message || "Something wrong!");
+            }
+
+            router.replace("/instructor/courses");
+        } catch (error: any) {
+            setError(error?.message || "Something went wrong, try again!");
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    return (
+        <>
+            {error && (
+                <div className="fixed z-50 top-0 left-0 flex items-center justify-center w-full min-h-screen bg-[#00000050] backdrop-blur-md">
+                    <div className="px-12 py-12 bg-white flex flex-col items-center justify-center rounded-md gap-2">
+                        <h2 className="font-medium text-red-900 text-lg">{error}</h2>
+                        <button className="px-6 py-2 rounded font-medium text-white bg-black" onClick={() => { setError(null) }} >Try again!</button>
+                    </div>
+                </div>
+            )}
+
+            {loading && (
+                <div className="fixed z-50 top-0 left-0 flex flex-col items-center justify-center w-full min-h-screen bg-[#00000050] backdrop-blur-md">
+                    <BanterLoader />
+                    <h2 className="absolute top-[60%] font-medium">Resources are processing, Please wait!</h2>
+                </div>
+            )}
+
+            <div className="w-full mt-4 px-10 flex items-end justify-between">
+                <div>
+                    <h2 className="font-bold">New Lesson</h2>
+                </div>
+                <div>
+                    <button onClick={handleSubmit(onSubmit)} className="secondary-bg px-6 py-2 rounded border border-[#8027C2] me-4">{"Submit"}</button>
+                </div>
+            </div>
+
+            <div className="w-full px-10 py-4 flex gap-12">
+                <div className="w-6/12">
+                    <h2 className="font-medium text-xs mb-1 ">Lesson Resource <span className="text-red-700">*</span></h2>
+                    <VideoUpload onChange={(file: any) => { setLessonVideo(file) }} />
+                    {(submitted && !lessonVideo) && <span className="custom-form-error">Video is required!</span>}
+
+                    <CourseFormField
+                        style={['mt-4']}
+                        title="Lesson title"
+                        fieldName="lessonTitle"
+                        fieldType="text"
+                        required
+                        register={register}
+                        errors={errors}
+                    />
+                    <CourseFormField
+                        style={['mt-4']}
+                        title="Lesson description"
+                        fieldName="lessonDescription"
+                        fieldType="textarea"
+                        required
+                        register={register}
+                        errors={errors}
+                    />
+
+                </div>
+                <div className="w-6/12">
+
+                    <h2 className="font-medium text-xs mb-1 ">Lesson thumbnail <span className="text-red-700">*</span></h2>
+                    <ImageUpload onChange={(file: any) => { setLessonThumbnail(file) }} />
+                    {(submitted && !lessonThumbnail) && <span className="custom-form-error">Thumbnail is required!</span>}
+
+                    {/* <h2 className="mt-4 font-medium text-xs mb-1 ">Lesson Attachments</h2>
+                    <FileUpload onChange={(file: any) => { setLessonAttachment(file) }} />
+
+
+                    <h2 className="mt-4 font-medium text-xs mb-1 ">Attachment title</h2>
+                    <input
+                        value={attachmentTitle}
+                        onChange={(e) => { setAttachmentTitle(e.target.value) }}
+                        type="text"
+                        className="w-full px-8 py-3 rounded-lg font-medium border placeholder-gray-500 text-xs focus:outline-none border-gray-400 bg-white"
+                    />
+                    {(lessonAttachment && !attachmentTitle) && <span className="custom-form-error">Attachment title is required!</span>} */}
+                </div>
+            </div>
+        </>
+    )
+}

@@ -37,6 +37,13 @@ export default function CourseDetailed({ params }: any) {
                 <>
                     {course && (
                         <>
+                            <div className="w-full px-8 flex items-end justify-end py-4">
+                                <div>
+                                    <button
+                                        onClick={() => { router.push(`${courseId}/add-lesson`) }}
+                                        className="secondary-bg px-6 py-2 rounded border border-[#8027C2] me-4">Add Lesson</button>
+                                </div>
+                            </div>
                             <div className="px-10">
                                 <div className="relative w-full flex items-center justify-between px-4 py-4 gap-8 bg-white rounded shadow-md">
                                     <button onClick={() => { router.push(`${courseId}/update`) }} className="absolute px-2 py-1 rounded bg-black top-2 right-2 text-xs text-white font-medium">update</button>

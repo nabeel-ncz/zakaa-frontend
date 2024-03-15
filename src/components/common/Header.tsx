@@ -52,8 +52,8 @@ export default function Header() {
                         <HeaderLink href={"/teach"}>
                             <h2 className="primary-text font-bold text-sm">Teach</h2>
                         </HeaderLink>
-                        <HeaderLink href={"/contact"}>
-                            <h2 className="primary-text font-bold text-sm">Announcments</h2>
+                        <HeaderLink href={"/announcements"}>
+                            <h2 className="primary-text font-bold text-sm">Announcements</h2>
                         </HeaderLink>
                         <HeaderLink href={"/about"}>
                             <h2 className="primary-text font-bold text-sm">Instructors</h2>

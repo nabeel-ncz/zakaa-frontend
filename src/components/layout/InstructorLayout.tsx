@@ -72,6 +72,12 @@ export default function InstructorLayout({
                                 <span className="mt-1 font-medium text-sm">Assessments</span>
                             </div>
                         </NavLink>
+                        <NavLink href="/instructor/announcements">
+                            <div className="pl-6 py-4 flex items-center justify-start gap-4 bg-white rounded-lg">
+                                <img src="/icons/megaphone.png" alt="" className="w-5 opacity-80" />
+                                <span className="mt-1 font-medium text-sm">Announcements</span>
+                            </div>
+                        </NavLink>
                         <NavLink href="/instructor/chat">
                             <div className="pl-6 py-4 flex items-center justify-start gap-4 bg-white rounded-lg">
                                 <img src="/svgs/message-circle.svg" alt="" className="w-5 opacity-80" />

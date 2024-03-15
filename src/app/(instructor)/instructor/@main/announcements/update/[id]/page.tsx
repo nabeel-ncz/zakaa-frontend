@@ -1,64 +1,89 @@
 "use client";
 import ImageUpload from "@/components/ui/ImageUpload"
-import { TypeDispatch, TypeState } from "@/store";
-import { createAnnouncementAction } from "@/store/actions/announcements";
+import { TypeDispatch } from "@/store";
+import { getAnnouncementByIdAction, updateAnnouncementAction } from "@/store/actions/announcements";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { ZodType, z } from "zod";
 
-export default function page() {
+export default function page({ params: { id } }: { params: { id: string } }) {
 
     const router = useRouter();
+    const [data, setData] = useState<any>(null);
     const [file, setFile] = useState<any>(null);
     const [fileError, setFileError] = useState<string>("");
     const dispatch: TypeDispatch = useDispatch();
-    const _id = useSelector((state: any) => state.user?.data?._id);
     const [loading, setLoading] = useState<boolean>(false);
     const [isImageChanged, setIsImageChanged] = useState<boolean>(false);
+
+    useEffect(() => {
+        handleFetch();
+    }, []);
+
+    const handleFetch = () => {
+        dispatch(getAnnouncementByIdAction(id))
+            .then((res) => {
+                if (res.payload?.success) {
+                    setValue("title", res.payload?.data?.title);
+                    setValue("description", res.payload?.data?.description);
+                    setValue("status", res.payload?.data?.isBlocked);
+                    setData(res.payload?.data);
+                }
+            })
+    }
 
     interface ISchema {
         title: string;
         description: string;
+        status: string | boolean;
     };
 
     const Schema: ZodType<ISchema> = z.object({
         title: z.string().min(1, "Title is required!"),
-        description: z.string().min(1, "Description is required!")
+        description: z.string().min(1, "Description is required!"),
+        status: z.string().min(1, "Status is required!")
     });
 
     const onSubmit = async (form: ISchema) => {
-        if (!file) {
+        if (!file && isImageChanged) {
             setFileError("Image is required!");
             return;
         }
         try {
             setLoading(true);
-            const formData = new FormData();
-            formData.append("file", file);
-            formData.append("upload_preset", "ml_default");
-            const response = await fetch(
-                `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_NAME}/image/upload`,
-                {
-                    method: "POST",
-                    body: formData,
-                }
-            );
-            const data = await response.json();
+            let updates: any = {};
+            if (isImageChanged) {
+                const formData = new FormData();
+                formData.append("file", file);
+                formData.append("upload_preset", "ml_default");
+                const response = await fetch(
+                    `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_NAME}/image/upload`,
+                    {
+                        method: "POST",
+                        body: formData,
+                    }
+                );
+                const data = await response.json();
+                updates['content'] = data?.secure_url;
+            } else {
+                updates['content'] = data?.content;
+            }
 
-            const res = await dispatch(createAnnouncementAction({
-                title: form.title,
-                description: form.description,
-                content: data.secure_url,
-                userRef: _id
-            }));
+            updates['_id'] = data?._id;
+            updates['title'] = form.title;
+            updates['description'] = form.description;
+            updates['isBlocked'] = form.status as boolean;
+
+            const res = await dispatch(updateAnnouncementAction(updates));
 
             if (!res.payload?.success) {
                 throw new Error(res.payload?.message || "Something wrong!");
             }
+
             router.replace("/instructor/announcements");
 
         } catch (error: any) {
@@ -71,9 +96,15 @@ export default function page() {
     const {
         register,
         handleSubmit,
-        formState: { errors }
+        formState: { errors },
+        setValue
     } = useForm<z.infer<typeof Schema>>({
-        resolver: zodResolver(Schema)
+        resolver: zodResolver(Schema),
+        defaultValues: {
+            title: "",
+            description: "",
+            status: "false"
+        }
     });
 
     return (
@@ -93,7 +124,7 @@ export default function page() {
                             <div className="w-full relative h-56 flex items-center justify-center secondary-bg border border-gray-400 border-dashed rounded-md">
                                 <img
                                     crossOrigin="anonymous"
-                                    src={``}
+                                    src={`${data?.content}`}
                                     alt={"Loading"}
                                     className="h-full"
                                 />
@@ -101,7 +132,7 @@ export default function page() {
                             </div>
                         </>
                     )}
-                    
+
                     <h2 className="font-medium text-xs mt-2 mb-1">Title : </h2>
                     <input
                         {...register("title")}
@@ -118,6 +149,16 @@ export default function page() {
                         className="w-full h-32 rounded-lg font-medium border px-4 pt-2 text-gray-800 text-sm focus:outline-none border-gray-400 bg-white"
                     />
                     {errors && errors[`${"description"}`] && <span className="custom-form-error"> {errors[`${"description"}`]?.message}</span>}
+                    
+                    <h2 className="font-medium text-xs mt-2 mb-1">Status : </h2>
+                    <select
+                        {...register("status")}
+                        className="w-full h-12 rounded-lg font-medium border px-4 text-gray-800 text-sm focus:outline-none border-gray-400 bg-white"
+                    >
+                        <option value="false">Published</option>
+                        <option value="true">UnPublished</option>
+                    </select>
+                    {errors && errors[`${"status"}`] && <span className="custom-form-error"> {errors[`${"status"}`]?.message}</span>}
 
                     <div className="w-full flex items-center justify-end gap-2 mt-2">
                         <button

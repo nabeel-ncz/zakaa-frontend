@@ -32,6 +32,7 @@ export default function page() {
                 <div className="max-w-screen-xl mx-auto p-5 sm:p-10 md:p-16">
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
                         {announcements?.map((item: {
+                            _id: string;
                             title: string;
                             description: string;
                             content: string;
@@ -42,7 +43,9 @@ export default function page() {
                             <div className="rounded overflow-hidden shadow-lg flex flex-col h-[360px]">
                                 <div className="relative">
                                     <img className="w-full" src={item.content} />
-                                    <div className="cursor-pointer text-xs font-bold absolute top-0 right-0 rounded bg-white px-4 py-2 mt-3 mr-3 hover:bg-white transition duration-500 ease-in-out flex items-center justify-center gap-2">
+                                    <div onClick={() => {
+                                        router.push(`announcements/update/${item._id}`);
+                                    }} className="cursor-pointer text-xs font-bold absolute top-0 right-0 rounded bg-white px-4 py-2 mt-3 mr-3 hover:bg-white transition duration-500 ease-in-out flex items-center justify-center gap-2">
                                         <span>{"Update"}</span>
                                     </div>
                                 </div>

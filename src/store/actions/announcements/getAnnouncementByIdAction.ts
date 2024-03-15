@@ -2,20 +2,14 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { apiClient } from "@/utils/axios";
 import { AxiosError } from "axios";
 
-export const updateAnnouncementAction = createAsyncThunk(
-    "course/updateAnnouncement",
-    async (data: {
-        title: string;
-        description: string;
-        content?: string;
-        isBlocked?: boolean;
-    }) => {
+export const getAnnouncementByIdAction = createAsyncThunk(
+    "course/getAnnouncementById",
+    async (id: string) => {
        
         try {
 
-            const response = await apiClient.put(
-                "/api/course/announcement",
-                data,
+            const response = await apiClient.get(
+                `/api/course/announcement/byId/${id}`,
                 {
                     headers: { "Content-Type": "application/json" },
                     withCredentials: true,

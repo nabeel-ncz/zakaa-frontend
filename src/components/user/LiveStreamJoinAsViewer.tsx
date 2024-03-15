@@ -2,11 +2,20 @@
 import Hls from "hls.js";
 import { useEffect, useRef } from "react";
 import { useMeeting } from "@videosdk.live/react-sdk";
+import { useDispatch, useSelector } from "react-redux";
+import { TypeDispatch, TypeState } from "@/store";
+import { fetchUserAction } from "@/store/actions";
 
 export default function LiveStreamJoinAsViewer() {
 
     const playerRef: any = useRef(null);
     const { hlsUrls, hlsState } = useMeeting();
+    const user: any = useSelector((state: TypeState) => state.user?.data);
+    const dispatch: TypeDispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(fetchUserAction());
+    },[]);
 
     useEffect(() => {
         if (hlsUrls.downstreamUrl && hlsState == "HLS_PLAYABLE") {
@@ -66,7 +75,7 @@ export default function LiveStreamJoinAsViewer() {
                             <div className='w-full h-full relative'>
                                 <div className="absolute left-[42%] top-[27%] w-32 h-32 rounded-full overflow-hidden flex items-center justify-center">
                                     <div className="bg-purple-100 w-full h-full absolute top-0 left-0 z-0 animate-pulse"></div>
-                                    <img src="/icons/profile-copy-2.png" alt="" className="z-10 w-20 h-20 rounded-full" />
+                                    <img src={`${user?.profile?.avatar ? user?.profile?.avatar : "/ui/empty-profile.webp"}`} alt="" className="z-10 w-20 h-20 rounded-full" />
                                 </div>
                                 <div className='absolute w-full flex flex-col items-center justify-center top-[60%]'>
                                     <h2 className="font-bold text-xl opacity-60">{"HLS has not started yet or is stopped!"}</h2>

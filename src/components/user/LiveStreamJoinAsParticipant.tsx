@@ -13,10 +13,15 @@ function ParticipantView({
     participantId: string
 }) {
 
+    const user: any = useSelector((state: TypeState) => state.user?.data);
     const dispatch: TypeDispatch = useDispatch();
     const micRef: any = useRef(null);
     const { webcamStream, micStream, webcamOn, micOn, isLocal, displayName } =
         useParticipant(participantId);
+
+    useEffect(() => {
+        dispatch(fetchUserAction());
+    }, []);
 
     const videoStream = useMemo(() => {
         if (webcamOn && webcamStream) {
@@ -47,7 +52,7 @@ function ParticipantView({
         <>
             <div className='w-full flex items-center justify-center gap-2 p-4'>
                 <audio ref={micRef} autoPlay playsInline muted={isLocal} />
-                <div className='h-[28rem] w-8/12 bg-white rounded px-2 py-4 shadow' style={{ aspectRatio: '16:9', transform:`scaleX(${webcamOn ? "-1" : "1"})` }}>
+                <div className='h-[28rem] w-8/12 bg-white rounded px-2 py-4 shadow' style={{ aspectRatio: '16:9', transform: `scaleX(${webcamOn ? "-1" : "1"})` }}>
                     {webcamOn ? (
                         <ReactPlayer
                             playsinline
@@ -67,7 +72,7 @@ function ParticipantView({
                         <div className='w-full h-full relative'>
                             <div className="absolute left-[42%] top-[27%] w-32 h-32 rounded-full overflow-hidden flex items-center justify-center">
                                 <div className="bg-purple-100 w-full h-full absolute top-0 left-0 z-0 animate-pulse"></div>
-                                <img src="/icons/profile-copy-2.png" alt="" className="z-10 w-20 h-20 rounded-full" />
+                                <img src={`${user?.profile?.avatar ? user?.profile?.avatar : "/ui/empty-profile.webp"}`} alt="" className="z-10 w-20 h-20 rounded-full" />
                             </div>
                             <div className='absolute w-full flex flex-col items-center justify-center top-[60%]'>
                                 <h2 className="font-bold text-xl">{displayName || ""}</h2>

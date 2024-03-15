@@ -63,7 +63,7 @@ export default function WrapperBwStreamerAndViewer({ onMeetingLeave, meetingId }
                             <div className="w-full h-[28rem] bg-white shadow relative rounded-md">
                                 <div className="absolute left-[42%] top-[27%] w-32 h-32 rounded-full overflow-hidden flex items-center justify-center">
                                     <div className="bg-purple-100 w-full h-full absolute top-0 left-0 z-0 animate-pulse"></div>
-                                    <img src="/icons/profile-copy-2.png" alt="" className="z-10 w-20 h-20 rounded-full" />
+                                    <img src={`${user?.profile?.avatar ? user?.profile?.avatar : "/ui/empty-profile.webp"}`} alt="" className="z-10 w-20 h-20 rounded-full" />
                                 </div>
                                 <h2 className="font-bold text-xl absolute left-[46%] top-[60%] ">{user?.username || ""}</h2>
                                 <h3 className="absolute top-4 left-4 font-medium text-xl text-gray-600">Meeting Id: <span className="font-bold text-black">{meetingId}</span></h3>

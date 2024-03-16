@@ -4,7 +4,7 @@ import AnnouncementCard from "@/components/ui/AnnouncementCard";
 import { TypeDispatch, TypeState } from "@/store";
 import { fetchUserAction } from "@/store/actions";
 import { commentAnnoucementAction, getAnnouncementsAction } from "@/store/actions/announcements";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -15,11 +15,18 @@ export default function page() {
     const user: any = useSelector((state: TypeState) => state.user?.data);
     const [commentOpen, setCommentOpen] = useState<{ _id: string; comments: any[]; } | null>(null);
     const [comment, setComment] = useState<string>("");
+    const commentsDivRef: any = useRef();
 
     useEffect(() => {
         dispatch(fetchUserAction());
         dispatch(getAnnouncementsAction());
     }, []);
+
+    useEffect(() => {
+        if (commentsDivRef?.current?.scrollHeight) {
+            commentsDivRef.current.scrollTop = commentsDivRef.current?.scrollHeight;
+        }
+    }, [commentOpen]);
 
     const handleCommentOpen = (data: {
         _id: string;
@@ -45,10 +52,16 @@ export default function page() {
         }))
 
         if (res.payload?.success) {
-            setCommentOpen((prevState) => {
-                if (!prevState) return null;
-                return { ...prevState, comments: res.payload?.data?.comments };
-            });
+            let newComment = {
+                userRef: {
+                    profile: { avatar: user?.profile?.avatar },
+                    username: user?.username
+                },
+                comment: comment
+            }
+            let temp: any = { ...commentOpen };
+            temp.comments = [...commentOpen?.comments!, newComment]
+            setCommentOpen(temp);
             setComment("");
         }
     }
@@ -69,7 +82,7 @@ export default function page() {
                                 <img src="/icons/speech-bubble.png" alt="" className="w-4" />
                                 <span className="ml-1">{commentOpen?.comments?.length} Comments</span>
                             </div>
-                            <div className="mt-4 w-full flex flex-col items-start justify-start overflow-y-scroll h-64 gap-4">
+                            <div ref={commentsDivRef} className="mt-4 w-full flex flex-col items-start justify-start overflow-y-scroll h-64 gap-4">
                                 {commentOpen?.comments?.map((item: any) => (
                                     <div className="w-full flex gap-4 items-center justify-start">
                                         <img src={item?.userRef?.profile?.avatar ? item?.userRef?.profile?.avatar : "/ui/empty-profile.webp"} alt="" className="w-6 h-6 rounded-full" />

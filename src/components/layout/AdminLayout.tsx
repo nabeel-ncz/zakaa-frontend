@@ -5,13 +5,14 @@ import { TypeDispatch, TypeState } from "@/store";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserAction } from "@/store/actions";
 import Skeleton from "../ui/Skeleton";
+import NavLink from "../common/NavLink";
 
 export default function AdminLayout({
     children
 }: {
     children: React.ReactNode
 }) {
-    
+
     const [loading, setLoading] = useState(true);
     const [open, setOpen] = useState(true);
     const dispatch: TypeDispatch = useDispatch();
@@ -32,48 +33,48 @@ export default function AdminLayout({
                 </div>
                 <div className="flex-1 overflow-y-auto border-r secondary-bg">
                     <nav className="flex flex-col gap-4 flex-1 px-4 py-4">
-                        <Link href="/admin">
+                        <NavLink href="/admin">
                             <div className="pl-6 py-4 flex items-center justify-start gap-4 bg-white rounded-lg shadow">
                                 <img src="/svgs/home.svg" alt="" className="w-5 opacity-80" />
                                 <span className="mt-1 font-medium text-sm">Overview</span>
                             </div>
-                        </Link>
-                        <Link href="/admin/courses">
+                        </NavLink>
+                        <NavLink href="/admin/courses">
                             <div className="pl-6 py-4 flex items-center justify-start gap-4 bg-white rounded-lg">
-                                <img src="/svgs/book-open.svg" alt="" className="w-5 opacity-50" />
-                                <span className="mt-1 font-medium text-sm opacity-50">Courses</span>
+                                <img src="/svgs/book-open.svg" alt="" className="w-5 opacity-80" />
+                                <span className="mt-1 font-medium text-sm">Courses</span>
                             </div>
-                        </Link>
-                        <Link href="/admin/assessments">
+                        </NavLink>
+                        <NavLink href="/admin/assessments">
                             <div className="pl-6 py-4 flex items-center justify-start gap-4 bg-white rounded-lg">
-                                <img src="/svgs/pie-chart.svg" alt="" className="w-5 opacity-50" />
-                                <span className="mt-1 font-medium text-sm opacity-50">Assessments</span>
+                                <img src="/svgs/pie-chart.svg" alt="" className="w-5 opacity-80" />
+                                <span className="mt-1 font-medium text-sm">Assessments</span>
                             </div>
-                        </Link>
-                        <Link href="/admin/categories">
+                        </NavLink>
+                        <NavLink href="/admin/categories">
                             <div className="pl-6 py-4 flex items-center justify-start gap-4 bg-white rounded-lg">
-                                <img src="/svgs/bar-chart-2.svg" alt="" className="w-5 opacity-50" />
-                                <span className="mt-1 font-medium text-sm opacity-50">Categories</span>
+                                <img src="/svgs/bar-chart-2.svg" alt="" className="w-5 opacity-80" />
+                                <span className="mt-1 font-medium text-sm">Categories</span>
                             </div>
-                        </Link>
-                        <Link href="/admin/transactions">
+                        </NavLink>
+                        <NavLink href="/admin/transactions">
                             <div className="pl-6 py-4 flex items-center justify-start gap-4 bg-white rounded-lg">
-                                <img src="/svgs/message-circle.svg" alt="" className="w-5 opacity-50" />
-                                <span className="mt-1 font-medium text-sm opacity-50">Transactions</span>
+                                <img src="/svgs/message-circle.svg" alt="" className="w-5 opacity-80" />
+                                <span className="mt-1 font-medium text-sm">Transactions</span>
                             </div>
-                        </Link>
-                        <Link href="/admin/applications">
+                        </NavLink>
+                        <NavLink href="/admin/applications">
                             <div className="pl-6 py-4 flex items-center justify-start gap-4 bg-white rounded-lg">
-                                <img src="/svgs/book-open.svg" alt="" className="w-5 opacity-50" />
-                                <span className="mt-1 font-medium text-sm opacity-50">Applications</span>
+                                <img src="/svgs/book-open.svg" alt="" className="w-5 opacity-80" />
+                                <span className="mt-1 font-medium text-sm">Applications</span>
                             </div>
-                        </Link>
-                        <Link href="/admin/settings">
+                        </NavLink>
+                        <NavLink href="/admin/settings">
                             <div className="pl-6 py-4 flex items-center justify-start gap-4 bg-white rounded-lg">
-                                <img src="/svgs/settings.svg" alt="" className="w-5 opacity-50" />
-                                <span className="mt-1 font-medium text-sm opacity-50">Settings</span>
+                                <img src="/svgs/settings.svg" alt="" className="w-5 opacity-80" />
+                                <span className="mt-1 font-medium text-sm">Settings</span>
                             </div>
-                        </Link>
+                        </NavLink>
                     </nav>
                 </div>
             </div>

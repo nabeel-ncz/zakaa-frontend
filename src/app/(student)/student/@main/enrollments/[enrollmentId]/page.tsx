@@ -1,9 +1,11 @@
 'use client';
 import Loading from "@/components/ui/Loading";
+import EnrollmentVideoPlayer from "@/components/user/EnrollmentVideoPlayer";
 import { TypeDispatch } from "@/store";
 import { createExamResultAction, fetchUserAction, getExamResultsByUserIdAction } from "@/store/actions";
 import { getAssessmentsByCourseIdAction } from "@/store/actions/course";
 import { getEnrollmentsByIdAction } from "@/store/actions/enrollment";
+import { updateEnrollmentAction } from "@/store/actions/enrollment/updateEnrollmentAction";
 import { BASE_URL } from "@/utils/axios";
 import { PUBLIC_RESOURCE_URL } from "@/utils/constants";
 import { useEffect, useState } from "react";
@@ -103,6 +105,7 @@ export default function page({ params }: any) {
                 throw new Error("Exam completion failed!");
             }
 
+            handleUpdateExamProgress();
             setAttendExam(false);
             setLoading(true);
             handleFetch();
@@ -113,6 +116,22 @@ export default function page({ params }: any) {
         } catch (error: any) {
             toast.error(error?.message || "Something went wrong!");
         }
+    }
+
+    const  handleUpdateExamProgress = () => {
+        dispatch(updateEnrollmentAction({
+            enrollmentId,
+            lessonId: selectedLesson?._id,
+            status: 'assessment-completed',
+            completedAssessment: assessmentAvailable?._id,
+        }));
+    }
+
+    const handleFetchEnrollmentProgress = async () => {
+        const result = await dispatch(getEnrollmentsByIdAction({
+            id: enrollmentId
+        }));
+        setEnrollment(result?.payload?.data);
     }
 
     const handleNextQuestion = () => {
@@ -168,7 +187,16 @@ export default function page({ params }: any) {
                                     <img src="/icons/close-icon.png" alt="" className="w-8" />
                                 </button>
                                 <div className="h-5/6">
-                                    <ReactPlayer url={`${BASE_URL}/api/course/video/${course?._id}/${selectedLesson?.video}?userId=${user?._id}`} controls height="100%" style={{ aspectRatio: '16:9' }} />
+                                    <EnrollmentVideoPlayer
+                                        reFetch={handleFetchEnrollmentProgress}
+                                        totalTimeWatched={enrollment?.progress?.lessonProgress?.find((item: {
+                                            lessonId: string;
+                                            totalTimeWatched: string;
+                                        }) => item.lessonId?.toString() === selectedLesson?._id?.toString())?.totalTimeWatched ?? 0}
+                                        lessonId={selectedLesson?._id}
+                                        enrollmentId={enrollmentId}
+                                        url={`${BASE_URL}/api/course/video/${course?._id}/${selectedLesson?.video}?userId=${user?._id}`}
+                                    />
                                 </div>
                             </div>
                         </div>

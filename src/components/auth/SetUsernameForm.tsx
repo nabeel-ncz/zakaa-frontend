@@ -3,20 +3,21 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { TypeDispatch, TypeState } from "@/store";
 import { useRouter } from "next/navigation";
-import { useAxiosGetOnClick } from "@/hooks";
+import { IUseAxiosGetOnClick, useAxiosGetOnClick } from "@/hooks";
 import { findUsernameAction, signupAction } from "@/store/actions";
 import { SignupFormData } from "@/types";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 
 export default function SetUsernameForm() {
 
-    const { fetchData, data }: any = useAxiosGetOnClick();
+    const { fetchData, data }: IUseAxiosGetOnClick = useAxiosGetOnClick();
     const dispatch: TypeDispatch = useDispatch();
-    const signupData: any = useSelector((state: TypeState) => state.user.temp);
-    const router = useRouter();
+    const signupData: SignupFormData | any = useSelector((state: TypeState) => state.user.temp);
+    const router: AppRouterInstance = useRouter();
 
-    const [username, setUsername] = useState("");
-    const [error, setError] = useState("");
+    const [username, setUsername] = useState<string>("");
+    const [error, setError] = useState<string>("");
 
     useEffect(() => {
         if (!signupData) {
@@ -39,10 +40,6 @@ export default function SetUsernameForm() {
 
             if (result?.error && result?.error?.message) {
                 throw new Error(result?.error?.message);
-            }
-
-            if (!result?.payload) {
-                throw new Error("Username is not available!");
             }
 
             if (!result?.payload?.success) {

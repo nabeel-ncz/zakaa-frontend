@@ -12,12 +12,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 export default function LoginForm() {
 
-    const [error, setError] = useState(null);
+    const [error, setError] = useState<string | null>(null);
     const dispatch: TypeDispatch = useDispatch();
-    const router = useRouter();
+    const router: AppRouterInstance = useRouter();
 
     const {
         register,

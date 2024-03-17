@@ -1,6 +1,7 @@
 "use client";
 import { TypeDispatch } from "@/store";
 import { resetPasswordAction } from "@/store/actions";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useRouter } from "next/navigation";
 import { useState } from "react"
 import toast from "react-hot-toast";
@@ -8,12 +9,12 @@ import { useDispatch } from "react-redux";
 
 export default function ResetPasswordForm() {
 
-    const router = useRouter();
+    const router: AppRouterInstance = useRouter();
     const dispatch: TypeDispatch = useDispatch();
-    const [currentPassword, setCurrentPassword] = useState("");
-    const [newPassword, setNewPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
-    const [error, setError] = useState("");
+    const [currentPassword, setCurrentPassword] = useState<string>("");
+    const [newPassword, setNewPassword] = useState<string>("");
+    const [confirmPassword, setConfirmPassword] = useState<string>("");
+    const [error, setError] = useState<string>("");
 
     const handleSubmition = async () => {
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;

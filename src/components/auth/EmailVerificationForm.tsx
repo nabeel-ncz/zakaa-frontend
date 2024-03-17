@@ -6,14 +6,15 @@ import { TypeDispatch } from "@/store";
 import { verifyAccountAction } from "@/store/actions";
 import { sendVerificationMailAction } from "@/store/actions/auth/sendVerificationMail";
 import toast from "react-hot-toast";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 export default function EmailVerificationForm() {
 
-    const router = useRouter();
+    const router: AppRouterInstance = useRouter();
     const dispatch: TypeDispatch = useDispatch();
 
-    const [otp, setOtp] = useState("");
-    const [error, setError] = useState("");
+    const [otp, setOtp] = useState<string>("");
+    const [error, setError] = useState<string>("");
 
     const handleSubmition = async () => {
         try {
@@ -34,6 +35,7 @@ export default function EmailVerificationForm() {
             setError("");
             toast.success("Your account is verified", { position: "bottom-right" });
             router.replace("/");
+            
         } catch (error: any) {
             setError(error?.message);
         }

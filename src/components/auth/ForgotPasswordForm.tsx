@@ -5,13 +5,14 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 export default function ForgotPasswordForm() {
 
-    const router = useRouter();
+    const router: AppRouterInstance = useRouter();
     const dispatch: TypeDispatch = useDispatch();
-    const [email, setEmail] = useState("");
-    const [error, setError] = useState(null);
+    const [email, setEmail] = useState<string>("");
+    const [error, setError] = useState<string | null>(null);
 
     const handleForgotPasswordSubmition = async () => {
         try {

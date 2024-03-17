@@ -3,17 +3,18 @@ import { TypeDispatch } from "@/store";
 import { changePasswordAction } from "@/store/actions/auth/changePasswordAction";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams, useRouter, ReadonlyURLSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 export default function ChangePasswordForm() {
 
-    const router = useRouter();
+    const router: AppRouterInstance = useRouter();
     const dispatch: TypeDispatch = useDispatch();
-    const [error, setError] = useState("");
-    const [nPassword, setNPassword] = useState("");
-    const [cPassword, setCPassword] = useState("");
-    const searchParams = useSearchParams();
+    const [error, setError] = useState<string>("");
+    const [nPassword, setNPassword] = useState<string>("");
+    const [cPassword, setCPassword] = useState<string>("");
+    const searchParams: ReadonlyURLSearchParams = useSearchParams();
 
     const handleSubmition = async () => {
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -34,7 +35,7 @@ export default function ChangePasswordForm() {
                 throw new Error(response?.error?.message);
             }
 
-            if(!response.payload || !response.payload.success){
+            if (!response.payload || !response.payload.success) {
                 throw new Error("There is something went wrong!");
             }
 
@@ -44,7 +45,7 @@ export default function ChangePasswordForm() {
             });
             router.replace("/auth/login");
 
-        } catch (error: any){
+        } catch (error: any) {
             setError(error.message || "Something went wrong!");
         }
     }

@@ -13,12 +13,13 @@ import Link from "next/link";
 import { useState } from "react";
 import { findEmailAction } from "@/store/actions/auth/findEmailAction";
 import { signIn } from "next-auth/react";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 export default function SignupForm() {
 
     const dispatch: TypeDispatch = useDispatch();
-    const [emailError, setEmailError] = useState<any>(null);
-    const router = useRouter();
+    const [emailError, setEmailError] = useState<{ email: { message: string; } } | null>(null);
+    const router: AppRouterInstance = useRouter();
 
     const {
         register,
@@ -61,7 +62,7 @@ export default function SignupForm() {
     }
 
     const handleGoogleSignup = () => {
-        signIn('google', {callbackUrl: `${window.location.origin}/`});
+        signIn('google', { callbackUrl: `${window.location.origin}/` });
     }
 
     return (

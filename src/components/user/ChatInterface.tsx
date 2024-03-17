@@ -255,7 +255,9 @@ export default function ChatInterface() {
                                     </div>
                                 </div>
                                 <div className="">
-                                    <button className="px-4 py-2 secondary-bg primary-text rounded font-medium text-sm">Call</button>
+                                    <button className="px-4 py-2 secondary-bg primary-text rounded font-medium text-sm">
+                                        {/* call */}
+                                    </button>
                                 </div>
                             </div>
                             {/* messages container */}

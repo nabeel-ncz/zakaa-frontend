@@ -30,7 +30,7 @@ export default function page({ params: { id } }: { params: { id: string } }) {
                 if (res.payload?.success) {
                     setValue("title", res.payload?.data?.title);
                     setValue("description", res.payload?.data?.description);
-                    setValue("status", res.payload?.data?.isBlocked);
+                    setValue("status", String(res.payload?.data?.isBlocked));
                     setData(res.payload?.data);
                 }
             })

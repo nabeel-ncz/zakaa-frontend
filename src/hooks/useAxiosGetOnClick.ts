@@ -21,3 +21,10 @@ export const useAxiosGetOnClick = () => {
 
     return { fetchData, data, loading, error };
 };
+
+export interface IUseAxiosGetOnClick {
+    fetchData: (endpoint: string) => Promise<void>;
+    data: any;
+    loading: boolean;
+    error: any;
+}

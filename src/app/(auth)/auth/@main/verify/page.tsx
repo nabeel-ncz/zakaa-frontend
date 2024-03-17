@@ -1,9 +1,5 @@
 import EmailVerificationForm from "@/components/auth/EmailVerificationForm";
 
-export default function Verify() {
-    return (
-        <>
-            <EmailVerificationForm />
-        </>
-    )
+export default function page() {
+    return <EmailVerificationForm />
 }

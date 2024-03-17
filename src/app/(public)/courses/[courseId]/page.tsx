@@ -43,7 +43,7 @@ export default function CourseDetailed({ params }: any) {
             const enrollments = await dispatch(getEnrollmentsByUserIdAction({
                 userId: user.payload?.data?._id
             }));
-            
+
             setUser(user.payload?.data);
             enrollments.payload?.data?.forEach((item: any) => {
                 if (item.courseId?._id === course.payload?.data?._id) {
@@ -226,13 +226,15 @@ export default function CourseDetailed({ params }: any) {
                         <div className="w-1/3 flex flex-col items-start justify-end">
                             <h2 className="font-semibold text-sm mt-2">Pricing : <span className="text-gray-600">{course?.pricing?.type}</span></h2>
                             <h2 className={`font-semibold text-sm mt-2 ${course?.pricing?.type === "free" && "line-through text-green-900"}`}>Amount : <span className={`text-gray-600`}>{course?.pricing?.type === "paid" ? course?.pricing?.amount : "0"}</span></h2>
-                            {isEnrolled ? (
-                                <button className="h-10 custom-form-button bg-purple-800" onClick={() => {
-                                    toast.success("You are already enroll to the course", { position: "top-right" });
-                                }}>Enrolled</button>
-                            ) : (
-                                <button className="h-10 custom-form-button bg-purple-800" onClick={handleEnrollment}>Enroll</button>
-                            )}
+                            {user?.role === "student" && <>
+                                {isEnrolled ? (
+                                    <button className="h-10 custom-form-button bg-purple-800" onClick={() => {
+                                        toast.success("You are already enroll to the course", { position: "top-right" });
+                                    }}>Enrolled</button>
+                                ) : (
+                                    <button className="h-10 custom-form-button bg-purple-800" onClick={handleEnrollment}>Enroll</button>
+                                )}
+                            </>}
                         </div>
                     </div>
                 </div>

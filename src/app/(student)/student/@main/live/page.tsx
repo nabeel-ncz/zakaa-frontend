@@ -1,9 +1,4 @@
-import LiveStreamContainer from "@/components/user/LiveStreamContainer";
-
+import LiveContainer from "./LiveContainer";
 export default function page() {
-    return (
-        <>
-            <LiveStreamContainer path="student" />
-        </>
-    )
+    return <LiveContainer />
 }

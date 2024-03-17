@@ -2,6 +2,7 @@
 import { TypeDispatch, TypeState } from "@/store";
 import { fetchUserAction } from "@/store/actions";
 import { getAnnouncementsByInstructorIdAction } from "@/store/actions/announcements";
+import { AnnouncementEntity } from "@/types/entities";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 export default function page() {
 
     const router = useRouter();
-    const announcements: any = useSelector((state: TypeState) => state.course?.instructorAnnouncements);
+    const announcements: AnnouncementEntity[] | any = useSelector((state: TypeState) => state.course?.instructorAnnouncements);
     const dispatch: TypeDispatch = useDispatch();
 
     useEffect(() => {
@@ -31,15 +32,7 @@ export default function page() {
                 </div>
                 <div className="max-w-screen-xl mx-auto p-5 sm:p-10 md:p-16">
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
-                        {announcements?.map((item: {
-                            _id: string;
-                            title: string;
-                            description: string;
-                            content: string;
-                            likes: string[];
-                            dislikes: string[];
-                            comments: any[];
-                        }) => (
+                        {announcements?.map((item: AnnouncementEntity) => (
                             <div className="rounded overflow-hidden shadow-lg flex flex-col h-[360px]">
                                 <div className="relative">
                                     <img className="w-full" src={item.content} />

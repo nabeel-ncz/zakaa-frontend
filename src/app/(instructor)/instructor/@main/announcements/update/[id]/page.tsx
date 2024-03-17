@@ -2,6 +2,7 @@
 import ImageUpload from "@/components/ui/ImageUpload"
 import { TypeDispatch } from "@/store";
 import { getAnnouncementByIdAction, updateAnnouncementAction } from "@/store/actions/announcements";
+import { AnnouncementEntity } from "@/types/entities";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -13,8 +14,8 @@ import { ZodType, z } from "zod";
 export default function page({ params: { id } }: { params: { id: string } }) {
 
     const router = useRouter();
-    const [data, setData] = useState<any>(null);
-    const [file, setFile] = useState<any>(null);
+    const [data, setData] = useState<AnnouncementEntity | null>(null);
+    const [file, setFile] = useState<File | null>(null);
     const [fileError, setFileError] = useState<string>("");
     const dispatch: TypeDispatch = useDispatch();
     const [loading, setLoading] = useState<boolean>(false);
@@ -58,7 +59,7 @@ export default function page({ params: { id } }: { params: { id: string } }) {
             let updates: any = {};
             if (isImageChanged) {
                 const formData = new FormData();
-                formData.append("file", file);
+                formData.append("file", file || "");
                 formData.append("upload_preset", "ml_default");
                 const response = await fetch(
                     `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_NAME}/image/upload`,
@@ -113,7 +114,7 @@ export default function page({ params: { id } }: { params: { id: string } }) {
                 <div className="w-full px-80 py-4 flex flex-col items-start">
                     {isImageChanged ? (
                         <>
-                            <ImageUpload onChange={(file: any) => {
+                            <ImageUpload onChange={(file: File | null) => {
                                 if (file) setFileError("");
                                 setFile(file);
                             }} />

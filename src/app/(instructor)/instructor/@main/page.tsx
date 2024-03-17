@@ -3,6 +3,7 @@ import Loading from "@/components/ui/Loading";
 import { TypeDispatch } from "@/store"
 import { getEnrollmentsByInstructorIdAction } from "@/store/actions/enrollment";
 import { getUserProfileAction } from "@/store/actions/user";
+import { UserEntity } from "@/types/entities";
 import { PUBLIC_RESOURCE_URL } from "@/utils/constants";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -13,7 +14,7 @@ export default function Dashboard() {
     const dispatch: TypeDispatch = useDispatch();
     const [loading, setLoading] = useState<boolean>(true);
     const [data, setData] = useState<any[] | null>(null);
-    const [user, setUser] = useState<any>(null);
+    const [user, setUser] = useState<UserEntity | null>(null);
     const [totalSales, setTotalSales] = useState<number>(0);
     const [totalVisitors, setTotalVisitors] = useState<number>(0);
     const [totalProfit, setTotalProfit] = useState<number>(0);

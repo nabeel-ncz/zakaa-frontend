@@ -3,6 +3,7 @@ import ImageUpload from "@/components/ui/ImageUpload"
 import { TypeDispatch, TypeState } from "@/store";
 import { createAnnouncementAction } from "@/store/actions/announcements";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -12,7 +13,7 @@ import { ZodType, z } from "zod";
 
 export default function page() {
 
-    const router = useRouter();
+    const router: AppRouterInstance = useRouter();
     const [file, setFile] = useState<any>(null);
     const [fileError, setFileError] = useState<string>("");
     const dispatch: TypeDispatch = useDispatch();
@@ -79,7 +80,7 @@ export default function page() {
         <>
             <div className="w-full min-h-screen pt-4">
                 <div className="w-full px-80 py-4 flex flex-col items-start">
-                    <ImageUpload onChange={(file: any) => {
+                    <ImageUpload onChange={(file) => {
                         if (file) setFileError("");
                         setFile(file);
                     }} />

@@ -1,2 +1,2 @@
-export const PUBLIC_RESOURCE_URL = 'http://zakaa.nabeel.cloud';
-export const SOCKET_SERVICE = 'http://zakaa.nabeel.cloud';
+export const PUBLIC_RESOURCE_URL = 'https://zakaa.nabeel.cloud';
+export const SOCKET_SERVICE = 'https://zakaa.nabeel.cloud/api/chat';

@@ -18,15 +18,16 @@ export default function Header() {
     const dispatch: TypeDispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(fetchUserAction())
-            .finally(() => {
+        if (!user) {
+            dispatch(fetchUserAction()).finally(() => {
                 setLoading(false);
             })
+        }
     }, []);
 
     const handleSearch = (evt: any) => {
         evt.preventDefault();
-        if(pathname === "/courses"){
+        if (pathname === "/courses") {
             const { name, value } = evt.target;
             router.push(`/courses?${name}=${value}`);
             return;
@@ -78,7 +79,7 @@ export default function Header() {
                         <li className="p-2 rounded cursor-pointer">
                             <div className="flex items-center justify-between gap-4">
                                 <Link href={`${user ? "/" + user.role + "/" : "/auth/login"}`}>
-                                    {loading && <Skeleton width="44px" height="44px" />}
+                                    {(loading && !user) && <Skeleton width="44px" height="44px" />}
                                     {user && <img src={`${user?.profile?.avatar ? user?.profile?.avatar : "/ui/empty-profile.webp"}`} className="w-12 rounded-xl" />}
                                 </Link>
                                 <div className="flex flex-col items-start h-full bg-white">
@@ -89,7 +90,7 @@ export default function Header() {
                                         </>
                                     ) : (
                                         <>
-                                            {loading ? (
+                                            {(loading) ? (
                                                 <div className="flex flex-col gap-2">
                                                     <Skeleton width="80px" height="18px" />
                                                     <Skeleton width="40px" height="14px" />

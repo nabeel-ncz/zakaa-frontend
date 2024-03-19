@@ -1,4 +1,5 @@
 import Header from "@/components/common/Header";
+import Image from "next/image";
 import Link from "next/link";
 
 export default function Teach() {
@@ -6,11 +7,29 @@ export default function Teach() {
         <>
             <Header />
             <div className="w-full px-52 pt-10 pb-16">
-                <img src="ui/teach-head-sec-img.png" alt="" />
+                {/* <img src="ui/teach-head-sec-img.png" alt="" /> */}
+                <Image
+                    src="/ui/teach-head-sec-img.png"
+                    alt=""
+                    style={{ backgroundSize: "cover" }}
+                    width={600}
+                    height={450}
+                    layout="responsive"
+                    loading="lazy"
+                />
             </div>
             <div className="w-full flex items-center justify-center pb-12 pl-64 pr-52">
                 <div className="max-w-sm" >
-                    <img src="ui/become-mentor-img.png" alt="" />
+                    {/* <img src="ui/become-mentor-img.png" alt="" /> */}
+                    <Image
+                        src="/ui/become-mentor-img.png"
+                        alt=""
+                        style={{ backgroundSize: "cover" }}
+                        width={700}
+                        height={550}
+                        layout="responsive"
+                        loading="lazy"
+                    />
                 </div>
                 <div className="px-12 flex flex-col items-start">
                     <h2 className="font-semibold text-2xl">Apply as <span className="primary-text">instructor</span></h2>

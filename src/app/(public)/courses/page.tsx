@@ -8,6 +8,7 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { TypeDispatch } from "@/store";
 import { getAvailableCategoriesAction } from "@/store/actions/category";
+import Image from "next/image";
 
 export default function Courses() {
 
@@ -119,7 +120,16 @@ export default function Courses() {
         <>
             <Header />
             <div className="w-full px-52 pt-10 pb-16">
-                <img src="/ui/course-head-sec-img.png" alt="" />
+                <Image
+                    src="/ui/course-head-sec-img.png"
+                    alt=""
+                    style={{ backgroundSize: "cover" }}
+                    width={600}
+                    height={450}
+                    layout="responsive"
+                    loading="lazy"
+                />
+                {/* <img alt="" /> */}
             </div>
             <div className="w-full px-52 flex gap-4 mb-8">
                 <div className="w-9/12 flex flex-col items-start gap-2 bg-white">

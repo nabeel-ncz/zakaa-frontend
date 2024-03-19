@@ -7,12 +7,14 @@ import { TypeDispatch, TypeState } from "@/store";
 import Skeleton from "@/components/ui/Skeleton";
 import NavLink from "@/components/common/NavLink";
 import { SocketContext } from "../providers/SocketProvider";
+import { useRouter } from "next/navigation";
 
 export default function InstructorLayout({
     children
 }: {
     children: React.ReactNode
 }) {
+    const router = useRouter();
     const { socket } = useContext(SocketContext);
     const [loading, setLoading] = useState(true);
     const [open, setOpen] = useState(true);
@@ -21,7 +23,16 @@ export default function InstructorLayout({
 
     useEffect(() => {
         dispatch(fetchUserAction()).then((res) => {
-            if (res.payload?.success) {
+            if(!res.payload?.success){
+                router.replace("/auth/login");
+            }
+            else if(!res.payload?.data?.isVerified){
+                router.replace("/auth/verify");
+            }
+            else if(res.payload?.data?.role !== "instructor"){
+                router.replace("/");
+            }
+            else {
                 socket.emit("online", {
                     user: res.payload?.data?._id
                 })
@@ -120,7 +131,7 @@ export default function InstructorLayout({
                             <ul className="flex items-center gap-10">
                                 <li className="p-2 rounded cursor-pointer">
                                     <div className="flex items-center justify-between gap-4">
-                                        {loading ? (
+                                        {(loading || !user) ? (
                                             <>
                                                 <Skeleton width="44px" height="44px" />
                                                 <div className="flex flex-col gap-2">
@@ -133,8 +144,8 @@ export default function InstructorLayout({
                                             <>
                                                 <img src={`${user?.profile?.avatar ? user?.profile?.avatar : "/ui/empty-profile.webp"}`} className="w-12 rounded-xl" />
                                                 <div className="flex flex-col items-start h-full bg-white">
-                                                    <h2 className="font-semibold text-sm">{user.username}</h2>
-                                                    <h6 className="font-light text-xs">{user.role}</h6>
+                                                    <h2 className="font-semibold text-sm">{user?.username}</h2>
+                                                    <h6 className="font-light text-xs">{user?.role}</h6>
                                                 </div>
                                             </>
                                         )}

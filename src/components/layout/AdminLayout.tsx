@@ -6,23 +6,33 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchUserAction } from "@/store/actions";
 import Skeleton from "../ui/Skeleton";
 import NavLink from "../common/NavLink";
+import { useRouter } from "next/navigation";
 
 export default function AdminLayout({
     children
 }: {
     children: React.ReactNode
 }) {
-
+    const router = useRouter();
     const [loading, setLoading] = useState(true);
     const [open, setOpen] = useState(true);
     const dispatch: TypeDispatch = useDispatch();
     const user: any = useSelector((state: TypeState) => state.user.data);
 
     useEffect(() => {
-        dispatch(fetchUserAction())
-            .finally(() => {
-                setLoading(false);
-            })
+        dispatch(fetchUserAction()).then((res) => {
+            if (!res.payload?.success) {
+                router.replace("/auth/login");
+            }
+            else if (!res.payload?.data?.isVerified) {
+                router.replace("/auth/verify");
+            }
+            else if (res.payload?.data?.role !== "admin") {
+                router.replace("/");
+            }
+        }).finally(() => {
+            setLoading(false);
+        });
     }, []);
 
     return (

@@ -1,11 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import {
-    studentMiddleware,
-    instructorMiddleware,
-    adminMiddleware,
-    authExistMiddleware
-} from '@/server';
+// import { studentMiddleware, instructorMiddleware, adminMiddleware, authExistMiddleware } from '@/server';
 
 export async function middleware(req: NextRequest) {
 

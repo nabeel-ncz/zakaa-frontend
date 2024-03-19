@@ -1,6 +1,28 @@
+"use client";
+import { TypeDispatch } from "@/store";
+import { fetchUserAction } from "@/store/actions";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+
 export default function AuthLayout(
     { children }: { children: React.ReactNode }
 ) {
+
+    const dispatch: TypeDispatch = useDispatch();
+    const router = useRouter();
+
+    useEffect(() => {
+        dispatch(fetchUserAction()).then((res) => {
+            if (res.payload?.success) {
+                router.replace("/");
+            }
+            else if (!res.payload?.data?.isVerified) {
+                router.replace("/auth/verify");
+            }
+        })
+    }, []);
+
     return (
         <>
             <div className="min-h-screen text-gray-900 flex justify-center px-12 md:px-24 mt-12">

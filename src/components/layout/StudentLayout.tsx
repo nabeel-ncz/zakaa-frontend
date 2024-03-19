@@ -125,7 +125,7 @@ export default function StudentLayout({
                             <ul className="flex items-center gap-10">
                                 <li className="p-2 rounded cursor-pointer">
                                     <div className="flex items-center justify-between gap-4">
-                                        {loading ? (
+                                        {(loading || !user) ? (
                                             <>
                                                 <Skeleton width="44px" height="44px" />
                                                 <div className="flex flex-col gap-2">
@@ -138,8 +138,8 @@ export default function StudentLayout({
                                             <>
                                                 <img src={`${user?.profile?.avatar ? user?.profile?.avatar : "/ui/empty-profile.webp"}`} className="w-12 rounded-xl" />
                                                 <div className="flex flex-col items-start h-full bg-white">
-                                                    <h2 className="font-semibold text-sm">{user.username}</h2>
-                                                    <h6 className="font-light text-xs">{user.role}</h6>
+                                                    <h2 className="font-semibold text-sm">{user?.username}</h2>
+                                                    <h6 className="font-light text-xs">{user?.role}</h6>
                                                 </div>
                                             </>
                                         )}

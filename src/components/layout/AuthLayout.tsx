@@ -17,9 +17,6 @@ export default function AuthLayout(
             if (res.payload?.success) {
                 router.replace("/");
             }
-            else if (!res.payload?.data?.isVerified) {
-                router.replace("/auth/verify");
-            }
         })
     }, []);
 

@@ -12,6 +12,7 @@ export async function studentMiddleware(req: NextRequest) {
         console.log(access_token, refresh_token, "================================");
         
         if (!access_token) {
+            console.log('thissssssssssssssssssis working');
             return NextResponse.redirect(new URL("/auth/login", req.url));
         }
 

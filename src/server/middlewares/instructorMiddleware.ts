@@ -8,6 +8,8 @@ export async function instructorMiddleware(req: NextRequest) {
 
         const access_token = req.cookies.get("access_token")?.value;
         const refresh_token = req.cookies.get("refresh_token")?.value;
+
+        console.log(access_token, refresh_token, "================================");
         
         if (!access_token) {
             return NextResponse.redirect(new URL("/auth/login", req.url));
@@ -28,6 +30,8 @@ export async function instructorMiddleware(req: NextRequest) {
                     return data;
                 });
         });
+        
+        console.log(response, "================================");
 
         if (!response?.success) {
             return NextResponse.redirect(new URL("/auth/login", req.url));

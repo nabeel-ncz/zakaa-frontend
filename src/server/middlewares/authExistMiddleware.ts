@@ -11,6 +11,8 @@ export async function authExistMiddleware(req: NextRequest) {
         const access_token = req.cookies.get("access_token")?.value;
         const refresh_token = req.cookies.get("refresh_token")?.value;
 
+        console.log(access_token, refresh_token, "================================");
+
         const response = await fetch(
             `${BASE_URL}/api/auth`,
             {
@@ -26,6 +28,8 @@ export async function authExistMiddleware(req: NextRequest) {
                     return data;
                 });
         });
+
+        console.log(response, "================================");
 
         if (response?.success) {
             if (!response?.data?.isVerified && path.startsWith("/auth/verify")) {

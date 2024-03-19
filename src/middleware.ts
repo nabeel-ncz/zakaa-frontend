@@ -9,35 +9,36 @@ import {
 
 export async function middleware(req: NextRequest) {
 
-    const path = req.nextUrl.pathname;
+    // const path = req.nextUrl.pathname;
 
-    if (path.startsWith('/auth')) {
-        return authExistMiddleware(req);
+    // if (path.startsWith('/auth')) {
+    //     return authExistMiddleware(req);
 
-    } else if (path.startsWith('/apply-to-teach')) {
-        return studentMiddleware(req);
+    // } else if (path.startsWith('/apply-to-teach')) {
+    //     return studentMiddleware(req);
 
-    } else if (path.startsWith('/student')) {
-        return studentMiddleware(req);
+    // } else if (path.startsWith('/student')) {
+    //     return studentMiddleware(req);
 
-    } else if (path.startsWith('/instructor')) {
-        return instructorMiddleware(req);
+    // } else if (path.startsWith('/instructor')) {
+    //     return instructorMiddleware(req);
 
-    } else if (path.startsWith('/admin')) {
-        return adminMiddleware(req);
+    // } else if (path.startsWith('/admin')) {
+    //     return adminMiddleware(req);
 
-    } else {
-        return NextResponse.next();
-    }
+    // } else {
+    // return NextResponse.next();
+    // }
 
+    return NextResponse.next();
 }
 
 export const config = {
     matcher: [
-        "/auth/:path*", 
-        "/apply-to-teach/:path*", 
-        "/student/:path*", 
-        "/instructor/:path*", 
+        "/auth/:path*",
+        "/apply-to-teach/:path*",
+        "/student/:path*",
+        "/instructor/:path*",
         "/admin/:path*"
     ],
 };

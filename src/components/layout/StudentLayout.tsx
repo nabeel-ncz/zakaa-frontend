@@ -7,13 +7,14 @@ import { fetchUserAction } from "@/store/actions";
 import Skeleton from "@/components/ui/Skeleton";
 import NavLink from "../common/NavLink";
 import { SocketContext } from "../providers/SocketProvider";
+import { useRouter } from "next/navigation";
 
 export default function StudentLayout({
     children
 }: {
     children: React.ReactNode
 }) {
-    
+    const router = useRouter();
     const { socket } = useContext(SocketContext);
     const [loading, setLoading] = useState(true);
     const [open, setOpen] = useState(true);
@@ -22,7 +23,16 @@ export default function StudentLayout({
 
     useEffect(() => {
         dispatch(fetchUserAction()).then((res) => {
-            if (res.payload?.success) {
+            if(!res.payload?.success){
+                router.replace("/auth/login");
+            }
+            else if(!res.payload?.data?.isVerified){
+                router.replace("/auth/verify");
+            }
+            else if(res.payload?.data?.role !== "student"){
+                router.replace("/");
+            }
+            else {
                 socket.emit("online", {
                     user: res.payload?.data?._id
                 })

@@ -15,33 +15,33 @@ export async function studentMiddleware(req: NextRequest) {
             return NextResponse.redirect(new URL("/auth/login", req.url));
         }
 
-        const response = await fetch(
-            `${BASE_URL}/api/auth`,
-            {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Cookie': `access_token=${access_token}; refresh_token=${refresh_token}`
-                },
-            }
-        ).then((response: any) => {
-            return response.json()
-                .then((data: any) => {
-                    return data;
-                });
+        const response = await fetch(`${BASE_URL}/api/auth`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Cookie': `access_token=${access_token}; refresh_token=${refresh_token}`
+            },
         });
 
-        console.log(response, "================================");
+        console.log(response.ok, "resposnse.ok");
+    
+        if (!response.ok) {
+            return NextResponse.redirect(new URL("/auth/login", req.url));
+        }
+    
+        const data: any = await response.json();
 
-        if (!response?.success) {
+        console.log(data, "================================");
+
+        if (!data?.success) {
             return NextResponse.redirect(new URL("/auth/login", req.url));
         }
 
-        if(response?.data?.role !== "student"){
+        if(data?.data?.role !== "student"){
             return NextResponse.redirect(new URL("/auth/login", req.url));
         }
 
-        if(!response?.data?.isVerified){
+        if(!data?.data?.isVerified){
             return NextResponse.redirect(new URL("/auth/verify", req.url));
         }
 

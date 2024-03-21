@@ -57,7 +57,7 @@ export default function Overview() {
             setRecentEnrollmetns(enrollments.payload?.data);
 
         } catch (error: any) {
-            toast.error(error?.message || "Somthing went wrong!", { position: "top-right" })
+            toast.error("Something went wrong!", {position:"top-right"});
         } finally {
             setLoading(false);
         }

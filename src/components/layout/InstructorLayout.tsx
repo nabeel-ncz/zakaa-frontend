@@ -113,11 +113,11 @@ export default function InstructorLayout({
 
             <div className="flex flex-col flex-1 overflow-y-auto">
                 <div className="flex items-center justify-between h-24 bg-white border-b">
-                    <div className="flex w-full items-center gap-96 ps-6">
+                    <div className={`flex w-full items-center ${open ? "gap-[22rem]": "gap-[38rem]"} ps-6`}>
                         <div className="flex gap-4">
                             <button onClick={() => {
                                 setOpen((state) => !state);
-                            }} className="focus:outline-none secondary-light-bg px-4 rounded-lg">
+                            }} className="focus:outline-none hover:bg-purple-100 secondary-light-bg px-4 rounded-lg">
                                 <img src="/svgs/menu.svg" alt="" />
                             </button>
 

@@ -9,6 +9,8 @@ import { useDispatch } from "react-redux";
 import { TypeDispatch } from "@/store";
 import { getAvailableCategoriesAction } from "@/store/actions/category";
 import Image from "next/image";
+import Footer from "@/components/home/Footer";
+import Skeleton from "@/components/ui/Skeleton";
 
 export default function Courses() {
 
@@ -18,6 +20,7 @@ export default function Courses() {
     const [courses, setCourses] = useState<any[] | null>(null);
     const [filteredCourse, setFilteredCourse] = useState<any[] | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
+    const [initialLoading, setIntialLoading] = useState<boolean>(true);
     const [pageNo, setPageNo] = useState<number>(1);
     const [hasMore, setHasMore] = useState(true);
     const [categories, setCategories] = useState<any[] | null>(null);
@@ -28,6 +31,7 @@ export default function Courses() {
         priceTo: 1000
     });
     const searchQuery = searchParams.get("search");
+    const [imageLoading, setImageLoading] = useState({ "1": true, "2": true });
 
     useEffect(() => {
         dispatch(getAvailableCategoriesAction())
@@ -39,14 +43,16 @@ export default function Courses() {
     }, []);
 
     useEffect(() => {
-        loadCourses(1);
+        loadCourses(1).finally(() => {
+            setIntialLoading(false);
+        });
     }, []);
 
     const handleScroll = (event: any) => {
         event.preventDefault();
         if (
             window.innerHeight + document.documentElement.scrollTop >=
-            document.documentElement.offsetHeight - 50
+            document.documentElement.offsetHeight - 300
         ) {
             loadCourses(pageNo + 1);
             setPageNo(prev => prev + 1);
@@ -119,22 +125,35 @@ export default function Courses() {
     return (
         <>
             <Header />
-            <div className="w-full px-52 pt-10 pb-16">
+            <div className="w-full px-6 md:px-24 pt-2 pb-8 xl:px-52 xl:pt-10 xl:pb-16 relative">
                 <Image
                     src="/ui/course-head-sec-img.png"
                     alt=""
                     style={{ backgroundSize: "cover" }}
                     width={600}
                     height={450}
+                    onLoad={(e) => { setImageLoading((state) => ({ ...state, "1": false })) }}
                     layout="responsive"
                     loading="lazy"
+                    placeholder="blur"
+                    blurDataURL="/ui/course-head-sec-img-lazy.png"
                 />
-                {/* <img alt="" /> */}
             </div>
-            <div className="w-full px-52 flex gap-4 mb-8">
-                <div className="w-9/12 flex flex-col items-start gap-2 bg-white">
+            <div className="w-full px-6 xl:px-52 flex xl:flex-row flex-col gap-4 mb-4">
+                <div className="w-full xl:w-9/12 flex flex-col items-start gap-2 bg-white">
+                    <div className="w-full px-6 md:px-20 xl:hidden flex items-center justify-end mb-4">
+                        <button className="font-semibold primary-bg px-4 py-2 rounded text-xs text-white">Filter</button>
+                    </div>
+                    {((filteredCourse?.length === 0 || !filteredCourse) && !loading && !initialLoading) && (
+                        <>
+                            <div className="w-full flex flex-col gap-2 items-center justify-center">
+                                <h2 className="font-bold text-lg md:text-xl">Unfortunately, there are no courses available!</h2>
+                                <img src="/icons/not-found.png" alt="" className="h-80" />
+                            </div>
+                        </>
+                    )}
                     {filteredCourse?.map((item: any) => (
-                        <div className="flex items-center justify-center secondary-bg rounded-md overflow-hidden px-2 py-3">
+                        <div className="flex items-center justify-center bg-gray-100 rounded-md overflow-hidden px-2 py-3">
                             <div className="w-5/12 bg-white shadow">
                                 <img crossOrigin="anonymous" src={`${PUBLIC_RESOURCE_URL}/api/course/images/${item.thumbnail}`} alt="" className="rounded" />
                             </div>
@@ -153,8 +172,57 @@ export default function Courses() {
                             </div>
                         </div>
                     ))}
+                    {initialLoading && (
+                        <>
+                            <div className="w-full flex items-center justify-center bg-gray-100 rounded-md overflow-hidden px-2 py-3">
+                                <div className="w-5/12 bg-white shadow">
+                                    <Skeleton width={"100%"} height={"130px"} />
+                                </div>
+                                <div className="w-7/12 ps-4 flex flex-col gap-1">
+                                    <Skeleton width={"40%"} height={"10px"} />
+                                    <Skeleton width={"90%"} height={"14px"} />
+                                    <Skeleton width={"100%"} height={"14px"} />
+                                    <Skeleton width={"70%"} height={"14px"} />
+                                    <Skeleton width={"40%"} height={"14px"} />
+                                    <Skeleton width={"20%"} height={"20px"} />
+                                </div>
+                            </div>
+                            <div className="w-full flex items-center justify-center bg-gray-100 rounded-md overflow-hidden px-2 py-3">
+                                <div className="w-5/12 bg-white shadow">
+                                    <Skeleton width={"100%"} height={"130px"} />
+                                </div>
+                                <div className="w-7/12 ps-4 flex flex-col gap-1">
+                                    <Skeleton width={"40%"} height={"10px"} />
+                                    <Skeleton width={"90%"} height={"14px"} />
+                                    <Skeleton width={"100%"} height={"14px"} />
+                                    <Skeleton width={"70%"} height={"14px"} />
+                                    <Skeleton width={"40%"} height={"14px"} />
+                                    <Skeleton width={"20%"} height={"20px"} />
+                                </div>
+                            </div>
+                            <div className="w-full flex items-center justify-center bg-gray-100 rounded-md overflow-hidden px-2 py-3">
+                                <div className="w-5/12 bg-white shadow">
+                                    <Skeleton width={"100%"} height={"130px"} />
+                                </div>
+                                <div className="w-7/12 ps-4 flex flex-col gap-1">
+                                    <Skeleton width={"40%"} height={"10px"} />
+                                    <Skeleton width={"90%"} height={"14px"} />
+                                    <Skeleton width={"100%"} height={"14px"} />
+                                    <Skeleton width={"70%"} height={"14px"} />
+                                    <Skeleton width={"40%"} height={"14px"} />
+                                    <Skeleton width={"20%"} height={"20px"} />
+                                </div>
+                            </div>
+                        </>
+                    )}
+                    
+                    {loading && (
+                        <div className="w-full flex items-start">
+                            <h2 className="font-bold text-lg">Loading <span className="animate-pulse">....</span></h2>
+                        </div>
+                    )}
                 </div>
-                <div className="w-3/12 secondary-bg h-80 rounded-md px-4">
+                <div className="hidden xl:block xl:w-3/12 bg-gray-100 h-80 rounded-md px-4">
                     <h2 className="font-medium my-2 ms-2">Filter</h2>
                     <label htmlFor="" className="text-xs font-medium my-2">Category : </label>
                     <select className="w-full h-10 outline-none" onChange={(handleFilterChange)} value={filter.category} name="category" id="">
@@ -178,7 +246,7 @@ export default function Courses() {
                     )}
                 </div>
             </div>
-            {loading && <div>Loading courses...</div>}
+            <Footer />
         </>
     );
 }

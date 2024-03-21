@@ -1,5 +1,7 @@
 "use client";
 import Header from "@/components/common/Header";
+import CourseSectionCardLoading from "@/components/home/CourseSectionCardLoading";
+import Footer from "@/components/home/Footer";
 import AnnouncementCard from "@/components/ui/AnnouncementCard";
 import { TypeDispatch, TypeState } from "@/store";
 import { fetchUserAction } from "@/store/actions";
@@ -16,10 +18,13 @@ export default function page() {
     const [commentOpen, setCommentOpen] = useState<{ _id: string; comments: any[]; } | null>(null);
     const [comment, setComment] = useState<string>("");
     const commentsDivRef: any = useRef();
+    const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
         dispatch(fetchUserAction());
-        dispatch(getAnnouncementsAction());
+        dispatch(getAnnouncementsAction()).finally(() => {
+            setLoading(false);
+        })
     }, []);
 
     useEffect(() => {
@@ -70,6 +75,26 @@ export default function page() {
         <>
             <Header />
             <div className="max-w-screen-xl mx-auto p-5 sm:p-10 md:p-16">
+                <div className="flex flex-wrap -mx-4">
+                    {loading && (
+                        <>
+                            <CourseSectionCardLoading />
+                            <CourseSectionCardLoading />
+                            <CourseSectionCardLoading />
+                            <CourseSectionCardLoading />
+                            <CourseSectionCardLoading />
+                            <CourseSectionCardLoading />
+                            <CourseSectionCardLoading />
+                            <CourseSectionCardLoading />
+                        </>
+                    )}
+                </div>
+                {(!loading && (!announcements || announcements?.length === 0)) && (
+                    <div className="w-full pt-6 flex flex-col gap-2 items-center justify-center">
+                        <h2 className="font-bold text-xl pb-6">Unfortunately, there are no announcements available!</h2>
+                        <img src="/icons/not-found.png" alt="" className="h-80" />
+                    </div>
+                )}
                 {commentOpen && (
                     <div className="fixed z-50 top-0 left-0 flex items-center justify-center w-full min-h-screen bg-[#00000020] backdrop-blur-sm">
                         <div
@@ -121,6 +146,7 @@ export default function page() {
                     ))}
                 </div>
             </div>
+            <Footer />
         </>
     )
 }

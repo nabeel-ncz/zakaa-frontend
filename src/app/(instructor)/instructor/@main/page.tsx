@@ -48,7 +48,7 @@ export default function Dashboard() {
             setTotalProfit(user.payload?.data?.profit);
 
         } catch (error: any) {
-            toast.error(error?.message || "Something went wrong!");
+            toast.error("Something went wrong!", {position:"top-right"});
         } finally {
             setLoading(false);
         }

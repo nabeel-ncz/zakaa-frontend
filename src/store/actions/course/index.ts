@@ -9,3 +9,4 @@ export * from "./getAssessmentByIdAction";
 export * from "./updateExamAction";
 export * from "./updateAssessmentQuestionAction";
 export * from "./getAssessmentsByCourseIdAction";
+export * from "./getTopInstructorsByEnrollmentAction";

@@ -135,7 +135,7 @@ export default function CourseDetailed({ params }: any) {
             <Header />
             {videoOpen && (
                 <div className="fixed z-50 top-0 left-0 flex items-center justify-center w-full min-h-screen bg-[#00000050] backdrop-blur-md">
-                    <div className="relative bg-white flex flex-col items-center justify-center h-5/6 w-10/12 p-8">
+                    <div className="relative bg-white flex flex-col items-center justify-center h-3/6 lg:h-5/6 w-10/12 p-8">
                         <button className="absolute top-4 right-4" onClick={() => { setVideoOpen(false) }} >
                             <img src="/icons/close-icon.png" alt="" className="w-8" />
                         </button>
@@ -148,9 +148,9 @@ export default function CourseDetailed({ params }: any) {
             {loading ? (
                 <Loading />
             ) : (
-                <div className="w-full px-44 pt-10 pb-16">
-                    <div className="w-full h-full secondary-bg rounded-lg px-8 py-12 flex gap-8">
-                        <div className="w-8/12 relative">
+                <div className="w-full px-6 lg:px-12 xl:px-44 pt-10 pb-16">
+                    <div className="w-full h-full secondary-bg rounded-lg px-8 py-12 flex flex-col lg:flex-row gap-8">
+                        <div className="w-full lg:w-8/12 relative">
                             {selectedLesson ? (
                                 <img crossOrigin="anonymous" src={`${PUBLIC_RESOURCE_URL}/api/course/images/${selectedLesson?.thumbnail}`} alt="" className="w-full rounded" />
                             ) : (
@@ -173,7 +173,7 @@ export default function CourseDetailed({ params }: any) {
                                 </div>
                             )}
                         </div>
-                        <div className="w-4/12 flex flex-col gap-2">
+                        <div className="w-full lg:w-4/12 flex flex-col gap-2 overflow-y-scroll">
 
                             {course?.trial?.video && (
                                 <div
@@ -212,8 +212,8 @@ export default function CourseDetailed({ params }: any) {
 
                         </div>
                     </div>
-                    <div className="w-full mt-8 px-8 flex">
-                        <div className="w-2/3 flex flex-col items-start">
+                    <div className="w-full mt-8 px-8 flex flex-col lg:flex-row">
+                        <div className="w-full lg:w-2/3 flex flex-col items-start">
                             <h2 className="font-semibold text-2xl">{course?.title}</h2>
                             <p className="font-semibold text-gray-600 text-sm mt-2">
                                 {course?.description}
@@ -223,7 +223,7 @@ export default function CourseDetailed({ params }: any) {
                             <h2 className="font-semibold text-sm mt-1">No of lessons : <span className="text-gray-600">{course?.lessons?.length}</span></h2>
                             <h2 className="font-semibold text-sm mt-1">Language : <span className="text-gray-600">{course?.language}</span></h2>
                         </div>
-                        <div className="w-1/3 flex flex-col items-start justify-end">
+                        <div className="w-full lg:w-1/3 flex flex-col items-start justify-end">
                             <h2 className="font-semibold text-sm mt-2">Pricing : <span className="text-gray-600">{course?.pricing?.type}</span></h2>
                             <h2 className={`font-semibold text-sm mt-2 ${course?.pricing?.type === "free" && "line-through text-green-900"}`}>Amount : <span className={`text-gray-600`}>{course?.pricing?.type === "paid" ? course?.pricing?.amount : "0"}</span></h2>
                             {user?.role === "student" && <>

@@ -93,9 +93,9 @@ export default function Overview() {
                 <Loading />
             ) : (
                 <>
-                    <div className="w-full px-12">
-                        <div className="flex items-center justify-between gap-12">
-                            <div className="w-1/3 relative bg-white flex shadow rounded px-4 py-4 items-center justify-around">
+                    <div className="w-full px-12 mt-4">
+                        <div className="w-full flex flex-wrap items-center">
+                            <div className="w-full sm:w-full md:w-1/2 xl:w-1/3 mb-2 xl:mb-0 max-h-[5.5rem] relative bg-white flex shadow rounded px-4 py-4 items-center justify-around">
                                 <div className="flex flex-col font-bold text-lg">
                                     <span>Today's watch activity</span>
                                     <span>{"2"}+ Hrs</span>
@@ -103,7 +103,7 @@ export default function Overview() {
                                 <img src="/icons/heartbeat.png" alt="" className="w-18 opacity-75" />
                                 <span className="absolute w-2 h-12 bg-purple-800 left-0 top-[25%] opacity-80"></span>
                             </div>
-                            <div className="w-1/3 relative bg-white flex shadow rounded px-4 py-4 items-center justify-around">
+                            <div className="w-full sm:w-full md:w-1/2 xl:w-1/3 mb-2 xl:mb-0 max-h-[5.5rem] relative bg-white flex shadow rounded px-4 py-4 items-center justify-around">
                                 <div className="flex flex-col font-bold text-lg">
                                     <span>Exam success rate</span>
                                     <span>{examSuccessRate}%</span>
@@ -111,7 +111,7 @@ export default function Overview() {
                                 <img src="/icons/exam.png" alt="" className="w-14 opacity-75" />
                                 <span className="absolute w-2 h-12 bg-purple-800 left-0 top-[25%] opacity-80"></span>
                             </div>
-                            <div className="w-1/3 relative bg-white flex shadow rounded px-4 py-4 items-center justify-around">
+                            <div className="w-full sm:w-full md:w-1/2 xl:w-1/3 mb-2 xl:mb-0 max-h-[5.5rem] relative bg-white flex shadow rounded px-4 py-4 items-center justify-around">
                                 <div className="flex flex-col font-bold text-lg">
                                     <span>Focus Category</span>
                                     <span>{focusCategory}</span>
